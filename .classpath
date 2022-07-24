@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="core.jar"/>
+	<classpathentry kind="lib" path="gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="gst1-java-core-1.4.0.jar"/>
+	<classpathentry kind="lib" path="jna.jar"/>
+	<classpathentry kind="lib" path="jogamp-fat.jar"/>
+	<classpathentry kind="lib" path="jogl-all.jar"/>
+	<classpathentry kind="lib" path="video.jar"/>
+	<classpathentry kind="lib" path="webcam-capture-0.3.12.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

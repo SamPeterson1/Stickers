@@ -59,7 +59,7 @@ public class CubeSolver extends PApplet {
 	}
 	
 	public void draw() {
-		noStroke();
+		//noStroke();
 		strokeWeight(2);
 		background(0);
 		
