@@ -18,9 +18,9 @@
 
 package com.yoshiapolis.ui;
 
-import com.yoshiapolis.cube.megaminx.Megaminx;
-import com.yoshiapolis.cube.megaminx.MegaminxStickerPlacement;
 import com.yoshiapolis.cube.pieces.Cube;
+import com.yoshiapolis.megaminx.Megaminx;
+import com.yoshiapolis.megaminx.MegaminxStickerPlacement;
 import com.yoshiapolis.puzzle.Algorithm;
 import com.yoshiapolis.puzzle.Face;
 import com.yoshiapolis.puzzle.Move;

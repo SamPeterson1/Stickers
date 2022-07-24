@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.yoshiapolis.cube.megaminx;
+package com.yoshiapolis.megaminx;
 
 import com.yoshiapolis.cube.pieces.Mathf;
 import com.yoshiapolis.puzzle.PuzzleSticker;
