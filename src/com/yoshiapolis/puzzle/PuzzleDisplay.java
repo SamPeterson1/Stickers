@@ -1,0 +1,145 @@
+package com.yoshiapolis.puzzle;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.yoshiapolis.cube.pieces.Mathf;
+
+import processing.core.PApplet;
+import processing.core.PMatrix3D;
+import processing.core.PVector;
+
+public class PuzzleDisplay {
+	
+	private PApplet app;
+	private float currentRotation = 0;
+	private Move animatingMove;
+	private long lastTime;
+	private float animationSpeed = Mathf.PI;
+	private boolean animate = true;
+	private int direction = 0;
+	private int cubeSize;
+	private float drawSize;
+	private float turnRotation;
+
+	private StickerPlacement placement;
+	protected List<PuzzleSticker> stickers;
+
+	public PuzzleDisplay(PApplet app, StickerPlacement placement, int cubeSize, float drawSize) {
+		this.stickers = new ArrayList<PuzzleSticker>();
+		this.app = app;
+		this.cubeSize = cubeSize;
+		this.drawSize = drawSize;
+		this.turnRotation = placement.getRotationAmt();
+		this.lastTime = System.currentTimeMillis();
+		this.placement = placement;
+		Face[] faces = placement.getFaces();
+		
+		List<PuzzleSticker> faceStickers = placement.createStickerFace(cubeSize, drawSize);
+		for(PuzzleSticker sticker : faceStickers) {
+			for(Face f : faces) {
+				PMatrix3D rot = f.getRotationMat();
+				PVector colorVec = f.getColor().getRGB();
+				int color = app.color(colorVec.x, colorVec.y, colorVec.z);
+				
+				PuzzleSticker clone = sticker.cloneTranslation();
+				clone.applyRotationMatrix(rot);
+				clone.setColor(color);
+				
+				stickers.add(clone);
+			}
+		}
+		
+	}
+
+	public final boolean isAnimating() {
+		return (animatingMove != null);
+	}
+
+	public final void setAnimationSpeed(float speed) {
+		this.animationSpeed = speed;
+	}
+
+	public final void setAnimate(boolean animate) {
+		this.animate = animate;
+	}
+
+	public final void makeMove(Move move) {
+		this.animatingMove = move;
+		direction = animatingMove.isCW() ? 1 : -1;
+		if(!animate) {
+			finishAnimation();
+		}
+	}
+
+	public final void show() {
+		float deltaTime = (System.currentTimeMillis() - lastTime)/1000.0f;
+		lastTime = System.currentTimeMillis();
+
+		if(animate && animatingMove != null) {
+			currentRotation += deltaTime * animationSpeed * direction;
+			for(PuzzleSticker sticker : stickers) {
+				sticker.calculatePosition(animatingMove, currentRotation);
+			}
+
+			drawLayerBlockers();
+			
+			if(Mathf.abs(currentRotation) >= turnRotation) {
+				finishAnimation();  
+			}
+		}
+		
+		for(PuzzleSticker sticker : stickers) {
+			sticker.show(app);
+		}
+	}
+	
+	private void drawLayerBlocker(Face face, int layer, float yOff) {
+		app.pushMatrix();
+		app.applyMatrix(face.getMoveMat(currentRotation));
+		app.applyMatrix(face.getRotationMat());
+		app.translate(0, yOff, 0);
+		app.rotateX(Mathf.PI/2);
+		placement.drawLayerBlocker(app, layer, cubeSize, drawSize);
+		app.popMatrix();
+		
+		app.pushMatrix();
+		app.applyMatrix(face.getRotationMat());
+		app.translate(0, yOff, 0);
+		app.rotateX(Mathf.PI/2);
+		placement.drawLayerBlocker(app, layer, cubeSize, drawSize);
+		app.popMatrix();
+	}
+	
+	private void drawLayerBlockers() {
+		Face face = animatingMove.getFace();
+		int layer = animatingMove.getLayer();
+		int nextLayer = layer + 1;
+		
+		app.pushMatrix();
+		app.fill(0);
+		
+		if(!face.inverted()) {
+			layer = cubeSize - layer - 1;
+			nextLayer = cubeSize - nextLayer - 1;
+		}
+		
+		float yStep = placement.getYStep(cubeSize, drawSize);
+		float yOff = placement.getMinY(cubeSize, drawSize) + (layer - 0.5f) * yStep;
+	
+		drawLayerBlocker(face, nextLayer, yOff);
+		drawLayerBlocker(face, layer, yOff + yStep);
+		
+		app.popMatrix();
+	}
+
+	public final void finishAnimation() {
+		currentRotation = direction * turnRotation;
+		for(PuzzleSticker sticker : stickers) {
+			sticker.calculatePosition(animatingMove, currentRotation);
+			sticker.applyRotation();
+		}
+		currentRotation = 0;
+		animatingMove = null;
+	}
+}
