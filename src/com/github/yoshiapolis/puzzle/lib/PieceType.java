@@ -16,13 +16,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.yoshiapolis.megaminx;
+package com.github.yoshiapolis.puzzle.lib;
 
-import com.github.yoshiapolis.puzzle.lib.Face;
-
-public class Megaminx {
-
-	public static Face[] faces = { Face.M1, Face.M2, Face.M3, Face.M4, Face.M5, Face.M6, Face.M7, Face.M8, Face.M9,
-			Face.M10, Face.M11, Face.M12 };
-
+public enum PieceType {
+	CORNER(3), CENTER(1), EDGE(2);
+	
+	int numColors;
+	
+	PieceType(int numColors) {
+		this.numColors = numColors;
+	}
+	
+	public int getNumColors() {
+		return this.numColors;
+	}
 }

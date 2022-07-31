@@ -16,13 +16,49 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.yoshiapolis.megaminx;
+package com.github.yoshiapolis.cube.util;
+
+import java.util.Objects;
 
 import com.github.yoshiapolis.puzzle.lib.Face;
 
-public class Megaminx {
+public class OrderedFacePair {
 
-	public static Face[] faces = { Face.M1, Face.M2, Face.M3, Face.M4, Face.M5, Face.M6, Face.M7, Face.M8, Face.M9,
-			Face.M10, Face.M11, Face.M12 };
+	Face a;
+	Face b;
+
+	public OrderedFacePair(Face a, Face b) {
+		this.a = a;
+		this.b = b;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrderedFacePair other = (OrderedFacePair) obj;
+		return a == other.a && b == other.b;
+	}
+
+	public Face getFaceA() {
+		return this.a;
+	}
+
+	public Face getFaceB() {
+		return this.b;
+	}
+
+	public OrderedFacePair getInverse() {
+		return new OrderedFacePair(b, a);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(a, b);
+	}
 
 }

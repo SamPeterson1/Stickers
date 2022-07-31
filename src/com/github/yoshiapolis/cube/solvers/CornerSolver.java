@@ -1,5 +1,5 @@
 /*
-    PrimePuzzle Twisty Puzzle Simulator
+    PrimePuzzle Twisty Puzzle Simulator and Solver
     Copyright (C) 2022 Sam Peterson
     
     This program is free software: you can redistribute it and/or modify
@@ -19,124 +19,124 @@
 package com.github.yoshiapolis.cube.solvers;
 
 import com.github.yoshiapolis.cube.pieces.Cube;
-import com.github.yoshiapolis.puzzle.Algorithm;
-import com.github.yoshiapolis.puzzle.Color;
-import com.github.yoshiapolis.puzzle.Face;
-import com.github.yoshiapolis.puzzle.Move;
-import com.github.yoshiapolis.puzzle.PuzzlePiece;
+import com.github.yoshiapolis.puzzle.lib.Algorithm;
+import com.github.yoshiapolis.puzzle.lib.Color;
+import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Move;
+import com.github.yoshiapolis.puzzle.lib.Piece;
 
 public class CornerSolver {
-	
+
 	private Cube cube;
 
 	public CornerSolver(Cube cube) {
 		this.cube = cube;
 	}
-	
+
 	public Algorithm solve() {
 		cube.setLogMoves(true);
 		cube.clearMoveLog();
 		cube.pushRotations();
-		
+
 		Color c = cube.getColor(Face.D);
-		for(int i = 0; i < 4; i ++) {
+		for (int i = 0; i < 4; i++) {
 			solveCorner(c);
 		}
-		
+
 		cube.popRotations();
 		Algorithm alg = cube.getMoveLog();
 		alg.simplify();
 		return alg;
 	}
-	
-	private void insertCorner(PuzzlePiece toSolve, Color c) {
-		int colorIndex = toSolve.indexOfColor(c);
-		if(colorIndex == 0) {
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.U, 0, false));
-			cube.makeMove(new Move(Face.F, 0, true));
-		} else if(colorIndex == 1) {
-			cube.makeMove(new Move(Face.R, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.R, 0, false));
-			cube.makeMove(new Move(Face.U, 0, false));
-			cube.makeMove(new Move(Face.R, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.R, 0, false));
-		} else if(colorIndex == 2) {
-			cube.makeMove(new Move(Face.R, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.R, 0, false));
-		}
-	}
-	
-	private void allignCorner(PuzzlePiece toSolve) {
-		while(toSolve.getPosition() != 1) {
+
+	private void allignCorner(Piece toSolve) {
+		while (toSolve.getPosition() != 1) {
 			cube.makeMove(new Move(Face.U, 0, true));
 		}
-		
+
 		Color fColor = cube.getColor(Face.F);
 		Color rColor = cube.getColor(Face.R);
-		while(toSolve.indexOfColor(fColor) == -1 || toSolve.indexOfColor(rColor) == -1) {
+		while (toSolve.indexOfColor(fColor) == -1 || toSolve.indexOfColor(rColor) == -1) {
 			cube.makeMove(new Move(Face.U, 0, true));
 			cube.makeRotation(Face.U, false);
 			fColor = cube.getColor(Face.F);
 			rColor = cube.getColor(Face.R);
 		}
 	}
-	
-	private PuzzlePiece findCorner_U(Color c) {
-		for(int i = 0; i < 4; i ++) {
-			PuzzlePiece piece = cube.getCorner(i).getPiece();
-			if(piece.indexOfColor(c) != -1) {
-				return piece;
-			}
-		}
-		
-		return null;
-	}
-	
-	private PuzzlePiece findCorner_D(Color c) {
-		for(int i = 4; i < 8; i ++) {
-			PuzzlePiece piece = cube.getCorner(i).getPiece();
+
+	private Piece findCorner_D(Color c) {
+		for (int i = 4; i < 8; i++) {
+			Piece piece = cube.getCorner(i).getPiece();
 			int colorIndex = piece.indexOfColor(c);
-			if(colorIndex == 2) {
+			if (colorIndex == 2) {
 				cube.pushRotations();
-				while(piece.getPosition() != 5) {
+				while (piece.getPosition() != 5) {
 					cube.makeRotation(Face.U, true);
 				}
-				if(piece.getColor(0) != cube.getColor(Face.F)) {
+				if (piece.getColor(0) != cube.getColor(Face.F)) {
 					cube.popRotations();
 					return piece;
 				} else {
 					cube.popRotations();
 				}
-			} else if(colorIndex == 0 || colorIndex == 1) {
+			} else if (colorIndex == 0 || colorIndex == 1) {
 				return piece;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	private void moveCorner(PuzzlePiece toSolve) {
-		while(toSolve.getPosition() != 5) {
+
+	private Piece findCorner_U(Color c) {
+		for (int i = 0; i < 4; i++) {
+			Piece piece = cube.getCorner(i).getPiece();
+			if (piece.indexOfColor(c) != -1) {
+				return piece;
+			}
+		}
+
+		return null;
+	}
+
+	private void insertCorner(Piece toSolve, Color c) {
+		int colorIndex = toSolve.indexOfColor(c);
+		if (colorIndex == 0) {
+			cube.makeMove(new Move(Face.F, 0, false));
+			cube.makeMove(new Move(Face.U, 0, false));
+			cube.makeMove(new Move(Face.F, 0, true));
+		} else if (colorIndex == 1) {
+			cube.makeMove(new Move(Face.R, 0, true));
+			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Face.R, 0, false));
+			cube.makeMove(new Move(Face.U, 0, false));
+			cube.makeMove(new Move(Face.R, 0, true));
+			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Face.R, 0, false));
+		} else if (colorIndex == 2) {
+			cube.makeMove(new Move(Face.R, 0, true));
+			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Face.R, 0, false));
+		}
+	}
+
+	private void moveCorner(Piece toSolve) {
+		while (toSolve.getPosition() != 5) {
 			cube.makeRotation(Face.U, true);
 		}
 		cube.makeMove(new Move(Face.R, 0, true));
 		cube.makeMove(new Move(Face.U, 0, true));
 		cube.makeMove(new Move(Face.R, 0, false));
 	}
-	
+
 	private void solveCorner(Color c) {
-		PuzzlePiece toSolve = findCorner_U(c);
-		if(toSolve != null) {
+		Piece toSolve = findCorner_U(c);
+		if (toSolve != null) {
 			allignCorner(toSolve);
 			insertCorner(toSolve, c);
 		} else {
 			toSolve = findCorner_D(c);
-			if(toSolve != null) {
+			if (toSolve != null) {
 				moveCorner(toSolve);
 				solveCorner(c);
 			}

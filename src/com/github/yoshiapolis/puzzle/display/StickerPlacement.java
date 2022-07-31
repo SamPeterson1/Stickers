@@ -16,13 +16,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.yoshiapolis.megaminx;
+package com.github.yoshiapolis.puzzle.display;
+
+import java.util.List;
 
 import com.github.yoshiapolis.puzzle.lib.Face;
 
-public class Megaminx {
+import processing.core.PApplet;
 
-	public static Face[] faces = { Face.M1, Face.M2, Face.M3, Face.M4, Face.M5, Face.M6, Face.M7, Face.M8, Face.M9,
-			Face.M10, Face.M11, Face.M12 };
+public interface StickerPlacement {
+	
+	public float getRotationAmt();
+	
+	public float getMinY(int cubeSize, float drawSize);
+	
+	public float getYStep(int cubeSize, float drawSize);
+	
+	public List<Sticker> createStickerFace(int cubeSize, float drawSize);
+	
+	public Face[] getFaces();
+	
+	public void drawLayerBlocker(PApplet app, int layer, int cubeSize, float drawSize);
 
 }

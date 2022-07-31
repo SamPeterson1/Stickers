@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.yoshiapolis.cube.pieces;
+package com.github.yoshiapolis.pyraminx.display;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,28 +25,52 @@ import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.puzzle.display.Sticker;
 import com.github.yoshiapolis.puzzle.display.StickerPlacement;
 import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Move;
+import com.github.yoshiapolis.pyraminx.pieces.Pyraminx;
 
 import processing.core.PApplet;
 import processing.core.PMatrix3D;
 
-public class CubeStickerPlacement implements StickerPlacement {
+public class PyraminxStickerPlacement implements StickerPlacement {
 
+	@Override
 	public List<Sticker> createStickerFace(int cubeSize, float drawSize) {
-		float stickerSize = drawSize / cubeSize;
-		float start = -stickerSize * (cubeSize / 2);
-		if (cubeSize % 2 == 0)
-			start += stickerSize / 2;
-		float end = -start + 0.01f;
-		float y = stickerSize / 2 - start;
-
 		List<Sticker> stickers = new ArrayList<Sticker>();
 
-		for (float x = start; x < end; x += stickerSize) {
-			for (float z = start; z < end; z += stickerSize) {
+		float size = drawSize/cubeSize;
+		float xStep = size/2;
+		float yOff = size*Mathf.sqrt(3)/12;
+		float yStep = size*Mathf.sqrt(3)/2;
+		int layer = 0;
+
+		float layersTop = cubeSize-cubeSize/3-1;
+		if(cubeSize % 3 == 0) {
+			layersTop += 0.5;
+		}
+		float layersBottom = cubeSize-layersTop-1;
+		float yStart = -yStep*layersTop;
+		float yEnd = yStep*layersBottom + 0.01f;
+
+		if(cubeSize % 3 == 1) {
+			yStart -= yOff;
+			yEnd -= yOff;
+		} else if(cubeSize % 3 == 2) {
+			yStart += yOff;
+			yEnd += yOff;
+		}
+		
+		float zOff = Mathf.sqrt(6)*drawSize/12;
+
+		for(float y = yStart; y <= yEnd; y += yStep) {
+			for(int i = -layer; i <= layer; i ++) {
+				float xPos = xStep*i;
+				float yPos = y + (((i + layer) % 2 == 0) ? yOff : -yOff);
 				PMatrix3D trans = new PMatrix3D();
-				trans.translate(x, y, z);
-				stickers.add(new Sticker(this, cubeSize, drawSize / cubeSize, trans));
+				trans.translate(xPos, zOff, yPos);
+				boolean flipped = ((i+layer) % 2 == 0);
+				stickers.add(new PyraminxSticker(this, flipped, cubeSize, drawSize/cubeSize, trans));
 			}
+			layer ++;
 		}
 
 		return stickers;
@@ -54,30 +78,39 @@ public class CubeStickerPlacement implements StickerPlacement {
 
 	@Override
 	public float getMinY(int cubeSize, float drawSize) {
-		float stickerSize = drawSize / cubeSize;
-		return -stickerSize * (cubeSize / 2.0f);
+		return -drawSize * (Mathf.sqrt(6)/4);
 	}
 
 	@Override
 	public float getYStep(int cubeSize, float drawSize) {
-		return drawSize / cubeSize;
+		float size = drawSize/cubeSize;
+		return size*Mathf.sqrt(2/3.0f);
 	}
 
 	@Override
 	public float getRotationAmt() {
-		return Mathf.PI / 2;
+		return 2*Mathf.PI/3;
 	}
-
+	
 	@Override
 	public Face[] getFaces() {
-		return Cube.faces;
+		return Pyraminx.faces;
 	}
 
 	@Override
 	public void drawLayerBlocker(PApplet app, int layer, int cubeSize, float drawSize) {
-		if (layer != -1 && layer != cubeSize - 1) {
-			app.rect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
+		if(layer != -1 && layer != cubeSize - 1) {
+			float size = drawSize/cubeSize * (layer + 1);
+			
+			float a = size/2;
+			float b = size*Mathf.sqrt(3)/6;
+			float c = 2*b;
+			
+			app.beginShape();
+			app.vertex(a, b);
+			app.vertex(-a, b);
+			app.vertex(0, -c);
+			app.endShape();
 		}
 	}
-
 }

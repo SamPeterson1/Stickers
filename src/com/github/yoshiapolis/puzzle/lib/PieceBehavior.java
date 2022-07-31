@@ -16,13 +16,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.yoshiapolis.megaminx;
+package com.github.yoshiapolis.puzzle.lib;
 
-import com.github.yoshiapolis.puzzle.lib.Face;
+import java.util.List;
 
-public class Megaminx {
+public interface PieceBehavior {
 
-	public static Face[] faces = { Face.M1, Face.M2, Face.M3, Face.M4, Face.M5, Face.M6, Face.M7, Face.M8, Face.M9,
-			Face.M10, Face.M11, Face.M12 };
-
+	public Piece createPiece(int position, int index);
+	
+	public List<Piece> getAffectedPieces(Move move, PieceGroup group);
+	
+	public void movePiece(Move move, Piece piece, int puzzleSize);
+	
+	public int getNumPieces(int puzzleSize);
+	
 }

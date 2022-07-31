@@ -1,5 +1,5 @@
 /*
-    PrimePuzzle Twisty Puzzle Simulator
+    PrimePuzzle Twisty Puzzle Simulator and Solver
     Copyright (C) 2022 Sam Peterson
     
     This program is free software: you can redistribute it and/or modify
@@ -19,49 +19,51 @@
 package com.github.yoshiapolis.cube.solvers;
 
 import com.github.yoshiapolis.cube.pieces.Cube;
-import com.github.yoshiapolis.cube.pieces.CubeMoveUtil;
-import com.github.yoshiapolis.puzzle.Algorithm;
-import com.github.yoshiapolis.puzzle.Color;
-import com.github.yoshiapolis.puzzle.Face;
-import com.github.yoshiapolis.puzzle.PuzzlePiece;
+import com.github.yoshiapolis.cube.util.CubeMoveUtil;
+import com.github.yoshiapolis.puzzle.lib.Algorithm;
+import com.github.yoshiapolis.puzzle.lib.Color;
+import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Piece;
 
 public class OLLCase {
-	
+
 	private Algorithm solution;
 	int[] edgeLocations;
 	int[] cornerLocations;
-	
+
 	public OLLCase(String solution, int[] locations) {
 		this.solution = CubeMoveUtil.parseAlgorithm(solution);
 		cornerLocations = new int[4];
-		for(int i = 0; i < 8; i += 2) cornerLocations[i/2] = locations[i];
+		for (int i = 0; i < 8; i += 2)
+			cornerLocations[i / 2] = locations[i];
 		edgeLocations = new int[4];
-		for(int i = 1; i < 8; i += 2) edgeLocations[i/2] = locations[i];
+		for (int i = 1; i < 8; i += 2)
+			edgeLocations[i / 2] = locations[i];
 	}
-	
+
 	public Algorithm getSolution() {
 		return this.solution;
 	}
-	
+
 	public boolean recognize(Cube cube) {
 		Color top = cube.getColor(Face.U);
 		boolean retVal = true;
-		if(cube.getSize() > 2) {
-			for(int i = 0; i < 4; i ++) {
-				PuzzlePiece piece = cube.getEdge(i).getPiece(0);
-				if(piece.indexOfColor(top) != edgeLocations[i]) {
+		if (cube.getSize() > 2) {
+			for (int i = 0; i < 4; i++) {
+				Piece piece = cube.getEdge(i).getPiece(0);
+				if (piece.indexOfColor(top) != edgeLocations[i]) {
 					retVal = false;
 				}
 			}
 		}
-		
-		for(int i = 0; i < 4; i ++) {
-			PuzzlePiece piece = cube.getCorner(i).getPiece();
-			if(piece.indexOfColor(top) != cornerLocations[i]) {
+
+		for (int i = 0; i < 4; i++) {
+			Piece piece = cube.getCorner(i).getPiece();
+			if (piece.indexOfColor(top) != cornerLocations[i]) {
 				retVal = false;
 			}
 		}
-		
+
 		return retVal;
 	}
 }
