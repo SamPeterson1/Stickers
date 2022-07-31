@@ -19,16 +19,23 @@
 package com.github.yoshiapolis.puzzle.lib;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Algorithm {
 
-	public ArrayList<Move> moves;
+	private static MoveSimplificationRule rule;
+	
+	public static void setSimplificationRule(MoveSimplificationRule newRule) {
+		rule = newRule;
+	}
+	
+	public List<Move> moves;
 	
 	public Algorithm() {
 		this.moves = new ArrayList<Move>();
 	}
 	
-	public ArrayList<Move> getMoves() {
+	public List<Move> getMoves() {
 		return this.moves;
 	}
 	
@@ -45,7 +52,7 @@ public class Algorithm {
 	}
 	
 	public void append(Algorithm other) {
-		ArrayList<Move> otherMoves = other.getMoves();
+		List<Move> otherMoves = other.getMoves();
 		for(Move move : otherMoves) {
 			moves.add(move);
 		}
@@ -60,6 +67,7 @@ public class Algorithm {
 	}
 	
 	public void simplify() {
-		
+		if(rule != null)
+			this.moves = rule.simplify(moves);
 	}
 }

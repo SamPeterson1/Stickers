@@ -18,40 +18,32 @@
 
 package com.github.yoshiapolis.puzzle.lib;
 
+import java.util.Objects;
+
 public class Move {
 	
 	protected boolean isCubeRotation;
 	protected boolean cw;
-	protected int startLayer;
-	protected int endLayer;
+	protected int layer;
 	protected Face face;
 	
-	public Move(Face face, int startLayer, int endLayer, boolean cw, boolean isCubeRotation) {
+	public Move(Face face, int layer, boolean cw, boolean isCubeRotation) {
 		this.face = face;
-		this.startLayer = startLayer;
-		this.endLayer = endLayer;
+		this.layer = layer;
 		this.cw = cw;
 		this.isCubeRotation = isCubeRotation;
 	}
 	
-	public Move(Face face, int layer, boolean cw, boolean isCubeRotation) {
-		this(face, layer, layer, cw, isCubeRotation);
-	}
-	
 	public Move(Face face, boolean cw, boolean isCubeRotation) {
-		this(face, 0, 0, cw, isCubeRotation);
+		this(face, 0, cw, isCubeRotation);
 	}
-	
-	public Move(Face face, int startLayer, int endLayer, boolean cw) {
-		this(face, startLayer, endLayer, cw, false);
-	}
-	
+
 	public Move(Face face, int layer, boolean cw) {
-		this(face, layer, layer, cw, false);
+		this(face, layer, cw, false);
 	}
 	
 	public Move(Face face, boolean cw) {
-		this(face, 0, 0, cw, false);
+		this(face, 0, cw, false);
 	}
 	
 	public boolean isCubeRotation() {
@@ -66,16 +58,8 @@ public class Move {
 		return !this.cw;
 	}
 	
-	public int getStartLayer() {
-		return this.startLayer;
-	}
-	
-	public int getEndLayer() {
-		return this.endLayer;
-	}
-	
 	public int getLayer() {
-		return this.startLayer;
+		return this.layer;
 	}
 	
 	public Face getFace() {
@@ -83,12 +67,31 @@ public class Move {
 	}
 	
 	public Move getInverse() {
-		return new Move(face, startLayer, endLayer, !cw, isCubeRotation);
+		return new Move(face, layer, !cw, isCubeRotation);
 	}
 	
 	public Move transpose(Puzzle puzzle) {
 		Face newFace = puzzle.transposeFace(face);
-		return new Move(newFace, startLayer, endLayer, cw, isCubeRotation);
+		return new Move(newFace, layer, cw, isCubeRotation);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cw, face, isCubeRotation, layer);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Move other = (Move) obj;
+		return cw == other.cw && face == other.face && isCubeRotation == other.isCubeRotation && layer == other.layer;
+	}
+
 	
 }

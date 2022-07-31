@@ -16,8 +16,8 @@ import com.github.yoshiapolis.pyraminx.util.PyraminxMoveUtil;
 public class PyraminxCenterBehavior implements PieceBehavior {
 
 	@Override
-	public Piece createPiece(int position, int index) {
-		Piece center = new Piece(PieceType.CENTER, position, index);
+	public Piece createPiece(int position, int index, int puzzleSize) {
+		Piece center = new Piece(PieceType.CENTER, position, index, puzzleSize);
 		center.setColor(PyraminxCenterUtil.getColor(position));
 		
 		return center;
@@ -64,7 +64,8 @@ public class PyraminxCenterBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public void movePiece(Move move, Piece piece, int puzzleSize) {
+	public void movePiece(Move move, Piece piece) {
+		int puzzleSize = piece.getPuzzleSize();
 		Face currentFace = Pyraminx.faces[piece.getPosition()];
 		
 		int newIndex = PyraminxCenterUtil.mapIndex(move, currentFace, piece.getIndex(), puzzleSize);

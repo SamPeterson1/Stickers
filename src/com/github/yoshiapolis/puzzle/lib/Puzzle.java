@@ -20,6 +20,7 @@ package com.github.yoshiapolis.puzzle.lib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class Puzzle {
 	
@@ -88,7 +89,7 @@ public abstract class Puzzle {
 	}
 	
 	public final void executeAlgorithm(Algorithm alg, boolean log) {
-		ArrayList<Move> moves = alg.getMoves();
+		List<Move> moves = alg.getMoves();
 		for(Move move : moves) {
 			makeMove(move, log);
 		}

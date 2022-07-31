@@ -93,10 +93,11 @@ public class CubeEdgeUtil {
 		}
 	}
 
-	public static Piece mapEdge(Move move, Piece piece, int puzzleSize) {
+	public static Piece mapEdge(Move move, Piece piece) {
 		move = CubeMoveUtil.faceNormalize(move);
 		int position = piece.getPosition();
 		int index = piece.getIndex();
+		int puzzleSize = piece.getPuzzleSize();
 		Color c1 = piece.getColor(0);
 		Color c2 = piece.getColor(1);
 
@@ -115,7 +116,7 @@ public class CubeEdgeUtil {
 			position = mapVal - 1;
 		}
 
-		Piece retVal = new Piece(PieceType.EDGE, position, index);
+		Piece retVal = new Piece(PieceType.EDGE, position, index, puzzleSize);
 		retVal.setColor(0, c1);
 		retVal.setColor(1, c2);
 

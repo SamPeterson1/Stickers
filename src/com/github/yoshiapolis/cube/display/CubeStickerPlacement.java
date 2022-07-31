@@ -16,11 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.yoshiapolis.cube.pieces;
+package com.github.yoshiapolis.cube.display;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.puzzle.display.Sticker;
 import com.github.yoshiapolis.puzzle.display.StickerPlacement;
@@ -45,7 +46,7 @@ public class CubeStickerPlacement implements StickerPlacement {
 			for (float z = start; z < end; z += stickerSize) {
 				PMatrix3D trans = new PMatrix3D();
 				trans.translate(x, y, z);
-				stickers.add(new Sticker(this, cubeSize, drawSize / cubeSize, trans));
+				stickers.add(new CubeSticker(this, cubeSize, drawSize / cubeSize, trans));
 			}
 		}
 

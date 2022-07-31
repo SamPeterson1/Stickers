@@ -20,17 +20,25 @@ package com.github.yoshiapolis.puzzle.lib;
 
 public class Piece {
 	
+	private int puzzleSize;
 	private int index;
 	private int position;
-	private Color[] colors;
-	private PieceType type;
+	
 	private boolean solved;
 	
-	public Piece(PieceType type, int position, int index) {
+	private Color[] colors;
+	private PieceType type;
+	
+	public Piece(PieceType type, int position, int index, int puzzleSize) {
 		this.type = type;
 		this.position = position;
 		this.index = index;
+		this.puzzleSize = puzzleSize;
 		this.colors = new Color[type.getNumColors()];
+	}
+
+	public int getPuzzleSize() {
+		return this.puzzleSize;
 	}
 	
 	public boolean isSolved() {
@@ -63,7 +71,7 @@ public class Piece {
 	public Color getColor(int index) {
 		return this.colors[index];
 	}
-	
+
 	public void setSolved(boolean solved) {
 		this.solved = solved;
 	}

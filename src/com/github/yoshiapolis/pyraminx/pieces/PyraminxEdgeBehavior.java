@@ -15,9 +15,9 @@ import com.github.yoshiapolis.pyraminx.util.PyraminxEdgeUtil;
 public class PyraminxEdgeBehavior implements PieceBehavior {
 
 	@Override
-	public Piece createPiece(int position, int index) {
+	public Piece createPiece(int position, int index, int puzzleSize) {
 		Color[] colors = PyraminxEdgeUtil.getColors(position);
-		Piece edge = new Piece(PieceType.EDGE, position, index);
+		Piece edge = new Piece(PieceType.EDGE, position, index, puzzleSize);
 		edge.setColor(0, colors[0]);
 		edge.setColor(1, colors[1]);
 		
@@ -44,7 +44,7 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 				return group.getPieces();
 			}
 		} else if(layer > 0 && layer < puzzleSize - 1){
-			Piece simulateFlips = new Piece(PieceType.EDGE, position, 0);
+			Piece simulateFlips = new Piece(PieceType.EDGE, position, 0, puzzleSize);
 			int targetPosition = 0;
 			Move simulateMove = new Move(face, true);
 			
@@ -57,7 +57,7 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 			}
 			
 			while(simulateFlips.getPosition() != targetPosition) {
-				movePiece(simulateMove, simulateFlips, puzzleSize);
+				movePiece(simulateMove, simulateFlips);
 			}
 			
 			int direction = 1;
@@ -79,9 +79,9 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public void movePiece(Move move, Piece piece, int puzzleSize) {
+	public void movePiece(Move move, Piece piece) {
 		int iters = move.isCW() ? 1 : 2;
-		int edgeSize = 2 * (puzzleSize - 3) + 1;
+		int edgeSize = 2 * (piece.getPuzzleSize() - 3) + 1;
 		Face face = move.getFace();
 
 		for (int i = 0; i < iters; i++) {

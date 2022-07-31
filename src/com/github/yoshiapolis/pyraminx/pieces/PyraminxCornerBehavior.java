@@ -17,9 +17,9 @@ public class PyraminxCornerBehavior implements PieceBehavior {
 	private static int[] oppositeCorners = {2, 3, 1, 0};
 	
 	@Override
-	public Piece createPiece(int position, int index) {
+	public Piece createPiece(int position, int index, int puzzleSize) {
 		Color[] colors = PyraminxCornerUtil.getColors(position);
-		Piece corner = new Piece(PieceType.CORNER, position, index);
+		Piece corner = new Piece(PieceType.CORNER, position, index, puzzleSize);
 		for(int i = 0; i < 3; i ++)
 			corner.setColor(i, colors[i]);
 		
@@ -48,7 +48,7 @@ public class PyraminxCornerBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public void movePiece(Move move, Piece piece, int puzzleSize) {
+	public void movePiece(Move move, Piece piece) {
 		PyraminxCornerUtil.mapCorner(move, piece);
 	}
 

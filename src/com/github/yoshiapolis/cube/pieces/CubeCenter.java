@@ -33,8 +33,8 @@ import com.github.yoshiapolis.puzzle.lib.PieceType;
 public class CubeCenter implements PieceBehavior {
 
 	@Override
-	public Piece createPiece(int position, int index) {
-		Piece piece = new Piece(PieceType.CENTER, position, index);
+	public Piece createPiece(int position, int index, int puzzleSize) {
+		Piece piece = new Piece(PieceType.CENTER, position, index, puzzleSize);
 		piece.setColor(CubeCenterUtil.getColor(Cube.getFace(position)));
 		return piece;
 	}
@@ -83,11 +83,11 @@ public class CubeCenter implements PieceBehavior {
 	}
 
 	@Override
-	public void movePiece(Move move, Piece piece, int puzzleSize) {
+	public void movePiece(Move move, Piece piece) {
 		Face face = Cube.getFace(piece.getPosition());
 		int index = piece.getIndex();
 		int newIndex = index;
-		int size = puzzleSize - 2;
+		int size = piece.getPuzzleSize() - 2;
 
 		if (move.getFace() == face) {
 			if (move.isCW()) {

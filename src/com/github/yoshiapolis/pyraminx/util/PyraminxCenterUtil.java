@@ -91,14 +91,14 @@ public class PyraminxCenterUtil {
 		return rotation;
 	}
 	
-	public static int getLayer(Piece piece, Face face, int puzzleSize) {
+	public static int getLayer(Piece piece, Face face) {
 		
 		Face pieceFace = Pyraminx.faces[piece.getPosition()];
 		if(pieceFace == face) return 0;		
 		
 		int rotation = (getRotationOffset(face, pieceFace) + 3) % 3;
 		int index = piece.getIndex();
-		int centerSize = puzzleSize - 3;
+		int centerSize = piece.getPuzzleSize() - 3;
 		
 		for(int i = 0; i < rotation; i ++) {
 			index = rotateIndexCCW(index, centerSize);

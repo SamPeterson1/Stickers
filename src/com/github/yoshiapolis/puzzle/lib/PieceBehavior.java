@@ -22,11 +22,11 @@ import java.util.List;
 
 public interface PieceBehavior {
 
-	public Piece createPiece(int position, int index);
+	public Piece createPiece(int position, int index, int puzzleSize);
 	
 	public List<Piece> getAffectedPieces(Move move, PieceGroup group);
 	
-	public void movePiece(Move move, Piece piece, int puzzleSize);
+	public void movePiece(Move move, Piece piece);
 	
 	public int getNumPieces(int puzzleSize);
 	

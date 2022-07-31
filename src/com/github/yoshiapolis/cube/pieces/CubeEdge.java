@@ -34,8 +34,8 @@ import com.github.yoshiapolis.puzzle.lib.PieceType;
 public class CubeEdge implements PieceBehavior {
 
 	@Override
-	public Piece createPiece(int position, int index) {
-		Piece edge = new Piece(PieceType.EDGE, position, index);
+	public Piece createPiece(int position, int index, int puzzleSize) {
+		Piece edge = new Piece(PieceType.EDGE, position, index, puzzleSize);
 		Color[] colors = CubeEdgeUtil.getColors(position);
 		edge.setColor(0, colors[0]);
 		edge.setColor(1, colors[1]);
@@ -44,8 +44,8 @@ public class CubeEdge implements PieceBehavior {
 	}
 
 	@Override
-	public void movePiece(Move move, Piece piece, int puzzleSize) {
-		Piece mapped = CubeEdgeUtil.mapEdge(move, piece, puzzleSize);
+	public void movePiece(Move move, Piece piece) {
+		Piece mapped = CubeEdgeUtil.mapEdge(move, piece);
 
 		piece.setColor(0, mapped.getColor(0));
 		piece.setColor(1, mapped.getColor(1));
@@ -55,7 +55,8 @@ public class CubeEdge implements PieceBehavior {
 
 	@Override
 	public List<Piece> getAffectedPieces(Move move, PieceGroup group) {
-		int size = group.getPuzzleSize() - 2;
+		int puzzleSize = group.getPuzzleSize();
+		int size = puzzleSize - 2;
 		int position = group.getPosition();
 
 		move = CubeMoveUtil.normalize(move, size + 2);
@@ -73,15 +74,15 @@ public class CubeEdge implements PieceBehavior {
 				&& oppMoveFace != edgeFace1 && oppMoveFace != edgeFace2) {
 			Piece calc = null;
 			if (moveFace == Face.R) {
-				calc = new Piece(PieceType.EDGE, 0, size - move.getLayer());
+				calc = new Piece(PieceType.EDGE, 0, size - move.getLayer(), puzzleSize);
 			} else if (moveFace == Face.U) {
-				calc = new Piece(PieceType.EDGE, 4, size - move.getLayer());
+				calc = new Piece(PieceType.EDGE, 4, size - move.getLayer(), puzzleSize);
 			} else if (moveFace == Face.F) {
-				calc = new Piece(PieceType.EDGE, 1, move.getLayer() - 1);
+				calc = new Piece(PieceType.EDGE, 1, move.getLayer() - 1, puzzleSize);
 			}
 
 			while (calc.getPosition() != position) {
-				calc = CubeEdgeUtil.mapEdge(move, calc, size + 2);
+				calc = CubeEdgeUtil.mapEdge(move, calc);
 			}
 
 			int index = calc.getIndex();

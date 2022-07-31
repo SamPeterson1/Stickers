@@ -71,28 +71,28 @@ public class PyraminxCenterSolver {
 		if(piece.getIndex() == centerIndex) return true;
 		Face face = Pyraminx.getFace(piece);
 		
-		int dLayer = PyraminxCenterUtil.getLayer(piece, Face.PD, puzzleSize) - 1;
+		int dLayer = PyraminxCenterUtil.getLayer(piece, Face.PD) - 1;
 		return (face == Face.PR && dLayer == layer)
 				|| (face == Face.PF && dLayer < layer);
 	}
 	
 	public void movePiece_LF(Piece piece, int pairingLayer) {
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PD, puzzleSize);
+		int layer = PyraminxCenterUtil.getLayer(piece, Face.PD);
 		while(layer == pairingLayer + 1) {
 			pyr.makeMove(new Move(Face.PL, true));
-			layer = PyraminxCenterUtil.getLayer(piece, Face.PD, puzzleSize);
+			layer = PyraminxCenterUtil.getLayer(piece, Face.PD);
 		}
 		pyr.makeMove(new Move(Face.PD, layer, true));
 	}
 	
 	public void movePiece_FL(Piece piece, int pairingLayer) {
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PD, puzzleSize) - 1;
+		int layer = PyraminxCenterUtil.getLayer(piece, Face.PD) - 1;
 		boolean restoreNeeded = (layer == pairingLayer);
 		
 		pyr.makeMove(new Move(Face.PD, layer + 1, false));
 		while(layer == pairingLayer) {	
 			pyr.makeMove(new Move(Face.PL, 0, true));
-			layer = PyraminxCenterUtil.getLayer(piece, Face.PD, puzzleSize) - 1;
+			layer = PyraminxCenterUtil.getLayer(piece, Face.PD) - 1;
 		}
 		
 		if(restoreNeeded) {
@@ -106,14 +106,14 @@ public class PyraminxCenterSolver {
 	
 	public void movePiece_RL(Piece piece, boolean keepDFace) {
 		pyr.makeMove(new Move(Face.PR, true));
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PF, puzzleSize);
+		int layer = PyraminxCenterUtil.getLayer(piece, Face.PF);
 		pyr.makeMove(new Move(Face.PF, layer, false));
 		
 		if(keepDFace) {
 			int newLayer = layer;
 			while(newLayer == layer) {
 				pyr.makeMove(new Move(Face.PL, true));
-				newLayer = PyraminxCenterUtil.getLayer(piece, Face.PF, puzzleSize);
+				newLayer = PyraminxCenterUtil.getLayer(piece, Face.PF);
 			}
 			
 			pyr.makeMove(new Move(Face.PF, layer, true));
@@ -133,7 +133,7 @@ public class PyraminxCenterSolver {
 			index = PyraminxCenterUtil.mapIndex(face, Face.PR, Face.PF, piece.getIndex(), puzzleSize);
 		}
 		
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PF, puzzleSize);
+		int layer = PyraminxCenterUtil.getLayer(piece, Face.PF);
 		int numMoves = 0;
 		while(Pyraminx.getFace(piece) != Face.PR) {
 			pyr.makeMove(new Move(Face.PF, layer, true));
@@ -142,11 +142,11 @@ public class PyraminxCenterSolver {
 		
 		int pairingLayer = 0;
 		if(keepDFace) {
-			Piece atIndex = new Piece(PieceType.CENTER, Face.PR.getIndex(), tgtIndex);
+			Piece atIndex = new Piece(PieceType.CENTER, Face.PR.getIndex(), tgtIndex, puzzleSize);
 			if(tilted) {
-				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Face.PL, puzzleSize);
+				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Face.PL);
 			} else {
-				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Face.PD, puzzleSize);
+				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Face.PD);
 			}
 			
 			pyr.makeMove(new Move(Face.PR, !tilted));
@@ -258,13 +258,13 @@ public class PyraminxCenterSolver {
 	
 	public boolean executeCommutator(Piece piece, Face pivot) {
 
-		int layer = PyraminxCenterUtil.getLayer(piece, pivot, puzzleSize);
+		int layer = PyraminxCenterUtil.getLayer(piece, pivot);
 		boolean cw = (pivot == Face.PR) ? true : false;
 		
 		pyr.makeMove(new Move(pivot, layer, cw));
 		pyr.makeMove(new Move(Face.PF, !cw));
 		
-		int nextLayer = PyraminxCenterUtil.getLayer(piece, pivot, puzzleSize);
+		int nextLayer = PyraminxCenterUtil.getLayer(piece, pivot);
 		if(nextLayer == layer) {
 			pyr.makeMove(new Move(Face.PF, cw));
 			pyr.makeMove(new Move(pivot, layer, !cw));
@@ -456,20 +456,11 @@ public class PyraminxCenterSolver {
 		pyr.clearMoveLog();
 		pyr.pushRotations();
 		
-		//executeAlternateCommutator(Face.PL, centerIndex - 1);
-	
-		
 		firstTwoCenters();
 		lastTwoCenters();
 		
 		if(puzzleSize % 3 != 0)
 			solveMiddleCenterPieces();
-		
-		
-		//threeCenterCycle(true);
-		
-		
-		
 
 		pyr.setLogMoves(false);
 		pyr.popRotations();

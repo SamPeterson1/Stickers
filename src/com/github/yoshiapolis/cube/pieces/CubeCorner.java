@@ -34,8 +34,8 @@ import com.github.yoshiapolis.puzzle.lib.PieceType;
 public class CubeCorner implements PieceBehavior {
 	
 	@Override
-	public Piece createPiece(int position, int index) {
-		Piece piece = new Piece(PieceType.CORNER, position, index);
+	public Piece createPiece(int position, int index, int puzzleSize) {
+		Piece piece = new Piece(PieceType.CORNER, position, index, puzzleSize);
 		Color[] colors = CubeCornerUtil.getColors(position);
 		for(int i = 0; i < 3; i ++) piece.setColor(i, colors[i]);
 		return piece;
@@ -70,7 +70,8 @@ public class CubeCorner implements PieceBehavior {
 	}
 
 	@Override
-	public void movePiece(Move move, Piece piece, int puzzleSize) {
+	public void movePiece(Move move, Piece piece) {
+		int puzzleSize = piece.getPuzzleSize();
 		move = CubeMoveUtil.normalize(move, puzzleSize);
 		int iters = (move.isCW() ? 1 : 3);
 				

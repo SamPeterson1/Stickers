@@ -18,15 +18,14 @@
 
 package main;
 
+import com.github.yoshiapolis.cube.display.CubeStickerPlacement;
 import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.puzzle.display.PuzzleDisplay;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Puzzle;
-import com.github.yoshiapolis.pyraminx.display.PyraminxStickerPlacement;
 import com.github.yoshiapolis.pyraminx.pieces.Pyraminx;
-import com.github.yoshiapolis.pyraminx.util.PyraminxCenterUtil;
 
 import processing.core.PApplet;
 
@@ -35,30 +34,46 @@ public class Main extends PApplet {
 	public static void main(String[] args) {
 		PApplet.main(new String[] { Main.class.getName() });
 	}
+	
 	PuzzleDisplay display;
 	Puzzle puzzle;
 
 	Algorithm alg;
+	
 	int size = 10;
 	int layer = 0;
-
 	int movesPerFrame = 1;
+	
 	boolean cw = true;
 	boolean scrambling = false;
 	boolean scrambleSimple = false;
-
 	boolean animate = true;
+	
 	float rotX = 0;
-
 	float rotY = 0;
+	
 	int clickX = 0;
-
 	int clickY = 0;
 
 	int movePointer = 0;
 
 	float animationSpeed = 30;
+	
+	public void settings() {
+		size(1000, 1000, P3D);
+	}
 
+	public void setup() {
+		Cube.init();
+		Pyraminx.init();
+		puzzle = new Cube(size);
+		//display = new PuzzleDisplay(this, new PyraminxStickerPlacement(), size, 600);
+		display = new PuzzleDisplay(this, new CubeStickerPlacement(), size, 400);
+		// display = new PuzzleDisplay(this, new MegaminxStickerPlacement(), size, 200);
+		display.setAnimate(animate);
+		display.setAnimationSpeed(animationSpeed);
+	}
+	
 	public void draw() {
 		// noStroke();
 		strokeWeight(4);
@@ -69,7 +84,7 @@ public class Main extends PApplet {
 			for (int i = 0; i < num; i++) {
 				if (scrambling) {
 					for (int j = 0; j < 1; j++) {
-						randMove(Pyraminx.faces);
+						randMove(Cube.faces);
 					}
 				}
 			}
@@ -152,25 +167,6 @@ public class Main extends PApplet {
 
 		rotX -= 5 * dy / height;
 		rotY += 5 * dx / width;
-	}
-
-	public void settings() {
-		size(1000, 1000, P3D);
-	}
-
-	public void setup() {
-		Cube.init();
-		Pyraminx.init();
-		puzzle = new Pyraminx(size);
-		display = new PuzzleDisplay(this, new PyraminxStickerPlacement(), size, 600);
-		// display = new PuzzleDisplay(this, new CubeStickerPlacement(), size, 400);
-		// display = new PuzzleDisplay(this, new MegaminxStickerPlacement(), size, 200);
-		display.setAnimate(animate);
-		display.setAnimationSpeed(animationSpeed);
-
-		for (int i = 4; i < 15; i++) {
-			System.out.println("Size: " + i + " Center Layer: " + PyraminxCenterUtil.getCenterIndex(i - 3));
-		}
 	}
 
 	private void makeMove(Move move) {

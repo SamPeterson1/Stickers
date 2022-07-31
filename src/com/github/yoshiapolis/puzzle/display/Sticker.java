@@ -26,7 +26,7 @@ import processing.core.PApplet;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
 
-public class Sticker {
+public abstract class Sticker {
 
 	protected float size;
 	protected int cubeSize;
@@ -50,15 +50,9 @@ public class Sticker {
 		this.rotationMat = new PMatrix3D();
 	}
 	
-	protected void drawStickerShape(PApplet app) {
-		app.rotateX(Mathf.PI/2);
-		app.rect(-size/2, -size/2, size, size);
-		app.rotateX(-Mathf.PI/2);
-	}
+	protected abstract void drawStickerShape(PApplet app);
 	
-	public Sticker cloneTranslation() {
-		return new Sticker(placement, cubeSize, size, translationMat.get());
-	}
+	public abstract Sticker cloneTranslation();
 	
 	public void setColor(int c) {
 		this.color = c;
@@ -107,11 +101,10 @@ public class Sticker {
 	}
 	
 	public void calculatePosition(Move move, float rotation) {	
-		for(int layer = move.getStartLayer(); layer <= move.getEndLayer(); layer ++) {
-			Face pivot = move.getFace();
-			if(affectedByRotation(pivot, layer)) {
-				rotationMat = pivot.getMoveMat(rotation);
-			}
+		Face pivot = move.getFace();
+		int layer = move.getLayer();
+		if(affectedByRotation(pivot, layer)) {
+			rotationMat = pivot.getMoveMat(rotation);
 		}
 	}
 

@@ -40,7 +40,7 @@ public class PieceGroup {
 		
 		int numPieces = behavior.getNumPieces(puzzleSize);
 		for(int i = 0; i < numPieces; i ++) {
-			pieces.add(behavior.createPiece(position, i));
+			pieces.add(behavior.createPiece(position, i, puzzleSize));
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class PieceGroup {
 		}
 		
 		for(Piece piece : toMove) {
-			behavior.movePiece(move, piece, puzzleSize);
+			behavior.movePiece(move, piece);
 			PieceGroup group = puzzle.getGroup(piece.getType(), piece.getPosition());
 			group.addMovedPiece(piece);
 		}
