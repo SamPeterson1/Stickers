@@ -119,9 +119,9 @@ public class Cube extends Puzzle {
 			corners.add(new PieceGroup(cornerBehavior, this, i));
 		}
 
-		super.pieces.put(PieceType.CENTER, centers);
-		super.pieces.put(PieceType.EDGE, edges);
-		super.pieces.put(PieceType.CORNER, corners);
+		super.addGroupType(PieceType.CENTER, centers);
+		super.addGroupType(PieceType.EDGE, edges);
+		super.addGroupType(PieceType.CORNER, corners);
 
 		centerSolver = new CenterSolver(this);
 		edgeSolver = new EdgeSolver(this);
@@ -137,7 +137,7 @@ public class Cube extends Puzzle {
 	}
 
 	public Color getColor(Face face) {
-		if (this.size > 2) {
+		if (super.getSize() > 2) {
 			return getCenter(face).getPiece(0).getColor();
 		} else {
 			Face transposed = transposeFace(face);

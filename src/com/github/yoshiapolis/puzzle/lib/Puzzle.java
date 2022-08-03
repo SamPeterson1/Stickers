@@ -21,11 +21,13 @@ package com.github.yoshiapolis.puzzle.lib;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Puzzle {
 	
-	protected HashMap<PieceType, ArrayList<PieceGroup>> pieces;
-	protected int size;
+	private List<Piece> allPieces;
+	private HashMap<PieceType, List<PieceGroup>> groupsByType;
+	private int size;
 	
 	private ArrayList<Move> rotations;
 	private ArrayList<Integer> rotationStack;
@@ -34,9 +36,22 @@ public abstract class Puzzle {
 		
 	public Puzzle(int size) {
 		this.size = size;
-		pieces = new HashMap<PieceType, ArrayList<PieceGroup>>();
-		rotations = new ArrayList<Move>();
-		rotationStack = new ArrayList<Integer>();
+		
+		this.groupsByType = new HashMap<PieceType, List<PieceGroup>>();
+		this.allPieces = new ArrayList<Piece>();
+		
+		this.rotations = new ArrayList<Move>();	
+		this.rotationStack = new ArrayList<Integer>();
+	}
+	
+	protected void addGroupType(PieceType type, List<PieceGroup> groups) {
+		groupsByType.put(type, groups);
+		
+		for(PieceGroup group : groups) {
+			for(Piece piece : group.getPieces()) {
+				allPieces.add(piece);
+			}
+		}
 	}
 	
 	public abstract Face transposeFace(Face face);
@@ -81,11 +96,23 @@ public abstract class Puzzle {
 	}
 	
 	public final PieceGroup getGroup(PieceType type, Face face) {
-		return pieces.get(type).get(face.getIndex());
+		return this.groupsByType.get(type).get(face.getIndex());
 	}
 	
 	public final PieceGroup getGroup(PieceType type, int position) {
-		return pieces.get(type).get(position);
+		return this.groupsByType.get(type).get(position);
+	}
+	
+	public final List<PieceGroup> getGroups(PieceType type) {
+		return this.groupsByType.get(type);
+	}
+	
+	public final HashMap<PieceType, List<PieceGroup>> getAllGroups() {
+		return this.groupsByType;
+	}
+	
+	public final List<Piece> getAllPieces() {
+		return this.allPieces;
 	}
 	
 	public final void executeAlgorithm(Algorithm alg, boolean log) {
@@ -96,12 +123,12 @@ public abstract class Puzzle {
 	}
 	
 	public final void makeMove(Move move, boolean log) {	
-		for(ArrayList<PieceGroup> groups : pieces.values()) {
+		for(List<PieceGroup> groups : groupsByType.values()) {
 			for(PieceGroup group : groups) {
 				group.makeMove(move);
 			}
 		}
-		for(ArrayList<PieceGroup> groups : pieces.values()) {
+		for(List<PieceGroup> groups : groupsByType.values()) {
 			for(PieceGroup group : groups) {
 				group.applyMoves();
 			}
@@ -124,8 +151,8 @@ public abstract class Puzzle {
 	}
 	
 	public final void print() {
-		for(PieceType type : pieces.keySet()) {
-			ArrayList<PieceGroup> groups = pieces.get(type);
+		for(PieceType type : groupsByType.keySet()) {
+			List<PieceGroup> groups = groupsByType.get(type);
 			System.out.println(type);
 			for(PieceGroup group : groups) {
 				System.out.print(group.getPosition() + ": [");

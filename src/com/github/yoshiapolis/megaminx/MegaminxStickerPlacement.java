@@ -24,12 +24,12 @@ import java.util.List;
 import com.github.yoshiapolis.math.Line;
 import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.puzzle.display.Sticker;
-import com.github.yoshiapolis.puzzle.display.StickerPlacement;
+import com.github.yoshiapolis.puzzle.display.FaceStickerPlacement;
 import com.github.yoshiapolis.puzzle.lib.Face;
 
 import processing.core.PApplet;
 
-public class MegaminxStickerPlacement implements StickerPlacement {
+public class MegaminxStickerPlacement implements FaceStickerPlacement {
 
 	@Override
 	public List<Sticker> createStickerFace(int cubeSize, float drawSize) {
@@ -71,6 +71,7 @@ public class MegaminxStickerPlacement implements StickerPlacement {
 		return stickers;
 	}
 
+	/*
 	@Override
 	public void drawLayerBlocker(PApplet app, int layer, int cubeSize, float drawSize) {
 		if (layer != -1) {
@@ -87,6 +88,7 @@ public class MegaminxStickerPlacement implements StickerPlacement {
 			app.endShape();
 		}
 	}
+	*/
 
 	@Override
 	public Face[] getFaces() {

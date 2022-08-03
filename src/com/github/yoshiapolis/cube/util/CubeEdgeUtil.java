@@ -38,14 +38,26 @@ public class CubeEdgeUtil {
 	private static int[][] edgeMapArr_U = { { 1, 4 }, { 4, 3 }, { 3, 2 }, { 2, 1 }, { 5, 8 }, { 8, 7 }, { 7, 6 },
 			{ 6, 5 }, { 9, 12 }, { 12, 11 }, { 11, 10 }, { 10, 9 } };
 
-	private static int[][] edgeMapArr_F = { { 3, 7 }, { 7, 11 }, { 11, -8 }, { 8, -3 }, { 2, -10 }, { 10, -12 },
-			{ 12, -4 }, { 4, -2 }, { 1, -6 }, { 6, -9 }, { 9, 5 }, { 5, 1 } };
+	private static int[][] edgeMapArr_F = {
+			{ 3, 7 }, { 7, 11 }, { 11, -8 }, { 8, -3 },
+			{ 2, -10 }, { 10, -12 }, { 12, -4 }, { 4, -2 }, 
+			{ 1, -6 }, { 6, -9 }, { 9, 5 }, { 5, 1 }
+	};
 
-	private static final Color[][] colors = { { Color.WHITE, Color.GREEN }, { Color.WHITE, Color.RED },
-			{ Color.WHITE, Color.BLUE }, { Color.WHITE, Color.ORANGE }, { Color.ORANGE, Color.GREEN },
-			{ Color.GREEN, Color.RED }, { Color.RED, Color.BLUE }, { Color.BLUE, Color.ORANGE },
-			{ Color.YELLOW, Color.GREEN }, { Color.YELLOW, Color.RED }, { Color.YELLOW, Color.BLUE },
-			{ Color.YELLOW, Color.ORANGE } };
+	private static final Color[][] colors = { 
+			{ Color.WHITE, Color.GREEN }, 
+			{ Color.WHITE, Color.RED },
+			{ Color.WHITE, Color.BLUE },
+			{ Color.WHITE, Color.ORANGE }, 
+			{ Color.ORANGE, Color.GREEN },
+			{ Color.GREEN, Color.RED }, 
+			{ Color.RED, Color.BLUE }, 
+			{ Color.BLUE, Color.ORANGE },
+			{ Color.YELLOW, Color.GREEN }, 
+			{ Color.YELLOW, Color.RED }, 
+			{ Color.YELLOW, Color.BLUE },
+			{ Color.YELLOW, Color.ORANGE } 
+	};
 
 	public static Color[] getColors(int position) {
 		return colors[position];

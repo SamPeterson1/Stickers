@@ -21,6 +21,13 @@ package com.github.yoshiapolis.puzzle.lib;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class contains 
+ * 
+ * @author Sam Peterson
+ * @see Move
+ */
+
 public class Algorithm {
 
 	private static MoveSimplificationRule rule;

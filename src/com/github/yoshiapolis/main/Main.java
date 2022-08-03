@@ -16,10 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package main;
+package com.github.yoshiapolis.main;
 
-import com.github.yoshiapolis.cube.display.CubeStickerPlacement;
 import com.github.yoshiapolis.cube.pieces.Cube;
+import com.github.yoshiapolis.megaminx.Megaminx;
 import com.github.yoshiapolis.puzzle.display.PuzzleDisplay;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Face;
@@ -30,7 +30,9 @@ import com.github.yoshiapolis.pyraminx.pieces.Pyraminx;
 import processing.core.PApplet;
 
 public class Main extends PApplet {
-
+	
+	public static PApplet app;
+	
 	public static void main(String[] args) {
 		PApplet.main(new String[] { Main.class.getName() });
 	}
@@ -40,7 +42,7 @@ public class Main extends PApplet {
 
 	Algorithm alg;
 	
-	int size = 10;
+	int size = 12;
 	int layer = 0;
 	int movesPerFrame = 1;
 	
@@ -57,25 +59,26 @@ public class Main extends PApplet {
 
 	int movePointer = 0;
 
-	float animationSpeed = 30;
+	float animationSpeed = 1;
 	
 	public void settings() {
 		size(1000, 1000, P3D);
 	}
 
 	public void setup() {
+		Main.app = this;
 		Cube.init();
 		Pyraminx.init();
-		puzzle = new Cube(size);
-		//display = new PuzzleDisplay(this, new PyraminxStickerPlacement(), size, 600);
-		display = new PuzzleDisplay(this, new CubeStickerPlacement(), size, 400);
-		// display = new PuzzleDisplay(this, new MegaminxStickerPlacement(), size, 200);
+		//puzzle = new Pyraminx(size);
+		//display = new PuzzleDisplay(this, new PyraminxStickerPlacement(), new PyraminxLayerBlocker(), size, 600);
+		display = new PuzzleDisplay(new Cube(size), 400);
+		//display = new PuzzleDisplay(this, new MegaminxStickerPlacement(), new MegaminxLayerBlocker(), size, 200);
 		display.setAnimate(animate);
 		display.setAnimationSpeed(animationSpeed);
 	}
 	
 	public void draw() {
-		// noStroke();
+		//noStroke();
 		strokeWeight(4);
 		background(0);
 
@@ -91,9 +94,9 @@ public class Main extends PApplet {
 		}
 
 		if (alg != null && !display.isAnimating()) {
-			for (int i = 0; i < 10 && alg != null; i++) {
+			for (int i = 0; i < 1 && alg != null; i++) {
 				if (movePointer < alg.length()) {
-					display.setAnimate(false);
+					display.setAnimate(true);
 					display.makeMove(alg.getMove(movePointer));
 					movePointer++;
 				} else {
@@ -130,7 +133,21 @@ public class Main extends PApplet {
 		display.setAnimationSpeed(animationSpeed);
 		if (!display.isAnimating()) {
 			Move move = null;
+			
+			if (key == 'f')
+				move = new Move(Face.F, layer, cw);
+			if (key == 'l')
+				move = new Move(Face.L, layer, cw);
+			if (key == 'r')
+				move = new Move(Face.R, layer, cw);
+			if (key == 'd')
+				move = new Move(Face.D, layer, cw);
+			if (key == 'b')
+				move = new Move(Face.B, layer, cw);
+			if (key == 'u')
+				move = new Move(Face.U, layer, cw);
 
+			/*
 			if (key == 'f')
 				move = new Move(Face.PF, layer, cw);
 			if (key == 'l')
@@ -139,6 +156,7 @@ public class Main extends PApplet {
 				move = new Move(Face.PR, layer, cw);
 			if (key == 'd')
 				move = new Move(Face.PD, layer, cw);
+			*/
 
 			if (move != null)
 				makeMove(move);
@@ -170,7 +188,7 @@ public class Main extends PApplet {
 	}
 
 	private void makeMove(Move move) {
-		puzzle.makeMove(move);
+		//puzzle.makeMove(move);
 		display.makeMove(move);
 	}
 

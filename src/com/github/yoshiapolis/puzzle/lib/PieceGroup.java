@@ -73,6 +73,10 @@ public class PieceGroup {
 		this.movedPieces.add(piece);
 	}
 	
+	public List<Piece> getAffectedPieces(Move move) {
+		return behavior.getAffectedPieces(move, this);
+	}
+	
 	public void makeMove(Move move) {
 		List<Piece> toMove = null;
 		if(move.isCubeRotation()) {

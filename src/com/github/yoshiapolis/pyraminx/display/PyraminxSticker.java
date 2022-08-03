@@ -20,7 +20,7 @@ package com.github.yoshiapolis.pyraminx.display;
 
 import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.puzzle.display.Sticker;
-import com.github.yoshiapolis.puzzle.display.StickerPlacement;
+import com.github.yoshiapolis.puzzle.display.FaceStickerPlacement;
 
 import processing.core.PApplet;
 import processing.core.PMatrix3D;
@@ -33,12 +33,12 @@ public class PyraminxSticker extends Sticker {
 		super();
 	}
 	
-	public PyraminxSticker(StickerPlacement placement, boolean flipped, int cubeSize, float size, PMatrix3D translationMat) {
+	public PyraminxSticker(FaceStickerPlacement placement, boolean flipped, int cubeSize, float size, PMatrix3D translationMat) {
 		super(placement, cubeSize, size, translationMat);
 		this.flipped = flipped;
 	}
 	
-	public PyraminxSticker(StickerPlacement placement, int cubeSize, float size, PMatrix3D translationMat) {
+	public PyraminxSticker(FaceStickerPlacement placement, int cubeSize, float size, PMatrix3D translationMat) {
 		super(placement, cubeSize, size, translationMat);
 	}
 
@@ -49,16 +49,15 @@ public class PyraminxSticker extends Sticker {
 	
 	@Override
 	protected void drawStickerShape(PApplet app) {
-		app.rotateX(Mathf.PI/2);
 		float a = size/2;
 		float b = (flipped ? -1 : 1) * size*Mathf.sqrt(3)/6;
 		float c = 2*b;
+		
 		app.beginShape();
 		app.vertex(a, -b);
 		app.vertex(-a, -b);
 		app.vertex(0, c);
 		app.endShape();
-		app.rotateX(-Mathf.PI/2);
 	}
 	
 }

@@ -19,15 +19,20 @@
 package com.github.yoshiapolis.puzzle.display;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.github.yoshiapolis.cube.display.CubeDisplayPiece;
 import com.github.yoshiapolis.math.Mathf;
-import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
+import com.github.yoshiapolis.puzzle.lib.Piece;
+import com.github.yoshiapolis.puzzle.lib.PieceGroup;
+import com.github.yoshiapolis.puzzle.lib.PieceType;
+import com.github.yoshiapolis.puzzle.lib.Puzzle;
 
 import processing.core.PApplet;
 import processing.core.PMatrix3D;
-import processing.core.PVector;
 
 public class PuzzleDisplay {
 	
@@ -38,127 +43,128 @@ public class PuzzleDisplay {
 	private float animationSpeed = Mathf.PI;
 	private boolean animate = true;
 	private int direction = 0;
-	private int cubeSize;
+	private int puzzleSize;
 	private float drawSize;
 	private float turnRotation;
 
-	private StickerPlacement placement;
-	protected List<Sticker> stickers;
+	private Puzzle puzzle;
 
-	public PuzzleDisplay(PApplet app, StickerPlacement placement, int cubeSize, float drawSize) {
-		this.stickers = new ArrayList<Sticker>();
-		this.app = app;
-		this.cubeSize = cubeSize;
+	private Map<Piece, DisplayPiece> pieceMap;
+	private List<Piece> movedPieces;
+	private List<DisplayPiece> allDisplayPieces;
+	
+	public PuzzleDisplay(Puzzle puzzle, float drawSize) {
+		this.puzzle = puzzle;
 		this.drawSize = drawSize;
-		this.turnRotation = placement.getRotationAmt();
+		
+		createPieces();
+		
 		this.lastTime = System.currentTimeMillis();
-		this.placement = placement;
-		Face[] faces = placement.getFaces();
+		this.turnRotation = Mathf.PI / 2;
+	}
+	
+	private void createPieces() {
+		this.pieceMap = new HashMap<Piece, DisplayPiece>();
+		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
-		List<Sticker> faceStickers = placement.createStickerFace(cubeSize, drawSize);
-		for(Sticker sticker : faceStickers) {
-			for(Face f : faces) {
-				PMatrix3D rot = f.getRotationMat();
-				PVector colorVec = f.getColor().getRGB();
-				int color = app.color(colorVec.x, colorVec.y, colorVec.z);
-				
-				Sticker clone = sticker.cloneTranslation();
-				clone.applyRotationMatrix(rot);
-				clone.setColor(color);
-				
-				stickers.add(clone);
-			}
+		for(Piece piece : puzzle.getAllPieces()) {
+			DisplayPiece displayPiece = new CubeDisplayPiece(piece, drawSize);
+			
+			pieceMap.put(piece, displayPiece);	
+			allDisplayPieces.add(displayPiece);
 		}
-		
 	}
 
-	public final boolean isAnimating() {
+	public PApplet getApp() {
+		return app;
+	}
+
+	public float getCurrentRotation() {
+		return currentRotation;
+	}
+
+	public Move getAnimatingMove() {
+		return animatingMove;
+	}
+
+	public int getPuzzleSize() {
+		return puzzleSize;
+	}
+
+	public float getDrawSize() {
+		return drawSize;
+	}
+
+	public boolean isAnimating() {
 		return (animatingMove != null);
 	}
 
-	public final void setAnimationSpeed(float speed) {
+	public void setAnimationSpeed(float speed) {
 		this.animationSpeed = speed;
 	}
 
-	public final void setAnimate(boolean animate) {
+	public void setAnimate(boolean animate) {
 		this.animate = animate;
 	}
 
-	public final void makeMove(Move move) {
+	public void makeMove(Move move) {
+		System.out.println(this.animate);
 		this.animatingMove = move;
+		this.movedPieces = getAffectedPieces();
 		direction = animatingMove.isCW() ? 1 : -1;
 		if(!animate) {
 			finishAnimation();
 		}
 	}
 
-	public final void show() {
+	private List<Piece> getAffectedPieces() {
+		Map<PieceType, List<PieceGroup>> allGroups = puzzle.getAllGroups();
+		List<Piece> allAffectedPieces = new ArrayList<Piece>();
+		
+		for(List<PieceGroup> groups : allGroups.values()) {
+			for(PieceGroup group : groups) {
+				List<Piece> groupAffectedPieces = group.getAffectedPieces(animatingMove);
+				allAffectedPieces.addAll(groupAffectedPieces);
+			}
+		}
+		
+		return allAffectedPieces;
+	}
+	
+	public void show() {
 		float deltaTime = (System.currentTimeMillis() - lastTime)/1000.0f;
 		lastTime = System.currentTimeMillis();
 
 		if(animate && animatingMove != null) {
 			currentRotation += deltaTime * animationSpeed * direction;
-			for(Sticker sticker : stickers) {
-				sticker.calculatePosition(animatingMove, currentRotation);
+			System.out.println((currentRotation / (Mathf.PI / 2)) + " " + animationSpeed);
+			PMatrix3D rotationMat = animatingMove.getFace().getMoveMat(currentRotation);
+			
+			for(Piece piece : movedPieces) {
+				DisplayPiece displayPiece = pieceMap.get(piece);
+				displayPiece.setRotationMat(rotationMat);
 			}
-
-			drawLayerBlockers();
 			
 			if(Mathf.abs(currentRotation) >= turnRotation) {
+				System.out.println("finishing");
 				finishAnimation();  
 			}
 		}
 		
-		for(Sticker sticker : stickers) {
-			sticker.show(app);
+		for(DisplayPiece piece : allDisplayPieces) {
+			piece.show();
 		}
 	}
 	
-	private void drawLayerBlocker(Face face, int layer, float yOff) {
-		app.pushMatrix();
-		app.applyMatrix(face.getMoveMat(currentRotation));
-		app.applyMatrix(face.getRotationMat());
-		app.translate(0, yOff, 0);
-		app.rotateX(Mathf.PI/2);
-		placement.drawLayerBlocker(app, layer, cubeSize, drawSize);
-		app.popMatrix();
-		
-		app.pushMatrix();
-		app.applyMatrix(face.getRotationMat());
-		app.translate(0, yOff, 0);
-		app.rotateX(Mathf.PI/2);
-		placement.drawLayerBlocker(app, layer, cubeSize, drawSize);
-		app.popMatrix();
-	}
-	
-	private void drawLayerBlockers() {
-		Face face = animatingMove.getFace();
-		int layer = animatingMove.getLayer();
-		int nextLayer = layer + 1;
-		
-		app.pushMatrix();
-		app.fill(0);
-		
-		if(!face.inverted()) {
-			layer = cubeSize - layer - 1;
-			nextLayer = cubeSize - nextLayer - 1;
-		}
-		
-		float yStep = placement.getYStep(cubeSize, drawSize);
-		float yOff = placement.getMinY(cubeSize, drawSize) + layer * yStep;
-	
-		drawLayerBlocker(face, nextLayer, yOff);
-		drawLayerBlocker(face, layer, yOff + yStep);
-		
-		app.popMatrix();
-	}
-
 	public final void finishAnimation() {
 		currentRotation = direction * turnRotation;
-		for(Sticker sticker : stickers) {
-			sticker.calculatePosition(animatingMove, currentRotation);
-			sticker.applyRotation();
+		System.out.println("done");
+		for(Piece piece : movedPieces) {
+			DisplayPiece displayPiece = pieceMap.get(piece);
+			displayPiece.setPosition(piece, drawSize);
+			displayPiece.setRotationMat(null);
 		}
+		
 		currentRotation = 0;
 		animatingMove = null;
 	}

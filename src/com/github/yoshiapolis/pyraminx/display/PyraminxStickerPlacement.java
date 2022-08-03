@@ -22,16 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.yoshiapolis.math.Mathf;
+import com.github.yoshiapolis.puzzle.display.FaceStickerPlacement;
 import com.github.yoshiapolis.puzzle.display.Sticker;
-import com.github.yoshiapolis.puzzle.display.StickerPlacement;
 import com.github.yoshiapolis.puzzle.lib.Face;
-import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.pyraminx.pieces.Pyraminx;
 
-import processing.core.PApplet;
 import processing.core.PMatrix3D;
 
-public class PyraminxStickerPlacement implements StickerPlacement {
+public class PyraminxStickerPlacement implements FaceStickerPlacement {
 
 	@Override
 	public List<Sticker> createStickerFace(int cubeSize, float drawSize) {
@@ -97,6 +95,7 @@ public class PyraminxStickerPlacement implements StickerPlacement {
 		return Pyraminx.faces;
 	}
 
+	/*
 	@Override
 	public void drawLayerBlocker(PApplet app, int layer, int cubeSize, float drawSize) {
 		if(layer != -1 && layer != cubeSize - 1) {
@@ -113,4 +112,5 @@ public class PyraminxStickerPlacement implements StickerPlacement {
 			app.endShape();
 		}
 	}
+	*/
 }

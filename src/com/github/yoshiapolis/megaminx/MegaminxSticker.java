@@ -21,7 +21,7 @@ package com.github.yoshiapolis.megaminx;
 import com.github.yoshiapolis.math.Line;
 import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.puzzle.display.Sticker;
-import com.github.yoshiapolis.puzzle.display.StickerPlacement;
+import com.github.yoshiapolis.puzzle.display.FaceStickerPlacement;
 
 import processing.core.PApplet;
 import processing.core.PMatrix3D;
@@ -31,7 +31,7 @@ public class MegaminxSticker extends Sticker {
 	private Line[] edges;
 	private float[] points;
 
-	public MegaminxSticker(StickerPlacement placement, int cubeSize, float size) {
+	public MegaminxSticker(FaceStickerPlacement placement, int cubeSize, float size) {
 		super(placement, cubeSize, size, new PMatrix3D());
 	}
 
@@ -75,13 +75,13 @@ public class MegaminxSticker extends Sticker {
 
 	@Override
 	public void drawStickerShape(PApplet app) {
-		app.rotateX(Mathf.PI / 2);
 		app.beginShape();
+		
 		for (int i = 0; i < points.length; i += 2) {
 			app.vertex(points[i], points[i + 1]);
 		}
+		
 		app.endShape();
-		app.rotateX(-Mathf.PI / 2);
 	}
 
 }
