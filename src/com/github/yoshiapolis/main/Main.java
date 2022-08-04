@@ -18,6 +18,62 @@
 
 package com.github.yoshiapolis.main;
 
+import com.github.yoshiapolis.math.Matrix3D;
+import com.github.yoshiapolis.math.Vector3f;
+import com.github.yoshiapolis.renderEngine.loaders.ModelLoader;
+import com.github.yoshiapolis.renderEngine.loaders.OBJLoader;
+import com.github.yoshiapolis.renderEngine.models.ColorPalette;
+import com.github.yoshiapolis.renderEngine.models.ColoredModel;
+import com.github.yoshiapolis.renderEngine.rendering.CameraSettings;
+import com.github.yoshiapolis.renderEngine.rendering.Entity;
+import com.github.yoshiapolis.renderEngine.rendering.Renderer;
+import com.github.yoshiapolis.renderEngine.rendering.Scene;
+import com.github.yoshiapolis.renderEngine.window.Window;
+
+public class Main {
+	
+	public static void main(String[] args) {
+		Window.init(600, 600, "Test");
+		ColorPalette.loadPaletteTexture("ColorPalette.png");
+		ColoredModel model = OBJLoader.loadColoredModel("cube.obj");
+		model.setBaseColor(1);
+		model.setAccentColor(4);
+		model.setAccentColor("XPos", 2);
+		model.setBaseColor("YPos", 3);
+		
+		Entity entity = new Entity(model);
+		
+		CameraSettings settings = new CameraSettings();
+		Scene.setCameraSettings(settings);
+		Scene.setLightDirection(new Vector3f(0f, 0f, 1f));
+		Scene.addEntity(entity);
+		
+		Renderer renderer = new Renderer();
+		
+		long startTime = System.currentTimeMillis();
+		
+		while(Window.isOpen()) {
+			Window.clear();
+			
+			float seconds = (System.currentTimeMillis() - startTime) / 1000.0f;
+			Matrix3D mat = new Matrix3D();
+			mat.rotateXYZ(seconds, seconds, 0);
+			mat.translateZ(-5);
+			entity.setTransformationMatrix(mat);
+			
+			renderer.render();			
+			Window.update();
+		}
+		
+		renderer.cleanUp();
+		ModelLoader.cleanUp();
+	}
+
+}
+
+/*
+package com.github.yoshiapolis.main;
+
 import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.megaminx.Megaminx;
 import com.github.yoshiapolis.puzzle.display.PuzzleDisplay;
@@ -66,6 +122,7 @@ public class Main extends PApplet {
 	}
 
 	public void setup() {
+		/*
 		Main.app = this;
 		Cube.init();
 		Pyraminx.init();
@@ -75,9 +132,11 @@ public class Main extends PApplet {
 		//display = new PuzzleDisplay(this, new MegaminxStickerPlacement(), new MegaminxLayerBlocker(), size, 200);
 		display.setAnimate(animate);
 		display.setAnimationSpeed(animationSpeed);
+		
 	}
 	
 	public void draw() {
+		/*
 		//noStroke();
 		strokeWeight(4);
 		background(0);
@@ -110,6 +169,7 @@ public class Main extends PApplet {
 		rotateX(rotX);
 		rotateY(rotY);
 		display.show();
+		
 	}
 
 	public void keyPressed() {
@@ -156,7 +216,7 @@ public class Main extends PApplet {
 				move = new Move(Face.PR, layer, cw);
 			if (key == 'd')
 				move = new Move(Face.PD, layer, cw);
-			*/
+			
 
 			if (move != null)
 				makeMove(move);
@@ -206,3 +266,4 @@ public class Main extends PApplet {
 	}
 
 }
+*/
