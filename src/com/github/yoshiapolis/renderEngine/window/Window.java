@@ -1,22 +1,13 @@
 package com.github.yoshiapolis.renderEngine.window;
 
-import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
@@ -31,8 +22,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
@@ -44,6 +38,8 @@ public class Window {
 	private static float bgGreen;
 	private static float bgBlue;
 	
+	private static Event event;
+		
 	public static void init(int width, int height, String title) {
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
@@ -59,7 +55,45 @@ public class Window {
 		glfwSwapInterval(1);
 
 		glfwShowWindow(windowID);
+		setEventCallbacks();
 		GL.createCapabilities();
+	}
+	
+	private static void setEventCallbacks() {
+		event = new Event();
+		
+		GLFW.glfwSetKeyCallback(windowID, new GLFWKeyCallback() {
+			@Override
+			public void invoke(long window, int key, int scancode, int action, int mods) {
+				event = Event.fromKeyCallback(key, scancode, action, mods);
+			}
+		});
+		GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
+			@Override
+			public void invoke(long window, int button, int action, int mods) {
+				event = Event.fromMouseButtonCallback(button, action, mods);
+			}
+		});
+		GLFW.glfwSetCursorPosCallback(windowID, new GLFWCursorPosCallback() {
+			@Override
+			public void invoke(long window, double xPos, double yPos) {
+				event = Event.fromCursorPosCallback(xPos, yPos);
+			}
+		});
+		GLFW.glfwSetScrollCallback(windowID, new GLFWScrollCallback() {
+			@Override
+			public void invoke(long window, double xOffset, double yOffset) {
+				event = Event.fromScrollCallback(xOffset, yOffset);
+			}
+		});
+	}
+	
+	public static Event pollEvent() {
+		Event retVal = event;
+		event = new Event();
+		glfwPollEvents();
+		
+		return retVal;
 	}
 	
 	public static void setBackgroundColor(float r, float g, float b) {
@@ -94,6 +128,5 @@ public class Window {
 	
 	public static void update() {
 		glfwSwapBuffers(windowID);
-		glfwPollEvents();
 	}
 }
