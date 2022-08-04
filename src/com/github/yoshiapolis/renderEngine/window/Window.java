@@ -38,9 +38,9 @@ public class Window {
 	private static float bgGreen;
 	private static float bgBlue;
 	
-	private static Event event;
+	private static EventQueue eventQueue;
 		
-	public static void init(int width, int height, String title) {
+	public static long init(int width, int height, String title) {
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
@@ -57,43 +57,57 @@ public class Window {
 		glfwShowWindow(windowID);
 		setEventCallbacks();
 		GL.createCapabilities();
+		
+		return windowID;
 	}
 	
 	private static void setEventCallbacks() {
-		event = new Event();
+		eventQueue = new EventQueue();
 		
 		GLFW.glfwSetKeyCallback(windowID, new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
-				event = Event.fromKeyCallback(key, scancode, action, mods);
+				eventQueue.handleKeyCallback(key, scancode, action, mods);
 			}
 		});
 		GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
-				event = Event.fromMouseButtonCallback(button, action, mods);
+				eventQueue.handleMouseButtonCallback(button, action, mods);
 			}
 		});
 		GLFW.glfwSetCursorPosCallback(windowID, new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xPos, double yPos) {
-				event = Event.fromCursorPosCallback(xPos, yPos);
+				eventQueue.handleCursorPosCallback(xPos, yPos);
 			}
 		});
 		GLFW.glfwSetScrollCallback(windowID, new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xOffset, double yOffset) {
-				event = Event.fromScrollCallback(xOffset, yOffset);
+				eventQueue.handleScrollCallback(xOffset, yOffset);
 			}
 		});
 	}
 	
-	public static Event pollEvent() {
-		Event retVal = event;
-		event = new Event();
-		glfwPollEvents();
-		
-		return retVal;
+	public static void lockEvents() {
+		eventQueue.lockQueue();
+	}
+	
+	public static void unlockEvents() {
+		eventQueue.unlockQueue();
+	}
+	
+	public static boolean hasEventToProcess() {
+		return eventQueue.hasEventToProcess();
+	}
+	
+	public static Event getEvent() {
+		return eventQueue.pollEvent();
+	}
+	
+	public static void pollEvents() {
+		GLFW.glfwWaitEvents();
 	}
 	
 	public static void setBackgroundColor(float r, float g, float b) {

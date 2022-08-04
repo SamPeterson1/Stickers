@@ -26,7 +26,15 @@ public class Mathf {
 	public static final float MEGAMINX_UNIT_APOTHEM = 0.5f * sqrt(2.5f + 1.1f * sqrt(5));
 	public static final float MEGAMINX_DIHEDRAL_ANGLE = acos(-1 / sqrt(5));
 	public static final float PHI = (1 + sqrt(5)) / 2.0f;
-
+	
+	public static float min(float a, float b) {
+		return Math.min(a, b);
+	}
+	
+	public static float max(float a, float b) {
+		return Math.max(a, b);
+	}
+	
 	public static float abs(float a) {
 		return (float) Math.abs(a);
 	}

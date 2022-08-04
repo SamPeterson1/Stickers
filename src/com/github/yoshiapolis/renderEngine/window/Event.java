@@ -43,6 +43,8 @@ public class Event {
 	private int type = EVENT_NONE;
 	private int mods;
 	
+	private Event() {}
+	
 	public static Event fromKeyCallback(int key, int scancode, int action, int mods) {
 		Event event = null;
 		if(key != GLFW.GLFW_KEY_UNKNOWN) {

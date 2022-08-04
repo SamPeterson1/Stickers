@@ -5,9 +5,10 @@ import java.util.Queue;
 
 public class EventQueue {
 	
-	private static final int MAX_QUEUE_LENGTH = 5;
+	private static final int MAX_QUEUE_LENGTH = 50;
 	
-	private Queue<Event> eventQueue;
+	private volatile boolean lock;
+	private volatile Queue<Event> eventQueue;
 	
 	public EventQueue() {
 		this.eventQueue = new LinkedList<Event>();
@@ -30,9 +31,21 @@ public class EventQueue {
 	}
 	
 	private void addEvent(Event event) {
-		if(event != null && this.eventQueue.size() < MAX_QUEUE_LENGTH) {
+		while(lock);
+		if(event != null) {
+			if(this.eventQueue.size() >= MAX_QUEUE_LENGTH) {
+				this.eventQueue.poll();
+			}
 			this.eventQueue.add(event);
 		}
+	}
+	
+	public void lockQueue() {
+		this.lock = true;
+	}
+	
+	public void unlockQueue() {
+		this.lock = false;
 	}
 	
 	public boolean hasEventToProcess() {

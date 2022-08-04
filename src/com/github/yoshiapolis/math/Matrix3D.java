@@ -149,4 +149,17 @@ public class Matrix3D {
 		multiply(translation);
 	}
 	
+	public void scale(float s) {
+		scale(s, s, s);
+	}
+	
+	public void scale(float sx, float sy, float sz) {
+		Matrix3D scale = new Matrix3D();
+		
+		scale.m00 = sx;
+		scale.m11 = sy;
+		scale.m22 = sz;
+		
+		multiply(scale);
+	}
 }

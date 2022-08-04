@@ -18,70 +18,20 @@
 
 package com.github.yoshiapolis.main;
 
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-
-import com.github.yoshiapolis.math.Matrix3D;
-import com.github.yoshiapolis.math.Vector3f;
-import com.github.yoshiapolis.renderEngine.loaders.ModelLoader;
-import com.github.yoshiapolis.renderEngine.loaders.OBJLoader;
-import com.github.yoshiapolis.renderEngine.models.ColorPalette;
-import com.github.yoshiapolis.renderEngine.models.ColoredModel;
-import com.github.yoshiapolis.renderEngine.rendering.CameraSettings;
-import com.github.yoshiapolis.renderEngine.rendering.Entity;
-import com.github.yoshiapolis.renderEngine.rendering.Renderer;
-import com.github.yoshiapolis.renderEngine.rendering.Scene;
-import com.github.yoshiapolis.renderEngine.window.Event;
+import com.github.yoshiapolis.renderEngine.window.RenderLoop;
 import com.github.yoshiapolis.renderEngine.window.Window;
 
 public class Main {
 	
 	public static void main(String[] args) {
-		Window.init(600, 600, "Test");
-		ColorPalette.loadPaletteTexture("ColorPalette.png");
-		ColoredModel model = OBJLoader.loadColoredModel("cube.obj");
-		model.setBaseColor(1);
-		model.setAccentColor(4);
-		model.setAccentColor("XPos", 2);
-		model.setBaseColor("YPos", 3);
+		long windowID = Window.init(600, 600, "Test");
 		
-		Entity entity = new Entity(model);
-		
-		CameraSettings settings = new CameraSettings();
-		Scene.setCameraSettings(settings);
-		Scene.setLightDirection(new Vector3f(0f, 0f, 1f));
-		Scene.addEntity(entity);
-		
-		Renderer renderer = new Renderer();
-		
-		long startTime = System.currentTimeMillis();
+		Thread renderThread = new Thread(new RenderLoop(windowID));
+		renderThread.start();
 		
 		while(Window.isOpen()) {
-			Window.clear();
-			
-			Event event = Window.pollEvent();
-			if(event.getMouseButton() == Event.MOUSE_LEFT_BUTTON) {
-				if(event.getType() == Event.EVENT_MOUSE_BUTTON_PRESS) {
-					System.out.println("Down");
-				} else if(event.getType() == Event.EVENT_MOUSE_BUTTON_RELEASE) {
-					System.out.println("Release");
-				} else if(event.getType() == Event.EVENT_MOUSE_DRAG) {
-					System.out.println("Drag x: " + event.getMouseX() + " y: " + event.getMouseY());
-				}
-				
-			}
-			
-			float seconds = (System.currentTimeMillis() - startTime) / 1000.0f;
-			Matrix3D mat = new Matrix3D();
-			mat.rotateXYZ(seconds, seconds, 0);
-			mat.translateZ(-5);
-			entity.setTransformationMatrix(mat);
-			
-			renderer.render();			
-			Window.update();
+			Window.pollEvents();
 		}
-		
-		renderer.cleanUp();
-		ModelLoader.cleanUp();
 	}
 
 }
