@@ -24,7 +24,7 @@ import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.cube.util.CubeCenterUtil;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceGroup;
@@ -41,7 +41,7 @@ public class CenterSolver {
 	public ArrayList<Piece> findPieces(int index, Color color) {
 		ArrayList<Piece> retVal = new ArrayList<Piece>();
 
-		for (Face face : Cube.faces) {
+		for (Axis face : Cube.faces) {
 			PieceGroup center = cube.getCenter(face);
 			int j = index;
 			for (int i = 0; i < 4; i++) {
@@ -62,19 +62,19 @@ public class CenterSolver {
 			// ignore the center piece
 			if (size % 2 != 1 || p.getIndex() != size * size / 2) {
 				// ignore solved pieces on the U face
-				if (!(p.getIndex() % size < line && Cube.getFace(p.getPosition()) == Face.U)) {
+				if (!(p.getIndex() % size < line && Cube.getFace(p.getPosition()) == Axis.U)) {
 					// ignore solved pieces on the F face
 					if (!vertical
-							&& !(p.getIndex() / size == size - line - 1 && Cube.getFace(p.getPosition()) == Face.F)) {
+							&& !(p.getIndex() / size == size - line - 1 && Cube.getFace(p.getPosition()) == Axis.F)) {
 						return p;
-					} else if (vertical && !(p.getIndex() % size == line && Cube.getFace(p.getPosition()) == Face.F)) {
+					} else if (vertical && !(p.getIndex() % size == line && Cube.getFace(p.getPosition()) == Axis.F)) {
 						return p;
 					}
 				}
 			} else {
 				return null;
 			}
-			if (p.getIndex() == index && Cube.getFace(p.getPosition()) == Face.F) {
+			if (p.getIndex() == index && Cube.getFace(p.getPosition()) == Axis.F) {
 				return null;
 			}
 		}
@@ -85,107 +85,107 @@ public class CenterSolver {
 	public void insertHorizontalLine(Color color, int line, boolean safe) {
 		int size = cube.getSize() - 2;
 		if (line == size / 2 && size % 2 == 1) {
-			while (cube.getCenter(Face.F).getPiece(size * size / 2).getColor() != color) {
-				cube.makeMove(new Move(Face.R, size / 2 + 1, false));
+			while (cube.getCenter(Axis.F).getPiece(size * size / 2).getColor() != color) {
+				cube.makeMove(new Move(Axis.R, size / 2 + 1, false));
 			}
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.R, size / 2 + 1, true));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.R, size / 2 + 1, true));
 		} else if (safe) {
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.L, line + 1, true));
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.L, line + 1, false));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.L, line + 1, true));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.L, line + 1, false));
 		} else {
 			// regular case
-			cube.makeMove(new Move(Face.F, 0, true));
-			cube.makeMove(new Move(Face.L, line + 1, false));
+			cube.makeMove(new Move(Axis.F, 0, true));
+			cube.makeMove(new Move(Axis.L, line + 1, false));
 		}
 	}
 
 	public void insertVerticalLine(int line, boolean safe) {
 		int size = cube.getSize() - 2;
 		if (line == size / 2 && size % 2 == 1) {
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.R, size / 2 + 1, false));
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.R, size / 2 + 1, true));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.R, size / 2 + 1, false));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.R, size / 2 + 1, true));
 		} else if (safe) {
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.L, line + 1, true));
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.L, line + 1, false));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.L, line + 1, true));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.L, line + 1, false));
 		} else {
-			cube.makeMove(new Move(Face.L, line + 1, false));
+			cube.makeMove(new Move(Axis.L, line + 1, false));
 		}
 	}
 
 	// moves a center piece from the U face or the D face
 	public void moveCenter_UD(Piece piece, int line, boolean safe) {
-		Face face = Cube.getFace(piece.getPosition());
+		Axis face = Cube.getFace(piece.getPosition());
 		int size = cube.getSize() - 2;
 
-		if (!safe && CubeCenterUtil.getLayer(piece, Face.L, size) - 1 > line
-				&& (size % 2 == 0 || CubeCenterUtil.getLayer(piece, Face.L, size) - 1 != size / 2)) {
-			if (face == Face.U) {
-				cube.makeMove(new Move(Face.R, CubeCenterUtil.getLayer(piece, Face.R, size), true));
-			} else if (face == Face.D) {
-				cube.makeMove(new Move(Face.R, CubeCenterUtil.getLayer(piece, Face.R, size), false));
+		if (!safe && CubeCenterUtil.getLayer(piece, Axis.L, size) - 1 > line
+				&& (size % 2 == 0 || CubeCenterUtil.getLayer(piece, Axis.L, size) - 1 != size / 2)) {
+			if (face == Axis.U) {
+				cube.makeMove(new Move(Axis.R, CubeCenterUtil.getLayer(piece, Axis.R, size), true));
+			} else if (face == Axis.D) {
+				cube.makeMove(new Move(Axis.R, CubeCenterUtil.getLayer(piece, Axis.R, size), false));
 			}
 		} else {
-			cube.makeMove(new Move(Face.U, 0, true));
-			int layer = CubeCenterUtil.getLayer(piece, Face.F, size);
-			cube.makeMove(new Move(Face.F, layer, true));
-			if (safe || CubeCenterUtil.getLayer(piece, Face.B, size) - 1 < line
-					|| (size % 2 == 1 && CubeCenterUtil.getLayer(piece, Face.F, size) - 1 == size / 2)) {
-				while (CubeCenterUtil.getLayer(piece, Face.F, size) == layer) {
-					cube.makeMove(new Move(Face.R, CubeCenterUtil.getLayer(piece, Face.R, size), true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			int layer = CubeCenterUtil.getLayer(piece, Axis.F, size);
+			cube.makeMove(new Move(Axis.F, layer, true));
+			if (safe || CubeCenterUtil.getLayer(piece, Axis.B, size) - 1 < line
+					|| (size % 2 == 1 && CubeCenterUtil.getLayer(piece, Axis.F, size) - 1 == size / 2)) {
+				while (CubeCenterUtil.getLayer(piece, Axis.F, size) == layer) {
+					cube.makeMove(new Move(Axis.R, CubeCenterUtil.getLayer(piece, Axis.R, size), true));
 				}
-				cube.makeMove(new Move(Face.F, layer, false));
+				cube.makeMove(new Move(Axis.F, layer, false));
 			}
-			cube.makeMove(new Move(Face.U, 0, false));
-			cube.makeMove(new Move(Face.R, CubeCenterUtil.getLayer(piece, Face.R, size), true));
+			cube.makeMove(new Move(Axis.U, 0, false));
+			cube.makeMove(new Move(Axis.R, CubeCenterUtil.getLayer(piece, Axis.R, size), true));
 		}
 	}
 
 	// move a center piece from the F face if the lines are constructed horizontally
 	public void moveCenterHorizontal_F(Piece piece) {
 		int size = cube.getSize() - 2;
-		cube.makeMove(new Move(Face.F, 0, true));
-		int layer = CubeCenterUtil.getLayer(piece, Face.R, size);
-		cube.makeMove(new Move(Face.R, layer, false));
-		while (CubeCenterUtil.getLayer(piece, Face.R, size) == layer) {
-			cube.makeMove(new Move(Face.D, 0, true));
+		cube.makeMove(new Move(Axis.F, 0, true));
+		int layer = CubeCenterUtil.getLayer(piece, Axis.R, size);
+		cube.makeMove(new Move(Axis.R, layer, false));
+		while (CubeCenterUtil.getLayer(piece, Axis.R, size) == layer) {
+			cube.makeMove(new Move(Axis.D, 0, true));
 		}
-		cube.makeMove(new Move(Face.R, layer, true));
-		cube.makeMove(new Move(Face.F, 0, false));
+		cube.makeMove(new Move(Axis.R, layer, true));
+		cube.makeMove(new Move(Axis.F, 0, false));
 	}
 
 	// move a center piece from the U face if the lines are constructed horizontally
 	public void moveCenterHorizontal_U(Piece piece, int index, boolean safe) {
 		int size = cube.getSize() - 2;
-		int layer = CubeCenterUtil.getLayer(piece, Face.R, size);
+		int layer = CubeCenterUtil.getLayer(piece, Axis.R, size);
 		if (safe) {
-			cube.makeMove(new Move(Face.R, layer, true));
-			cube.makeMove(new Move(Face.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
 
 			if (size - layer - 2 < index % size || safe) {
-				while (CubeCenterUtil.getLayer(piece, Face.R, size) == layer) {
-					cube.makeMove(new Move(Face.D, 0, true));
+				while (CubeCenterUtil.getLayer(piece, Axis.R, size) == layer) {
+					cube.makeMove(new Move(Axis.D, 0, true));
 				}
-				cube.makeMove(new Move(Face.R, layer, false));
-				cube.makeMove(new Move(Face.R, layer, false));
+				cube.makeMove(new Move(Axis.R, layer, false));
+				cube.makeMove(new Move(Axis.R, layer, false));
 			}
 		} else {
-			cube.makeMove(new Move(Face.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
 
 			if (size - layer - 2 < index % size || safe) {
-				while (CubeCenterUtil.getLayer(piece, Face.R, size) == layer) {
-					cube.makeMove(new Move(Face.B, 0, true));
+				while (CubeCenterUtil.getLayer(piece, Axis.R, size) == layer) {
+					cube.makeMove(new Move(Axis.B, 0, true));
 				}
-				cube.makeMove(new Move(Face.R, layer, false));
+				cube.makeMove(new Move(Axis.R, layer, false));
 			}
 		}
 	}
@@ -193,51 +193,38 @@ public class CenterSolver {
 	// move a center piece from the F face if the lines are constructed vertically
 	public void moveCenterVertical_F(Piece piece, int index) {
 		int size = cube.getSize() - 2;
-		if (CubeCenterUtil.getLayer(piece, Face.U, size) - 1 < index) {
-			cube.makeMove(new Move(Face.F, 0, true));
-			cube.makeMove(new Move(Face.U, CubeCenterUtil.getLayer(piece, Face.U, size), true));
-			cube.makeMove(new Move(Face.F, 0, false));
+		if (CubeCenterUtil.getLayer(piece, Axis.U, size) - 1 < index) {
+			cube.makeMove(new Move(Axis.F, 0, true));
+			cube.makeMove(new Move(Axis.U, CubeCenterUtil.getLayer(piece, Axis.U, size), true));
+			cube.makeMove(new Move(Axis.F, 0, false));
 		} else {
-			cube.makeMove(new Move(Face.U, CubeCenterUtil.getLayer(piece, Face.U, size), true));
+			cube.makeMove(new Move(Axis.U, CubeCenterUtil.getLayer(piece, Axis.U, size), true));
 		}
 	}
 
-	public Algorithm solve() {
-
-		if (cube.getSize() < 4)
-			return new Algorithm();
-
-		cube.clearMoveLog();
-		cube.setLogMoves(true);
-		cube.pushRotations();
-
-		step1();
-		step2();
-		step3();
-
-		System.out.println("domne");
-		cube.popRotations();
-		System.out.println("poppp");
-		cube.setLogMoves(false);
-		Algorithm moves = cube.getMoveLog();
-		moves.simplify();
-
-		return moves;
+	public void solve() {
+		if(cube.getSize() > 3) {
+			cube.pushRotations();
+			step1();
+			step2();
+			step3();
+			cube.popRotations();
+		}
+		
 	}
 
 	// solve two opposite centers
 	public void step1() {
 
 		int size = cube.getSize() - 2;
-
-		Color color;
-		if (size % 2 == 1) {
-			color = cube.getCenter(Face.U).getPiece(size * size / 2).getColor();
-		} else {
-			color = Color.WHITE;
-		}
-
+		
 		for (int i = 0; i < 2; i++) {
+			Color color;
+			if(size % 2 == 0) {
+				color = (i == 1) ? Color.WHITE : Color.YELLOW;
+			} else {
+				color = cube.getCenterColor(Axis.U);
+			}
 			boolean safe = (i == 1);
 			for (int line = 0; line < size; line++) {
 				progress += 1.0f / (size * 5);
@@ -246,10 +233,10 @@ public class CenterSolver {
 					ArrayList<Piece> pieces = findPieces(index, color);
 					Piece piece = getUnsolvedPiece(pieces, line, index, true);
 					if (piece != null) {
-						Face face = Cube.getFace(piece.getPosition());
-						if (face == Face.U || face == Face.D) {
+						Axis face = Cube.getFace(piece.getPosition());
+						if (face == Axis.U || face == Axis.D) {
 							moveCenter_UD(piece, line, safe);
-						} else if (face == Face.F) {
+						} else if (face == Axis.F) {
 							moveCenterVertical_F(piece, index);
 						}
 
@@ -257,8 +244,8 @@ public class CenterSolver {
 							cube.makeMove(new Move(Cube.getFace(piece.getPosition()), 0, true));
 						}
 
-						while (Cube.getFace(piece.getPosition()) != Face.F) {
-							cube.makeMove(new Move(Face.U, CubeCenterUtil.getLayer(piece, Face.U, size), true));
+						while (Cube.getFace(piece.getPosition()) != Axis.F) {
+							cube.makeMove(new Move(Axis.U, CubeCenterUtil.getLayer(piece, Axis.U, size), true));
 						}
 					}
 				}
@@ -266,12 +253,11 @@ public class CenterSolver {
 				insertVerticalLine(line, safe);
 			}
 
-			color = Cube.getOpposingColor(color);
-			cube.makeRotation(Face.F, true);
-			cube.makeRotation(Face.F, true);
+			cube.makeRotation(Axis.F, true);
+			cube.makeRotation(Axis.F, true);
 		}
 
-		cube.makeRotation(Face.F, true);
+		cube.makeRotation(Axis.F, true);
 	}
 
 	// solve two adjacent centers
@@ -282,12 +268,10 @@ public class CenterSolver {
 		for (int i = 0; i < 2; i++) {
 			boolean safe = (i == 1);
 			Color color;
-			if (size % 2 == 1) {
-				color = cube.getCenter(Face.U).getPiece(size * size / 2).getColor();
-			} else if (i == 1) {
-				color = Color.ORANGE;
+			if(size % 2 == 0) {
+				color = (i == 0) ? Color.ORANGE : Color.BLUE;
 			} else {
-				color = Color.BLUE;
+				color = cube.getCenterColor(Axis.U);
 			}
 
 			for (int line = 0; line < size; line++) {
@@ -299,40 +283,40 @@ public class CenterSolver {
 					Piece piece = getUnsolvedPiece(pieces, line, index, false);
 
 					if (piece != null) {
-						if (Cube.getFace(piece.getPosition()) == Face.U) {
+						if (Cube.getFace(piece.getPosition()) == Axis.U) {
 							moveCenterHorizontal_U(piece, index, safe);
-						} else if (Cube.getFace(piece.getPosition()) == Face.F) {
+						} else if (Cube.getFace(piece.getPosition()) == Axis.F) {
 							moveCenterHorizontal_F(piece);
 						}
 
 						// move piece to the F face in the right position
-						int fIndex = CubeCenterUtil.mapIndex(Face.R, Cube.getFace(piece.getPosition()), Face.F,
+						int fIndex = CubeCenterUtil.mapIndex(Axis.R, Cube.getFace(piece.getPosition()), Axis.F,
 								piece.getIndex(), size);
 						while (fIndex != index) {
 							cube.makeMove(new Move(Cube.getFace(piece.getPosition()), 0, true));
-							fIndex = CubeCenterUtil.mapIndex(Face.R, Cube.getFace(piece.getPosition()), Face.F,
+							fIndex = CubeCenterUtil.mapIndex(Axis.R, Cube.getFace(piece.getPosition()), Axis.F,
 									piece.getIndex(), size);
 						}
 
 						// insert piece into the horizontal line
 						int rMoves = 0;
 						int fMoves = 0;
-						int rLayer = CubeCenterUtil.getLayer(piece, Face.R, size);
-						while (Cube.getFace(piece.getPosition()) != Face.F) {
-							cube.makeMove(new Move(Face.R, rLayer, true));
+						int rLayer = CubeCenterUtil.getLayer(piece, Axis.R, size);
+						while (Cube.getFace(piece.getPosition()) != Axis.F) {
+							cube.makeMove(new Move(Axis.R, rLayer, true));
 							rMoves++;
 						}
 
 						if (index % size < line || safe) {
-							while (CubeCenterUtil.getLayer(piece, Face.R, size) == rLayer || fMoves % 2 == 0) {
-								cube.makeMove(new Move(Face.F, 0, true));
+							while (CubeCenterUtil.getLayer(piece, Axis.R, size) == rLayer || fMoves % 2 == 0) {
+								cube.makeMove(new Move(Axis.F, 0, true));
 								fMoves++;
 							}
 							for (int j = 0; j < rMoves; j++) {
-								cube.makeMove(new Move(Face.R, rLayer, false));
+								cube.makeMove(new Move(Axis.R, rLayer, false));
 							}
 							for (int j = 0; j < fMoves; j++) {
-								cube.makeMove(new Move(Face.F, 0, false));
+								cube.makeMove(new Move(Axis.F, 0, false));
 							}
 						}
 					}
@@ -340,7 +324,7 @@ public class CenterSolver {
 
 				insertHorizontalLine(color, line, safe);
 			}
-			cube.makeRotation(Face.R, true);
+			cube.makeRotation(Axis.R, true);
 		}
 	}
 
@@ -350,13 +334,13 @@ public class CenterSolver {
 		int size = cube.getSize() - 2;
 
 		Color color;
-		if (size % 2 == 1) {
-			color = cube.getCenter(Face.U).getPiece(size * size / 2).getColor();
+		if(size % 2 == 0) {
+			color = Color.RED;
 		} else {
-			color = Color.GREEN;
+			color = cube.getCenterColor(Axis.U);
 		}
 
-		PieceGroup uCenter = cube.getCenter(Face.U);
+		PieceGroup uCenter = cube.getCenter(Axis.U);
 		for (int i = 0; i < size * size; i++) {
 			if (i % size == 0) {
 				progress += 1.0f / (size * 5);
@@ -369,7 +353,7 @@ public class CenterSolver {
 				Piece toMove = null;
 				// find a pair of pieces to exchange
 				for (Piece piece : pieces) {
-					if (Cube.getFace(piece.getPosition()) == Face.F) {
+					if (Cube.getFace(piece.getPosition()) == Axis.F) {
 						toMove = piece;
 						break;
 					}
@@ -377,30 +361,30 @@ public class CenterSolver {
 
 				// move the F face until the 2 pieces allign
 				while (toMove.getIndex() != i) {
-					cube.makeMove(new Move(Face.F, 0, true));
+					cube.makeMove(new Move(Axis.F, 0, true));
 				}
 
 				// use a commutator to exchange 2 unsolved center pieces
-				int layer1 = CubeCenterUtil.getLayer(toMove, Face.R, size);
-				cube.makeMove(new Move(Face.R, layer1, true));
-				cube.makeMove(new Move(Face.U, 0, true));
+				int layer1 = CubeCenterUtil.getLayer(toMove, Axis.R, size);
+				cube.makeMove(new Move(Axis.R, layer1, true));
+				cube.makeMove(new Move(Axis.U, 0, true));
 				boolean cw = true;
-				if (CubeCenterUtil.getLayer(toMove, Face.R, size) == layer1) {
-					cube.makeMove(new Move(Face.U, 0, false));
-					cube.makeMove(new Move(Face.U, 0, false));
+				if (CubeCenterUtil.getLayer(toMove, Axis.R, size) == layer1) {
+					cube.makeMove(new Move(Axis.U, 0, false));
+					cube.makeMove(new Move(Axis.U, 0, false));
 					cw = false;
 				}
-				int layer2 = CubeCenterUtil.getLayer(toMove, Face.R, size);
-				cube.makeMove(new Move(Face.R, layer2, true));
-				cube.makeMove(new Move(Face.U, 0, !cw));
-				cube.makeMove(new Move(Face.R, layer1, false));
-				cube.makeMove(new Move(Face.U, 0, cw));
-				cube.makeMove(new Move(Face.R, layer2, false));
-				cube.makeMove(new Move(Face.U, 0, !cw));
+				int layer2 = CubeCenterUtil.getLayer(toMove, Axis.R, size);
+				cube.makeMove(new Move(Axis.R, layer2, true));
+				cube.makeMove(new Move(Axis.U, 0, !cw));
+				cube.makeMove(new Move(Axis.R, layer1, false));
+				cube.makeMove(new Move(Axis.U, 0, cw));
+				cube.makeMove(new Move(Axis.R, layer2, false));
+				cube.makeMove(new Move(Axis.U, 0, !cw));
 			}
 		}
 
-		cube.makeRotation(Face.R, true);
+		cube.makeRotation(Axis.R, true);
 	}
 
 	private void printProgress() {

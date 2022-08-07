@@ -34,13 +34,13 @@ public class ModelLoader {
 		return new ModelData(vaoID, vboIDs, positions.length/3, indices.length);
 	}
 	
-	public static ModelData loadDynamicTexturedModel(float[] positions, float[] normals, float[] texCoords, int[] indices) {
+	public static ModelData loadDynamicColoredModel(float[] positions, float[] normals, float[] colors, int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);
 		
 		int[] vboIDs = new int[3];
 		vboIDs[0] = storeAttributeData(0, 3, positions, GL15.GL_STATIC_DRAW);
-		vboIDs[1] = storeAttributeData(1, 2, texCoords, GL15.GL_DYNAMIC_DRAW);
+		vboIDs[1] = storeAttributeData(1, 3, colors, GL15.GL_DYNAMIC_DRAW);
 		vboIDs[2] = storeAttributeData(2, 3, normals, GL15.GL_STATIC_DRAW);
 		GL30.glBindVertexArray(0);
 		

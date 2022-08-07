@@ -25,8 +25,7 @@ public class OBJLoader {
 		public float[] positions;
 		public float[] texCoords;
 		public float[] normals;
-		public int[] baseIndices;
-		public int[] accentIndices;
+		public int[] indices;
 	}
 	
 	private static BufferedReader openFile(String filePath) {
@@ -46,9 +45,7 @@ public class OBJLoader {
 		OBJData data = new OBJData();
 		String line = null;
 		
-		List<Integer> currentIndices = null;
-		List<Integer> baseIndices = new ArrayList<Integer>();
-		List<Integer> accentIndices = new ArrayList<Integer>();
+		List<Integer> indices = new ArrayList<Integer>();
 		List<Float> positions = new ArrayList<Float>();
 		List<Float> normals = new ArrayList<Float>();
 		List<Float> texCoords = new ArrayList<Float>();
@@ -74,13 +71,13 @@ public class OBJLoader {
 					}
 					
 					for(int i = 0; i < 3; i ++) {
-						String[] indices = tokens[i + 1].split("/");
-						int index = Integer.parseInt(indices[0]) - 1;
-						currentIndices.add(index);
+						String[] indicesStr = tokens[i + 1].split("/");
+						int index = Integer.parseInt(indicesStr[0]) - 1;
+						indices.add(index);
 						
 						int relativeIndex = index - totalPositionsRead;
-						int normalIndex = Integer.parseInt(indices[2]) - 1 - totalNormalsRead;
-						int texCoordIndex = Integer.parseInt(indices[1]) - 1 - totalTexCoordsRead;
+						int normalIndex = Integer.parseInt(indicesStr[2]) - 1 - totalNormalsRead;
+						int texCoordIndex = Integer.parseInt(indicesStr[1]) - 1 - totalTexCoordsRead;
 												
 						normalsArr[3 * relativeIndex] = normals.get(3 * normalIndex);
 						normalsArr[3 * relativeIndex + 1] = normals.get(3 * normalIndex + 1);
@@ -102,12 +99,6 @@ public class OBJLoader {
 						lastObjectName = tokens[1];
 						break;
 					}
-				} else if(tokens[0].equals("usemtl")) {
-					if(tokens[1].equalsIgnoreCase("base")) {
-						currentIndices = baseIndices;
-					} else if(tokens[1].equalsIgnoreCase("accent")) {
-						currentIndices = accentIndices;
-					}
 				}
 			}
 			
@@ -123,8 +114,7 @@ public class OBJLoader {
 			data.positions = toFloatArr(positions);
 			data.normals = normalsArr;
 			data.texCoords = texCoordsArr;
-			data.baseIndices = toIntArr(baseIndices);
-			data.accentIndices = toIntArr(accentIndices);
+			data.indices = toIntArr(indices);
 			
 			totalPositionsRead += positions.size() / 3;
 			totalTexCoordsRead += texCoords.size() / 2;
@@ -141,32 +131,34 @@ public class OBJLoader {
 	
 	public static ColoredModel loadColoredModel(String filePath) {
 		List<Float> positions = new ArrayList<Float>();
-		List<Float> texCoords = new ArrayList<Float>();
 		List<Float> normals = new ArrayList<Float>();
 		List<Integer> indices = new ArrayList<Integer>();
 		
 		List<ColoredVertexGroup> colorGroups = new ArrayList<ColoredVertexGroup>();
 		BufferedReader reader = openFile(filePath);
 		
+		totalPositionsRead = 0;
+		totalNormalsRead = 0;
+		totalTexCoordsRead = 0;
 		lastObjectName = null;
+		
 		OBJData object = null;
 		while((object = loadObject(reader)) != null) {
 			addFloatArr(positions, object.positions);
-			addFloatArr(texCoords, object.texCoords);
 			addFloatArr(normals, object.normals);
-			addIntArr(indices, object.baseIndices);
-			addIntArr(indices, object.accentIndices);
+			addIntArr(indices, object.indices);
 			
-			ColoredVertexGroup colorGroup = new ColoredVertexGroup(object.objectName, object.baseIndices, object.accentIndices);
+			ColoredVertexGroup colorGroup = new ColoredVertexGroup(object.objectName, object.indices);
 			colorGroups.add(colorGroup);
 		}
 		
 		float[] positionsArr = toFloatArr(positions);
-		float[] texCoordsArr = toFloatArr(texCoords);
+		float[] emptyColors = new float[positionsArr.length]; 
+		for(int i = 0; i < positionsArr.length; i ++) emptyColors[i] = 1;
 		float[] normalsArr = toFloatArr(normals);
 		int[] indicesArr = toIntArr(indices);
 		
-		ModelData modelData = ModelLoader.loadDynamicTexturedModel(positionsArr, normalsArr, texCoordsArr, indicesArr);
+		ModelData modelData = ModelLoader.loadDynamicColoredModel(positionsArr, normalsArr, emptyColors, indicesArr);
 		ColoredModel model = new ColoredModel(modelData);
 		
 		for(ColoredVertexGroup colorGroup : colorGroups)

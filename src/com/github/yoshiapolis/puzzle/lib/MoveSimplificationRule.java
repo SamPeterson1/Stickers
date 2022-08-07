@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface MoveSimplificationRule {
 
-	List<Move> simplify(List<Move> moves);
+	Algorithm simplify(Algorithm alg);
 	
 }

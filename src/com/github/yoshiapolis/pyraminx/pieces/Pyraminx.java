@@ -56,7 +56,7 @@ public class Pyraminx extends Puzzle {
 		for(int i = 0; i < 4; i ++) {
 			centers.add(new PieceGroup(centerBehavior, this, i));
 		}
-		
+
 		ArrayList<PieceGroup> edges = new ArrayList<PieceGroup>();
 		PieceBehavior edgeBehavior = new PyraminxEdgeBehavior();
 		

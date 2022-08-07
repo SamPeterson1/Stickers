@@ -25,6 +25,8 @@ import java.util.Map;
 
 public abstract class Puzzle {
 	
+	private MoveSimplificationRule simplificationRule;
+	
 	private List<Piece> allPieces;
 	private HashMap<PieceType, List<PieceGroup>> groupsByType;
 	private int size;
@@ -44,6 +46,9 @@ public abstract class Puzzle {
 		this.rotationStack = new ArrayList<Integer>();
 	}
 	
+	
+	
+	/*
 	protected void addGroupType(PieceType type, List<PieceGroup> groups) {
 		groupsByType.put(type, groups);
 		
@@ -53,12 +58,38 @@ public abstract class Puzzle {
 			}
 		}
 	}
+	*/
 	
-	public abstract Face transposeFace(Face face);
+	public abstract Axis transposeAxis(Axis face);
+	public abstract Algorithm simplify(Algorithm alg);
+	public abstract Algorithm scramble(int length);
 	public abstract Algorithm solve();
+	
+	private void addAllPieces(List<PieceGroup> groups) {
+		for(PieceGroup group : groups) {
+			for(Piece piece : group.getPieces()) {
+				allPieces.add(piece);
+			}
+		}
+	}
+
+	
+	protected void createPieces(PieceBehavior behavior, int numGroups) {
+		List<PieceGroup> groups = new ArrayList<PieceGroup>();
+		for(int i = 0; i < numGroups; i ++) {
+			groups.add(new PieceGroup(behavior, this, i));
+		}
+		
+		groupsByType.put(behavior.getType(), groups);
+		addAllPieces(groups);
+	}
 	
 	public final int getSize() {
 		return size;
+	}
+	
+	public final Algorithm getSimplifiedAlgorithm(Algorithm alg) {
+		return alg.simplify(simplificationRule);
 	}
 	
 	public final Algorithm getMoveLog() {
@@ -86,17 +117,13 @@ public abstract class Puzzle {
 		}
 	}
 	
-	public final void makeRotation(Face face, boolean cw) {
+	public final void makeRotation(Axis face, boolean cw) {
 		Move move = new Move(face, cw, true);
 		makeMove(move, false);
 	}
 	
 	public final ArrayList<Move> getRotations() {
 		return this.rotations;
-	}
-	
-	public final PieceGroup getGroup(PieceType type, Face face) {
-		return this.groupsByType.get(type).get(face.getIndex());
 	}
 	
 	public final PieceGroup getGroup(PieceType type, int position) {
@@ -128,6 +155,7 @@ public abstract class Puzzle {
 				group.makeMove(move);
 			}
 		}
+		
 		for(List<PieceGroup> groups : groupsByType.values()) {
 			for(PieceGroup group : groups) {
 				group.applyMoves();

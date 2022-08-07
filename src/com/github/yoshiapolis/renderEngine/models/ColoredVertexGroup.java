@@ -1,46 +1,32 @@
 package com.github.yoshiapolis.renderEngine.models;
 
-import java.util.List;
+import com.github.yoshiapolis.math.Vector3f;
 
 public class ColoredVertexGroup {
 	
 	private String name;
-	private int baseColor;
-	private int accentColor;
-	private int[] baseIndices;
-	private int[] accentIndices;
+	private Vector3f color;
+	private int[] indices;
 	
-	public ColoredVertexGroup(String name, int[] baseIndices, int[] accentIndices) {
+	public ColoredVertexGroup(String name, int[] indices) {
 		this.name = name;
-		this.baseIndices = baseIndices;
-		this.accentIndices = accentIndices;
+		this.indices = indices;
+		this.color = Vector3f.ONE;
 	}
 	
-	public int[] getBaseIndices() {
-		return this.baseIndices;
-	}
-	
-	public int[] getAccentIndices() {
-		return this.accentIndices;
+	public int[] getIndices() {
+		return this.indices;
 	}
 	
 	public String getName() {
 		return this.name;
 	}
 	
-	public int getBaseColor() {
-		return this.baseColor;
-	}
-	
-	public int getAccentColor() {
-		return this.accentColor;
+	public Vector3f getColor() {
+		return this.color;
 	}
 
-	public void setBaseColor(int baseColor) {
-		this.baseColor = baseColor;
-	}
-
-	public void setAccentColor(int accentColor) {
-		this.accentColor = accentColor;
+	public void setColor(Vector3f baseColor) {
+		this.color = baseColor;
 	}
 }

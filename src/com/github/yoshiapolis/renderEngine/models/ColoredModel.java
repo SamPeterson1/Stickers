@@ -3,6 +3,7 @@ package com.github.yoshiapolis.renderEngine.models;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.yoshiapolis.math.Vector3f;
 import com.github.yoshiapolis.renderEngine.loaders.ModelLoader;
 
 public class ColoredModel {
@@ -20,43 +21,28 @@ public class ColoredModel {
 	}
 	
 	public void prepareColors() {
-		float[] texCoords = new float[modelData.getNumVertices() * 2];
+		float[] vertexColors = new float[modelData.getNumVertices() * 3];
 		
 		for(ColoredVertexGroup group : colorGroups.values()) {
-			float[] baseColorPosition = ColorPalette.getTextureCoords(group.getBaseColor());
-			for(int index : group.getBaseIndices()) {
-				texCoords[2 * index] = baseColorPosition[0];
-				texCoords[2 * index + 1] = baseColorPosition[1];
-			}
-			
-			float[] accentColorPosition = ColorPalette.getTextureCoords(group.getAccentColor());
-			for(int index : group.getAccentIndices()) {
-				texCoords[2 * index] = accentColorPosition[0];
-				texCoords[2 * index + 1] = accentColorPosition[1];
+			Vector3f color = group.getColor();
+			for(int index : group.getIndices()) {
+				vertexColors[index * 3] = color.x;
+				vertexColors[index * 3 + 1] = color.y;
+				vertexColors[index * 3 + 2] = color.z;
 			}
 		}
 
-		ModelLoader.updateAttributeData(modelData, 1, texCoords);
+		ModelLoader.updateAttributeData(modelData, 1, vertexColors);
 	}
 	
-	public void setBaseColor(int colorID) {
+	public void setColor(Vector3f color) {
 		for(ColoredVertexGroup colorGroup : colorGroups.values()) {
-			colorGroup.setBaseColor(colorID);
+			colorGroup.setColor(color);
 		}
-	}
-	
-	public void setAccentColor(int colorID) {
-		for(ColoredVertexGroup colorGroup : colorGroups.values()) {
-			colorGroup.setAccentColor(colorID);
-		}
-	}
-	
-	public void setAccentColor(String groupName, int colorID) {
-		colorGroups.get(groupName).setAccentColor(colorID);
 	}
 
-	public void setBaseColor(String groupName, int colorID) {
-		colorGroups.get(groupName).setBaseColor(colorID);
+	public void setColor(String groupName, Vector3f color) {
+		colorGroups.get(groupName).setColor(color);
 	}
 	
 	public ModelData getData() {

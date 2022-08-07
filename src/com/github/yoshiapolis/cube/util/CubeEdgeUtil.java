@@ -19,18 +19,17 @@
 package com.github.yoshiapolis.cube.util;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceType;
 
 public class CubeEdgeUtil {
 
-	private static HashMap<Integer, Integer> edgeMap_R;
-	private static HashMap<Integer, Integer> edgeMap_U;
-	private static HashMap<Integer, Integer> edgeMap_F;
+	
 
 	private static int[][] edgeMapArr_R = { { 4, 8 }, { 8, 12 }, { 12, -5 }, { 5, -4 }, { 1, -3 }, { 3, -11 },
 			{ 11, -9 }, { 9, -1 }, { 2, -7 }, { 7, -10 }, { 10, 6 }, { 6, 2 } };
@@ -43,6 +42,10 @@ public class CubeEdgeUtil {
 			{ 2, -10 }, { 10, -12 }, { 12, -4 }, { 4, -2 }, 
 			{ 1, -6 }, { 6, -9 }, { 9, 5 }, { 5, 1 }
 	};
+	
+	private static Map<Integer, Integer> edgeMap_R = initEdgeMap(edgeMapArr_R);
+	private static Map<Integer, Integer> edgeMap_U = initEdgeMap(edgeMapArr_U);
+	private static Map<Integer, Integer> edgeMap_F = initEdgeMap(edgeMapArr_F);
 
 	private static final Color[][] colors = { 
 			{ Color.WHITE, Color.GREEN }, 
@@ -63,34 +66,44 @@ public class CubeEdgeUtil {
 		return colors[position];
 	}
 
-	public static Face getFace(int position, int side) {
+	public static Axis getFace(int position, int side) {
 		if (side == 0) {
 			if (position >= 0 && position <= 3) {
-				return Face.U;
+				return Axis.U;
 			} else if (position == 4) {
-				return Face.L;
+				return Axis.L;
 			} else if (position == 5) {
-				return Face.F;
+				return Axis.F;
 			} else if (position == 6) {
-				return Face.R;
+				return Axis.R;
 			} else if (position == 7) {
-				return Face.B;
+				return Axis.B;
 			} else if (position >= 8 && position <= 11) {
-				return Face.D;
+				return Axis.D;
 			}
 		} else if (side == 1) {
 			if (position == 0 || position == 4 || position == 8) {
-				return Face.F;
+				return Axis.F;
 			} else if (position == 1 || position == 5 || position == 9) {
-				return Face.R;
+				return Axis.R;
 			} else if (position == 2 || position == 6 || position == 10) {
-				return Face.B;
+				return Axis.B;
 			} else if (position == 3 || position == 7 || position == 11) {
-				return Face.L;
+				return Axis.L;
 			}
 		}
 
 		return null;
+	}
+	
+	private static Map<Integer, Integer> initEdgeMap(int[][] edgeMapArr) {
+		Map<Integer, Integer> edgeMap = new HashMap<Integer, Integer>();
+		
+		for(int i = 0; i < 12; i ++) {
+			edgeMap.put(edgeMapArr[i][0], edgeMapArr[i][1]);
+		}
+		
+		return edgeMap;
 	}
 
 	public static void init() {
@@ -113,7 +126,7 @@ public class CubeEdgeUtil {
 		Color c1 = piece.getColor(0);
 		Color c2 = piece.getColor(1);
 
-		HashMap<Integer, Integer> map = CubeEdgeUtil.getEdgeMap(move.getFace());
+		Map<Integer, Integer> map = CubeEdgeUtil.getEdgeMap(move.getFace());
 		int n = move.isCW() ? 1 : 3;
 
 		for (int i = 0; i < n; i++) {
@@ -135,12 +148,12 @@ public class CubeEdgeUtil {
 		return retVal;
 	}
 
-	private static HashMap<Integer, Integer> getEdgeMap(Face face) {
-		if (face == Face.R) {
+	private static Map<Integer, Integer> getEdgeMap(Axis face) {
+		if (face == Axis.R) {
 			return edgeMap_R;
-		} else if (face == Face.U) {
+		} else if (face == Axis.U) {
 			return edgeMap_U;
-		} else if (face == Face.F) {
+		} else if (face == Axis.F) {
 			return edgeMap_F;
 		}
 

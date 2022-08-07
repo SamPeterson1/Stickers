@@ -24,7 +24,7 @@ import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.cube.util.CubeEdgeUtil;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceGroup;
@@ -39,33 +39,25 @@ public class EdgeSolver {
 		this.edgeSize = cube.getSize() - 2;
 	}
 
-	public Algorithm solve() {
-		if (cube.getSize() < 4)
-			return new Algorithm();
-
-		cube.setLogMoves(true);
-		cube.clearMoveLog();
-		cube.pushRotations();
-
-		for (int i = 0; i < 8; i++) {
-			solveEdge();
-			saveEdge();
+	public void solve() {
+		if(cube.getSize() > 3) {
+			cube.pushRotations();
+	
+			for (int i = 0; i < 8; i++) {
+				solveEdge();
+				saveEdge();
+			}
+	
+			restoreCenters();
+	
+			for (int i = 0; i < 3; i++) {
+				solveBodyEdge();
+				cube.makeRotation(Axis.U, true);
+			}
+	
+			solveParity();
+			cube.popRotations();
 		}
-
-		restoreCenters();
-
-		for (int i = 0; i < 3; i++) {
-			solveBodyEdge();
-			cube.makeRotation(Face.U, true);
-		}
-
-		solveParity();
-
-		cube.popRotations();
-		Algorithm alg = cube.getMoveLog();
-		alg.simplify();
-
-		return alg;
 	}
 
 	private boolean containsEdge(Piece root, PieceGroup edge) {
@@ -98,21 +90,21 @@ public class EdgeSolver {
 
 	private void flipEdge(Piece piece) {
 		if (piece.getPosition() == 4) {
-			cube.makeMove(new Move(Face.U, edgeSize - piece.getIndex(), true));
+			cube.makeMove(new Move(Axis.U, edgeSize - piece.getIndex(), true));
 		}
 
 		cube.pushRotations();
 		while (piece.getPosition() != 5) {
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.U, true);
 		}
 
-		cube.makeMove(new Move(Face.R, 0, true));
-		cube.makeMove(new Move(Face.U, 0, true));
-		cube.makeMove(new Move(Face.R, 0, false));
-		cube.makeMove(new Move(Face.F, 0, true));
-		cube.makeMove(new Move(Face.R, 0, false));
-		cube.makeMove(new Move(Face.F, 0, false));
-		cube.makeMove(new Move(Face.R, 0, true));
+		cube.makeMove(new Move(Axis.R, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
+		cube.makeMove(new Move(Axis.R, 0, false));
+		cube.makeMove(new Move(Axis.F, 0, true));
+		cube.makeMove(new Move(Axis.R, 0, false));
+		cube.makeMove(new Move(Axis.F, 0, false));
+		cube.makeMove(new Move(Axis.R, 0, true));
 		cube.popRotations();
 	}
 
@@ -125,29 +117,29 @@ public class EdgeSolver {
 
 		if (pos == 3) {
 			if (flipped) {
-				cube.makeMove(new Move(Face.B, 0, false));
-				cube.makeMove(new Move(Face.U, 0, true));
-				cube.makeMove(new Move(Face.B, 0, true));
+				cube.makeMove(new Move(Axis.B, 0, false));
+				cube.makeMove(new Move(Axis.U, 0, true));
+				cube.makeMove(new Move(Axis.B, 0, true));
 			} else {
-				cube.makeMove(new Move(Face.L, 0, false));
-				cube.makeMove(new Move(Face.B, 0, true));
-				cube.makeMove(new Move(Face.L, 0, true));
-				cube.makeMove(new Move(Face.B, 0, false));
+				cube.makeMove(new Move(Axis.L, 0, false));
+				cube.makeMove(new Move(Axis.B, 0, true));
+				cube.makeMove(new Move(Axis.L, 0, true));
+				cube.makeMove(new Move(Axis.B, 0, false));
 			}
 		} else {
 			while (piece.getPosition() != 0) {
-				cube.makeRotation(Face.U, true);
+				cube.makeRotation(Axis.U, true);
 			}
 
 			if (flipped) {
-				cube.makeMove(new Move(Face.F, 0, true));
-				cube.makeMove(new Move(Face.R, 0, false));
-				cube.makeMove(new Move(Face.F, 0, false));
-				cube.makeMove(new Move(Face.R, 0, true));
+				cube.makeMove(new Move(Axis.F, 0, true));
+				cube.makeMove(new Move(Axis.R, 0, false));
+				cube.makeMove(new Move(Axis.F, 0, false));
+				cube.makeMove(new Move(Axis.R, 0, true));
 			} else {
-				cube.makeMove(new Move(Face.R, 0, true));
-				cube.makeMove(new Move(Face.U, 0, false));
-				cube.makeMove(new Move(Face.R, 0, false));
+				cube.makeMove(new Move(Axis.R, 0, true));
+				cube.makeMove(new Move(Axis.U, 0, false));
+				cube.makeMove(new Move(Axis.R, 0, false));
 			}
 		}
 	}
@@ -167,23 +159,23 @@ public class EdgeSolver {
 
 		for (int layer : layers) {
 			for (int i = 0; i < turns; i++) {
-				cube.makeMove(new Move(Face.U, layer, false));
+				cube.makeMove(new Move(Axis.U, layer, false));
 			}
 		}
 		flipEdge(edge.getPiece(0));
 		for (int layer : layers) {
 			for (int i = 0; i < turns; i++) {
-				cube.makeMove(new Move(Face.U, layer, true));
+				cube.makeMove(new Move(Axis.U, layer, true));
 			}
 		}
 	}
 
 	private void restoreCenters() {
-		PieceGroup center = cube.getCenter(Face.F);
+		PieceGroup center = cube.getCenter(Axis.F);
 		Color solvingColor = center.getPiece(0).getColor();
 		for (int i = edgeSize; i < edgeSize * edgeSize; i += edgeSize) {
 			while (center.getPiece(i).getColor() != solvingColor) {
-				cube.makeMove(new Move(Face.U, 1 + (i / edgeSize), true));
+				cube.makeMove(new Move(Axis.U, 1 + (i / edgeSize), true));
 			}
 		}
 	}
@@ -208,9 +200,9 @@ public class EdgeSolver {
 		}
 
 		if (numSolved == 4) {
-			cube.makeRotation(Face.F, true);
-			cube.makeRotation(Face.F, true);
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.F, true);
+			cube.makeRotation(Axis.F, true);
+			cube.makeRotation(Axis.U, true);
 			numSolved = 0;
 			for (int j = 0; j < 4; j++) {
 				if (cube.getEdge(j).isSolved())
@@ -220,15 +212,15 @@ public class EdgeSolver {
 
 		if (numSolved == 3) {
 			while (!cube.getEdge(0).isSolved()) {
-				cube.makeMove(new Move(Face.U, 0, true));
+				cube.makeMove(new Move(Axis.U, 0, true));
 			}
 		}
 
-		cube.makeMove(new Move(Face.F, 0, true));
+		cube.makeMove(new Move(Axis.F, 0, true));
 		while (cube.getEdge(0).isSolved()) {
-			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
 		}
-		cube.makeMove(new Move(Face.F, 0, false));
+		cube.makeMove(new Move(Axis.F, 0, false));
 
 		cube.popRotations();
 	}
@@ -255,11 +247,11 @@ public class EdgeSolver {
 
 		PieceGroup edge = cube.getEdge(5);
 		for (int layer : layers) {
-			cube.makeMove(new Move(Face.U, layer, false));
+			cube.makeMove(new Move(Axis.U, layer, false));
 		}
 		flipEdge(edge.getPiece(0));
 		for (int layer : layers) {
-			cube.makeMove(new Move(Face.U, layer, true));
+			cube.makeMove(new Move(Axis.U, layer, true));
 		}
 
 	}
@@ -270,15 +262,15 @@ public class EdgeSolver {
 
 		for (Piece piece : pieces) {
 			boolean flipped = flipped(root, piece);
-			Face face = CubeEdgeUtil.getFace(piece.getPosition(), 0);
+			Axis face = CubeEdgeUtil.getFace(piece.getPosition(), 0);
 
 			cube.pushRotations();
-			if (face == Face.U) {
+			if (face == Axis.U) {
 				insertEdge_U(piece, flipped);
-			} else if (face == Face.D) {
-				cube.makeRotation(Face.F, true);
-				cube.makeRotation(Face.F, true);
-				cube.makeRotation(Face.U, true);
+			} else if (face == Axis.D) {
+				cube.makeRotation(Axis.F, true);
+				cube.makeRotation(Axis.F, true);
+				cube.makeRotation(Axis.U, true);
 				insertEdge_U(piece, !flipped);
 			} else if (flipped) {
 				flipEdge(piece);
@@ -286,7 +278,7 @@ public class EdgeSolver {
 			cube.popRotations();
 
 			while (piece.getPosition() != 4) {
-				cube.makeMove(new Move(Face.U, edgeSize - piece.getIndex(), true));
+				cube.makeMove(new Move(Axis.U, edgeSize - piece.getIndex(), true));
 			}
 		}
 
@@ -305,59 +297,59 @@ public class EdgeSolver {
 		}
 
 		if (layers.size() != 0) {
-			cube.makeRotation(Face.F, true);
+			cube.makeRotation(Axis.F, true);
 			for (int layer : layers) {
-				cube.makeMove(new Move(Face.R, layer, true));
-				cube.makeMove(new Move(Face.R, layer, true));
+				cube.makeMove(new Move(Axis.R, layer, true));
+				cube.makeMove(new Move(Axis.R, layer, true));
 			}
 
-			cube.makeMove(new Move(Face.B, 0, true));
-			cube.makeMove(new Move(Face.B, 0, true));
+			cube.makeMove(new Move(Axis.B, 0, true));
+			cube.makeMove(new Move(Axis.B, 0, true));
 
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
 
 			for (int layer : layers) {
-				cube.makeMove(new Move(Face.L, layer, true));
+				cube.makeMove(new Move(Axis.L, layer, true));
 			}
 
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
 
 			for (int layer : layers) {
-				cube.makeMove(new Move(Face.R, layer, false));
+				cube.makeMove(new Move(Axis.R, layer, false));
 			}
 
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
 
 			for (int layer : layers) {
-				cube.makeMove(new Move(Face.R, layer, true));
+				cube.makeMove(new Move(Axis.R, layer, true));
 			}
 
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
 
-			cube.makeMove(new Move(Face.F, 0, true));
-			cube.makeMove(new Move(Face.F, 0, true));
+			cube.makeMove(new Move(Axis.F, 0, true));
+			cube.makeMove(new Move(Axis.F, 0, true));
 
 			for (int layer : layers) {
-				cube.makeMove(new Move(Face.R, layer, true));
+				cube.makeMove(new Move(Axis.R, layer, true));
 			}
 
-			cube.makeMove(new Move(Face.F, 0, true));
-			cube.makeMove(new Move(Face.F, 0, true));
+			cube.makeMove(new Move(Axis.F, 0, true));
+			cube.makeMove(new Move(Axis.F, 0, true));
 
 			for (int layer : layers) {
-				cube.makeMove(new Move(Face.L, layer, false));
+				cube.makeMove(new Move(Axis.L, layer, false));
 			}
 
-			cube.makeMove(new Move(Face.B, 0, true));
-			cube.makeMove(new Move(Face.B, 0, true));
+			cube.makeMove(new Move(Axis.B, 0, true));
+			cube.makeMove(new Move(Axis.B, 0, true));
 
 			for (int layer : layers) {
-				cube.makeMove(new Move(Face.R, layer, true));
-				cube.makeMove(new Move(Face.R, layer, true));
+				cube.makeMove(new Move(Axis.R, layer, true));
+				cube.makeMove(new Move(Axis.R, layer, true));
 			}
 		}
 	}

@@ -24,9 +24,9 @@ import com.github.yoshiapolis.renderEngine.window.Window;
 public class Main {
 	
 	public static void main(String[] args) {
-		long windowID = Window.init(600, 600, "Test");
+		Window.init(600, 600, "Test");
 		
-		Thread renderThread = new Thread(new RenderLoop(windowID));
+		Thread renderThread = new Thread(new RenderLoop());
 		renderThread.start();
 		
 		while(Window.isOpen()) {

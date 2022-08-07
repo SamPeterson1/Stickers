@@ -22,7 +22,7 @@ import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.cube.util.CubeEdgeUtil;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 
@@ -34,25 +34,17 @@ public class CrossSolver {
 		this.cube = cube;
 	}
 
-	public Algorithm solve() {
-		if (cube.getSize() < 3)
-			return new Algorithm();
-
-		cube.setLogMoves(true);
-		cube.clearMoveLog();
-		cube.pushRotations();
-
-		Color c = cube.getColor(Face.D);
-
-		for (int i = 0; i < 4; i++) {
-			solveEdge(c);
+	public void solve() {
+		if (cube.getSize() > 2) {
+			cube.pushRotations();
+	
+			Color c = cube.getCenterColor(Axis.D);
+			for (int i = 0; i < 4; i++) {
+				solveEdge(c);
+			}
+	
+			cube.popRotations();
 		}
-
-		cube.popRotations();
-		Algorithm alg = cube.getMoveLog();
-		alg.simplify();
-
-		return alg;
 	}
 
 	private Piece findEdge(Color c) {
@@ -60,8 +52,8 @@ public class CrossSolver {
 			Piece piece = cube.getEdge(i).getPiece(0);
 			if (piece.getColor(0) == c || piece.getColor(1) == c) {
 				if (i >= 8 && i <= 11) {
-					Face face = CubeEdgeUtil.getFace(i, 1);
-					if (cube.getColor(face) != piece.getColor(1)) {
+					Axis face = CubeEdgeUtil.getFace(i, 1);
+					if (cube.getCenter(face).getPiece().getColor() != piece.getColor(1)) {
 						return piece;
 					}
 				} else {
@@ -75,15 +67,15 @@ public class CrossSolver {
 
 	private int getEdgeDistance(Piece toSolve, Color c) {
 		while (toSolve.getPosition() != 4) {
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.U, true);
 		}
 
 		int turns = 0;
 		Color color = ((toSolve.getColor(0)) == c) ? toSolve.getColor(1) : toSolve.getColor(0);
 
 		cube.pushRotations();
-		while (cube.getColor(Face.F) != color) {
-			cube.makeRotation(Face.U, true);
+		while (cube.getCenter(Axis.F).getPiece().getColor() != color) {
+			cube.makeRotation(Axis.U, true);
 			turns++;
 		}
 		cube.popRotations();
@@ -97,18 +89,18 @@ public class CrossSolver {
 
 		if (flipped) {
 			iters = turns + 1;
-			insertion = new Move(Face.L, 0, true);
+			insertion = new Move(Axis.L, 0, true);
 		} else {
 			iters = turns;
-			insertion = new Move(Face.F, 0, false);
+			insertion = new Move(Axis.F, 0, false);
 		}
 
 		for (int i = 0; i < iters; i++) {
-			cube.makeMove(new Move(Face.D, 0, false));
+			cube.makeMove(new Move(Axis.D, 0, false));
 		}
 		cube.makeMove(insertion);
 		for (int i = 0; i < iters; i++) {
-			cube.makeMove(new Move(Face.D, 0, true));
+			cube.makeMove(new Move(Axis.D, 0, true));
 		}
 	}
 
@@ -116,35 +108,35 @@ public class CrossSolver {
 		Color target = (flipped ? toSolve.getColor(0) : toSolve.getColor(1));
 
 		while (true) {
-			cube.makeMove(new Move(Face.U, 0, true));
-			Face face = CubeEdgeUtil.getFace(toSolve.getPosition(), 1);
-			if (cube.getColor(face) == target) {
+			cube.makeMove(new Move(Axis.U, 0, true));
+			Axis face = CubeEdgeUtil.getFace(toSolve.getPosition(), 1);
+			if (cube.getCenter(face).getPiece().getColor() == target) {
 				break;
 			}
 		}
 
 		if (flipped)
-			cube.makeMove(new Move(Face.U, true));
+			cube.makeMove(new Move(Axis.U, true));
 
 		while (toSolve.getPosition() != 0) {
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.U, true);
 		}
 
 		if (flipped) {
-			cube.makeMove(new Move(Face.F, 0, true));
-			cube.makeMove(new Move(Face.R, 0, false));
-			cube.makeMove(new Move(Face.F, 0, false));
+			cube.makeMove(new Move(Axis.F, 0, true));
+			cube.makeMove(new Move(Axis.R, 0, false));
+			cube.makeMove(new Move(Axis.F, 0, false));
 		} else {
-			cube.makeMove(new Move(Face.F, 0, true));
-			cube.makeMove(new Move(Face.F, 0, true));
+			cube.makeMove(new Move(Axis.F, 0, true));
+			cube.makeMove(new Move(Axis.F, 0, true));
 		}
 	}
 
 	private void moveCorner(Piece toSolve) {
 		while (toSolve.getPosition() != 8) {
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.U, true);
 		}
-		cube.makeMove(new Move(Face.F, 0, true));
+		cube.makeMove(new Move(Axis.F, 0, true));
 	}
 
 	private void solveEdge(Color c) {

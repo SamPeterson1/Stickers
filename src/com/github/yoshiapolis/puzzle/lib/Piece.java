@@ -18,6 +18,8 @@
 
 package com.github.yoshiapolis.puzzle.lib;
 
+import java.util.Objects;
+
 public class Piece {
 	
 	private int puzzleSize;
@@ -28,6 +30,12 @@ public class Piece {
 	
 	private Color[] colors;
 	private PieceType type;
+	
+	public Piece(PieceType type, int position) {
+		this.type = type;
+		this.colors = new Color[type.getNumColors()];
+		this.position = position;
+	}
 	
 	public Piece(PieceType type, int position, int index, int puzzleSize) {
 		this.type = type;
@@ -101,6 +109,10 @@ public class Piece {
 		sb.append("}");
 		
 		return sb.toString();
+	}
+
+	public boolean equalsPosition(Piece other) {
+		return index == other.index && position == other.position && type == other.type;
 	}
 
 }

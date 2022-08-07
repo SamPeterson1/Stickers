@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import com.github.yoshiapolis.math.Matrix3D;
-import com.github.yoshiapolis.renderEngine.models.ColorPalette;
+import com.github.yoshiapolis.puzzle.display.DisplayPiece;
 import com.github.yoshiapolis.renderEngine.models.ColoredModel;
 import com.github.yoshiapolis.renderEngine.models.ModelData;
 import com.github.yoshiapolis.renderEngine.shaders.StaticShader;
@@ -14,8 +14,10 @@ import com.github.yoshiapolis.renderEngine.shaders.StaticShader;
 public class Renderer {
 
 	private StaticShader shader = new StaticShader();
+	private OrbitalCamera camera;
 	
-	public Renderer() {
+	public Renderer(OrbitalCamera camera) {
+		this.camera = camera;
 		GL11.glEnable(GL11.GL_DEPTH_TEST);  
 	}
 	
@@ -24,23 +26,22 @@ public class Renderer {
 		
 		Matrix3D projectionMatrix = Matrix3D.createProjectionMatrix(Scene.getSettings());
 		shader.setProjectionMatrix(projectionMatrix);
+		shader.setViewMatrix(camera.getViewMatrix());
 		shader.setLightDirection(Scene.getLightDirection());
 		
-		for(Entity entity : Scene.getEntities()) {
-			ColoredModel model = entity.getModel();
+		for(DisplayPiece piece : Scene.getPieces()) {
+			ColoredModel model = piece.getModel();
 			model.prepareColors();
 			ModelData data = model.getData();
-			
-			shader.setTransformationMatrix(entity.getTransformationMatrix());
+			Matrix3D pieceTransformation = new Matrix3D();
+			pieceTransformation.multiply(piece.getTransformationMat());
+			shader.setTransformationMatrix(pieceTransformation);
 			
 			GL30.glBindVertexArray(data.getVaoID());
 			GL20.glEnableVertexAttribArray(0);
 			GL20.glEnableVertexAttribArray(1);
 			GL20.glEnableVertexAttribArray(2);
-			
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, ColorPalette.getTextureID());
-			
+
 			GL11.glDrawElements(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0);
 			
 			GL20.glDisableVertexAttribArray(0);

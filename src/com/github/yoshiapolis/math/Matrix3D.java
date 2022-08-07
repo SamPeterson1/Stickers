@@ -23,7 +23,7 @@ public class Matrix3D {
 		float zNear = settings.getZNear();
 		float zm = zFar - zNear;
 		float zp = zFar + zNear;
-		float a = Window.getAspectRatio();
+		float a = 1;
 		float fov = Mathf.DEG_TO_RAD * settings.getFov();
 		
 		mat.m00 = 1 / Mathf.tan(fov / 2) / a;
@@ -161,5 +161,29 @@ public class Matrix3D {
 		scale.m22 = sz;
 		
 		multiply(scale);
+	}
+	
+	public void rotateAroundAxis(Vector3f axis, float theta) {
+		Matrix3D rotation = new Matrix3D();
+		
+		float cos = Mathf.cos(theta);
+		float sin = Mathf.sin(theta);
+		
+		axis.normalize();
+		float x = axis.x;
+		float y = axis.y;
+		float z = axis.z;
+
+		rotation.m00 = cos + x * x * (1 - cos);
+		rotation.m01 = x * y * (1 - cos) - z * sin;
+		rotation.m02 = x * z * (1 - cos) + y * sin;
+		rotation.m10 = y * x * (1 - cos) + z * sin;
+		rotation.m11 = cos + y * y * (1 - cos);
+		rotation.m12 = y * z * (1 - cos) - x * sin;
+		rotation.m20 = z * x * (1 - cos) - y * sin;
+		rotation.m21 = z * y * (1 - cos) + x * sin;
+		rotation.m22 = cos + z * z * (1 - cos);
+
+		multiply(rotation);
 	}
 }

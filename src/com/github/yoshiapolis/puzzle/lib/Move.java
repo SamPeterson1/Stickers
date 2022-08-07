@@ -25,24 +25,24 @@ public class Move {
 	protected boolean isCubeRotation;
 	protected boolean cw;
 	protected int layer;
-	protected Face face;
+	protected Axis face;
 	
-	public Move(Face face, int layer, boolean cw, boolean isCubeRotation) {
+	public Move(Axis face, int layer, boolean cw, boolean isCubeRotation) {
 		this.face = face;
 		this.layer = layer;
 		this.cw = cw;
 		this.isCubeRotation = isCubeRotation;
 	}
 	
-	public Move(Face face, boolean cw, boolean isCubeRotation) {
+	public Move(Axis face, boolean cw, boolean isCubeRotation) {
 		this(face, 0, cw, isCubeRotation);
 	}
 
-	public Move(Face face, int layer, boolean cw) {
+	public Move(Axis face, int layer, boolean cw) {
 		this(face, layer, cw, false);
 	}
 	
-	public Move(Face face, boolean cw) {
+	public Move(Axis face, boolean cw) {
 		this(face, 0, cw, false);
 	}
 	
@@ -62,7 +62,7 @@ public class Move {
 		return this.layer;
 	}
 	
-	public Face getFace() {
+	public Axis getFace() {
 		return this.face;
 	}
 	
@@ -71,7 +71,7 @@ public class Move {
 	}
 	
 	public Move transpose(Puzzle puzzle) {
-		Face newFace = puzzle.transposeFace(face);
+		Axis newFace = puzzle.transposeAxis(face);
 		return new Move(newFace, layer, cw, isCubeRotation);
 	}
 

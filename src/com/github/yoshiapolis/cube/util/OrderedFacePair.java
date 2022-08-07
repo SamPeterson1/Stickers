@@ -20,14 +20,14 @@ package com.github.yoshiapolis.cube.util;
 
 import java.util.Objects;
 
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 
 public class OrderedFacePair {
 
-	Face a;
-	Face b;
+	Axis a;
+	Axis b;
 
-	public OrderedFacePair(Face a, Face b) {
+	public OrderedFacePair(Axis a, Axis b) {
 		this.a = a;
 		this.b = b;
 	}
@@ -44,11 +44,11 @@ public class OrderedFacePair {
 		return a == other.a && b == other.b;
 	}
 
-	public Face getFaceA() {
+	public Axis getFaceA() {
 		return this.a;
 	}
 
-	public Face getFaceB() {
+	public Axis getFaceB() {
 		return this.b;
 	}
 

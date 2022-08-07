@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 
 public class OLLSolver {
@@ -94,25 +94,18 @@ public class OLLSolver {
 		addCase("", new int[] { 1, 0, 1, 0, 1, 0, 1, 0 });
 	}
 
-	public Algorithm solve() {
-		cube.setLogMoves(true);
-		cube.clearMoveLog();
+	public void solve() {
 		cube.pushRotations();
 
 		Algorithm solution = getOLLSolution();
 		if (solution != null) {
 			cube.executeAlgorithm(solution);
 		} else {
-			return solveParity();
+			OLLParity();
+			solve();
 		}
 
 		cube.popRotations();
-		cube.setLogMoves(false);
-
-		Algorithm alg = cube.getMoveLog();
-		alg.simplify();
-
-		return alg;
 	}
 
 	private void addCase(String alg, int[] position) {
@@ -127,7 +120,7 @@ public class OLLSolver {
 					return c.getSolution();
 				}
 			}
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.U, true);
 		}
 
 		return solution;
@@ -136,67 +129,58 @@ public class OLLSolver {
 	private void OLLParity() {
 		int cubeSize = cube.getSize();
 		for (int layer = 1; layer < cubeSize / 2; layer++) {
-			cube.makeMove(new Move(Face.R, layer, true));
-			cube.makeMove(new Move(Face.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
 		}
 
-		cube.makeMove(new Move(Face.B, 0, true));
-		cube.makeMove(new Move(Face.B, 0, true));
+		cube.makeMove(new Move(Axis.B, 0, true));
+		cube.makeMove(new Move(Axis.B, 0, true));
 
-		cube.makeMove(new Move(Face.U, 0, true));
-		cube.makeMove(new Move(Face.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
 
 		for (int layer = 1; layer < cubeSize / 2; layer++) {
-			cube.makeMove(new Move(Face.L, layer, true));
+			cube.makeMove(new Move(Axis.L, layer, true));
 		}
 
-		cube.makeMove(new Move(Face.U, 0, true));
-		cube.makeMove(new Move(Face.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
 
 		for (int layer = 1; layer < cubeSize / 2; layer++) {
-			cube.makeMove(new Move(Face.R, layer, false));
+			cube.makeMove(new Move(Axis.R, layer, false));
 		}
 
-		cube.makeMove(new Move(Face.U, 0, true));
-		cube.makeMove(new Move(Face.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
 
 		for (int layer = 1; layer < cubeSize / 2; layer++) {
-			cube.makeMove(new Move(Face.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
 		}
 
-		cube.makeMove(new Move(Face.U, 0, true));
-		cube.makeMove(new Move(Face.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
 
-		cube.makeMove(new Move(Face.F, 0, true));
-		cube.makeMove(new Move(Face.F, 0, true));
+		cube.makeMove(new Move(Axis.F, 0, true));
+		cube.makeMove(new Move(Axis.F, 0, true));
 
 		for (int layer = 1; layer < cubeSize / 2; layer++) {
-			cube.makeMove(new Move(Face.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
 		}
 
-		cube.makeMove(new Move(Face.F, 0, true));
-		cube.makeMove(new Move(Face.F, 0, true));
+		cube.makeMove(new Move(Axis.F, 0, true));
+		cube.makeMove(new Move(Axis.F, 0, true));
 
 		for (int layer = 1; layer < cubeSize / 2; layer++) {
-			cube.makeMove(new Move(Face.L, layer, false));
+			cube.makeMove(new Move(Axis.L, layer, false));
 		}
 
-		cube.makeMove(new Move(Face.B, 0, true));
-		cube.makeMove(new Move(Face.B, 0, true));
+		cube.makeMove(new Move(Axis.B, 0, true));
+		cube.makeMove(new Move(Axis.B, 0, true));
 
 		for (int layer = 1; layer < cubeSize / 2; layer++) {
-			cube.makeMove(new Move(Face.R, layer, true));
-			cube.makeMove(new Move(Face.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
+			cube.makeMove(new Move(Axis.R, layer, true));
 		}
 	}
 
-	private Algorithm solveParity() {
-		OLLParity();
-		Algorithm alg = cube.getMoveLog();
-		cube.popRotations();
-		cube.setLogMoves(false);
-		alg.append(solve());
-		alg.simplify();
-		return alg;
-	}
 }

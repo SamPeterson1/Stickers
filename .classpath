@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/github/yoshiapolis/megaminx/|com/github/yoshiapolis/pyraminx/|com/github/yoshiapolis/puzzle/|com/github/yoshiapolis/cube/" kind="src" path="src"/>
+	<classpathentry excluding="com/github/yoshiapolis/megaminx/|com/github/yoshiapolis/pyraminx/" kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>

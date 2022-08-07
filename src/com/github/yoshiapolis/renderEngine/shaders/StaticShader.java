@@ -10,6 +10,7 @@ public class StaticShader extends Shader {
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
+	private int location_viewMatrix;
 	private int location_lightDirection;
 	
 	public StaticShader() {
@@ -19,7 +20,7 @@ public class StaticShader extends Shader {
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "texCoord");
+		super.bindAttribute(1, "vertColor");
 		super.bindAttribute(2, "normal");
 	}
 
@@ -27,6 +28,7 @@ public class StaticShader extends Shader {
 	protected void getAllUniformLocations() {
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_lightDirection = super.getUniformLocation("lightDirection");
 	}
 	
@@ -42,4 +44,7 @@ public class StaticShader extends Shader {
 		super.loadMatrix(location_projectionMatrix, matrix);
 	}
 	
+	public void setViewMatrix(Matrix3D matrix) {
+		super.loadMatrix(location_viewMatrix, matrix);
+	}
 }

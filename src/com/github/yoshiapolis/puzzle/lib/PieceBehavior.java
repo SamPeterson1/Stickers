@@ -28,6 +28,7 @@ public interface PieceBehavior {
 	
 	public void movePiece(Move move, Piece piece);
 	
-	public int getNumPieces(int puzzleSize);
+	public int getNumPieces(int puzzleSize, int position);
 	
+	public PieceType getType();
 }

@@ -25,18 +25,17 @@ import java.util.Map;
 
 import com.github.yoshiapolis.cube.display.CubeDisplayPiece;
 import com.github.yoshiapolis.math.Mathf;
+import com.github.yoshiapolis.math.Matrix3D;
+import com.github.yoshiapolis.math.Vector3f;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceGroup;
 import com.github.yoshiapolis.puzzle.lib.PieceType;
 import com.github.yoshiapolis.puzzle.lib.Puzzle;
-
-import processing.core.PApplet;
-import processing.core.PMatrix3D;
+import com.github.yoshiapolis.renderEngine.rendering.Scene;
 
 public class PuzzleDisplay {
 	
-	private PApplet app;
 	private float currentRotation = 0;
 	private Move animatingMove;
 	private long lastTime;
@@ -68,17 +67,17 @@ public class PuzzleDisplay {
 		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
 		for(Piece piece : puzzle.getAllPieces()) {
-			DisplayPiece displayPiece = new CubeDisplayPiece(piece, drawSize);
-			
+			DisplayPiece displayPiece = new CubeDisplayPiece(piece);
+			Scene.addPiece(displayPiece);
 			pieceMap.put(piece, displayPiece);	
 			allDisplayPieces.add(displayPiece);
 		}
 	}
-
-	public PApplet getApp() {
-		return app;
+	
+	public void print() {
+		puzzle.print();
 	}
-
+	
 	public float getCurrentRotation() {
 		return currentRotation;
 	}
@@ -108,7 +107,6 @@ public class PuzzleDisplay {
 	}
 
 	public void makeMove(Move move) {
-		System.out.println(this.animate);
 		this.animatingMove = move;
 		this.movedPieces = getAffectedPieces();
 		direction = animatingMove.isCW() ? 1 : -1;
@@ -124,48 +122,54 @@ public class PuzzleDisplay {
 		for(List<PieceGroup> groups : allGroups.values()) {
 			for(PieceGroup group : groups) {
 				List<Piece> groupAffectedPieces = group.getAffectedPieces(animatingMove);
-				allAffectedPieces.addAll(groupAffectedPieces);
+				for(Piece piece : groupAffectedPieces) {
+					allAffectedPieces.add(piece);
+				}
 			}
 		}
 		
 		return allAffectedPieces;
 	}
 	
-	public void show() {
+	public void update() {
 		float deltaTime = (System.currentTimeMillis() - lastTime)/1000.0f;
 		lastTime = System.currentTimeMillis();
 
 		if(animate && animatingMove != null) {
 			currentRotation += deltaTime * animationSpeed * direction;
-			System.out.println((currentRotation / (Mathf.PI / 2)) + " " + animationSpeed);
-			PMatrix3D rotationMat = animatingMove.getFace().getMoveMat(currentRotation);
+
+			Matrix3D rotationMat = getMoveRotationMatrix();
 			
-			for(Piece piece : movedPieces) {
-				DisplayPiece displayPiece = pieceMap.get(piece);
+			for(Piece position : movedPieces) {
+				DisplayPiece displayPiece = pieceMap.get(position);
 				displayPiece.setRotationMat(rotationMat);
 			}
 			
 			if(Mathf.abs(currentRotation) >= turnRotation) {
-				System.out.println("finishing");
 				finishAnimation();  
 			}
 		}
+	}
+	
+	private Matrix3D getMoveRotationMatrix() {
+		Vector3f axis = animatingMove.getFace().getRotationAxis();
+		Matrix3D rotationMat = new Matrix3D();
+		rotationMat.rotateAroundAxis(axis, currentRotation);
 		
-		for(DisplayPiece piece : allDisplayPieces) {
-			piece.show();
-		}
+		return rotationMat;
 	}
 	
 	public final void finishAnimation() {
 		currentRotation = direction * turnRotation;
-		System.out.println("done");
-		for(Piece piece : movedPieces) {
-			DisplayPiece displayPiece = pieceMap.get(piece);
-			displayPiece.setPosition(piece, drawSize);
-			displayPiece.setRotationMat(null);
+
+		Matrix3D rotationMat = getMoveRotationMatrix();	
+		for(Piece position : movedPieces) {
+			DisplayPiece piece = pieceMap.get(position);
+			piece.applyRotation(rotationMat);
 		}
-		
-		currentRotation = 0;
+	
+		puzzle.makeMove(animatingMove);		
+		currentRotation = 0;	
 		animatingMove = null;
 	}
 }

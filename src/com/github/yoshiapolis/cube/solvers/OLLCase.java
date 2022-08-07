@@ -22,7 +22,7 @@ import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.cube.util.CubeMoveUtil;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 
 public class OLLCase {
@@ -46,7 +46,7 @@ public class OLLCase {
 	}
 
 	public boolean recognize(Cube cube) {
-		Color top = cube.getColor(Face.U);
+		Color top = cube.getCenterColor(Axis.U);
 		boolean retVal = true;
 		if (cube.getSize() > 2) {
 			for (int i = 0; i < 4; i++) {

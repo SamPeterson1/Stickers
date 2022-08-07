@@ -27,6 +27,14 @@ public class Mathf {
 	public static final float MEGAMINX_DIHEDRAL_ANGLE = acos(-1 / sqrt(5));
 	public static final float PHI = (1 + sqrt(5)) / 2.0f;
 	
+	public static float random(int a, int b) {
+		return (float) Math.random() * (b - a) + a;
+	}
+	
+	public static float random(float a, float b) {
+		return (float) Math.random() * (b - a) + a;
+	}
+	
 	public static float min(float a, float b) {
 		return Math.min(a, b);
 	}

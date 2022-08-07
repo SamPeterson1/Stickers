@@ -1,40 +1,58 @@
 package com.github.yoshiapolis.puzzle.display;
 
-import com.github.yoshiapolis.main.Main;
+import com.github.yoshiapolis.math.Matrix3D;
 import com.github.yoshiapolis.puzzle.lib.Piece;
-
-import processing.core.PMatrix3D;
+import com.github.yoshiapolis.renderEngine.models.ColoredModel;
 
 public abstract class DisplayPiece {
 	
-	private PMatrix3D translationMat;
-	private PMatrix3D rotationMat;
+	private Piece position;
+	private ColoredModel model;
+	private Matrix3D transformationMat;
+	private Matrix3D rotationMat;
 	
-	protected abstract void drawShape();
+	public int firstPosition;
 	
-	public abstract void setPosition(Piece position, float drawSize);
+	protected abstract ColoredModel loadModel(Piece position);
 	
-	public DisplayPiece(Piece position, float drawSize) {
-		setPosition(position, drawSize);
-	}
+	public abstract void setWorldPosition(Piece position);
 	
-	public void show() {
-		Main.app.pushMatrix();
-		
-		if(rotationMat != null)
-			Main.app.applyMatrix(rotationMat);
-		Main.app.applyMatrix(translationMat);
-		
-		drawShape();
-		
-		Main.app.popMatrix();
+	public DisplayPiece(Piece position) {
+		this.transformationMat = new Matrix3D();
+		this.rotationMat = new Matrix3D();
+		this.model = loadModel(position);
+		this.position = position;
+		this.firstPosition = position.getPosition();
+		setWorldPosition(position);
 	}
 
-	public void setRotationMat(PMatrix3D rotation) {
+	public Piece getPosition() {
+		//System.out.println(this.position.getPosition() + " " + this.firstPosition);
+		return this.position;
+	}
+	
+	public ColoredModel getModel() {
+		return this.model;
+	}
+	
+	public Matrix3D getTransformationMat() {
+		Matrix3D retVal = new Matrix3D();
+		retVal.multiply(transformationMat);
+		retVal.multiply(rotationMat);
+		
+		return retVal;
+	}
+
+	public void setRotationMat(Matrix3D rotation) {
 		this.rotationMat = rotation;
 	}
 	
-	protected void setTranslationMat(PMatrix3D translation) {
-		this.translationMat = translation;
+	public void applyRotation(Matrix3D rotation) {
+		transformationMat.multiply(rotation);
+		rotationMat = new Matrix3D();
+	}
+	
+	protected void setTransformationMat(Matrix3D transformationMat) {
+		this.transformationMat = transformationMat;
 	}
 }

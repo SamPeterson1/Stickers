@@ -24,7 +24,7 @@ import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.cube.util.CubeMoveUtil;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 
 public class PLLCase {
 
@@ -80,16 +80,16 @@ public class PLLCase {
 	}
 
 	private Color getColor(Cube cube, int index) {
-		Face f = null;
+		Axis f = null;
 		if (index == 0)
-			f = Face.F;
+			f = Axis.F;
 		else if (index == 1)
-			f = Face.R;
+			f = Axis.R;
 		else if (index == 2)
-			f = Face.B;
+			f = Axis.B;
 		else if (index == 3)
-			f = Face.L;
+			f = Axis.L;
 
-		return cube.getColor(f);
+		return cube.getCenterColor(f);
 	}
 }

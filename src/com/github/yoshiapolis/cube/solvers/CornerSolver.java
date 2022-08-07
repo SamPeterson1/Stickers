@@ -21,7 +21,7 @@ package com.github.yoshiapolis.cube.solvers;
 import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 
@@ -33,34 +33,30 @@ public class CornerSolver {
 		this.cube = cube;
 	}
 
-	public Algorithm solve() {
-		cube.setLogMoves(true);
-		cube.clearMoveLog();
+	public void solve() {
 		cube.pushRotations();
-
-		Color c = cube.getColor(Face.D);
+		
+		Color c = cube.getCenterColor(Axis.D);
 		for (int i = 0; i < 4; i++) {
 			solveCorner(c);
 		}
-
+		
 		cube.popRotations();
-		Algorithm alg = cube.getMoveLog();
-		alg.simplify();
-		return alg;
 	}
 
 	private void allignCorner(Piece toSolve) {
 		while (toSolve.getPosition() != 1) {
-			cube.makeMove(new Move(Face.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
 		}
 
-		Color fColor = cube.getColor(Face.F);
-		Color rColor = cube.getColor(Face.R);
+		Color fColor = cube.getCenterColor(Axis.F);
+		Color rColor = cube.getCenterColor(Axis.R);
 		while (toSolve.indexOfColor(fColor) == -1 || toSolve.indexOfColor(rColor) == -1) {
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeRotation(Face.U, false);
-			fColor = cube.getColor(Face.F);
-			rColor = cube.getColor(Face.R);
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeRotation(Axis.U, false);
+			
+			fColor = cube.getCenterColor(Axis.F);
+			rColor = cube.getCenterColor(Axis.R);
 		}
 	}
 
@@ -71,9 +67,9 @@ public class CornerSolver {
 			if (colorIndex == 2) {
 				cube.pushRotations();
 				while (piece.getPosition() != 5) {
-					cube.makeRotation(Face.U, true);
+					cube.makeRotation(Axis.U, true);
 				}
-				if (piece.getColor(0) != cube.getColor(Face.F)) {
+				if (piece.getColor(0) != cube.getCenterColor(Axis.F)) {
 					cube.popRotations();
 					return piece;
 				} else {
@@ -101,32 +97,32 @@ public class CornerSolver {
 	private void insertCorner(Piece toSolve, Color c) {
 		int colorIndex = toSolve.indexOfColor(c);
 		if (colorIndex == 0) {
-			cube.makeMove(new Move(Face.F, 0, false));
-			cube.makeMove(new Move(Face.U, 0, false));
-			cube.makeMove(new Move(Face.F, 0, true));
+			cube.makeMove(new Move(Axis.F, 0, false));
+			cube.makeMove(new Move(Axis.U, 0, false));
+			cube.makeMove(new Move(Axis.F, 0, true));
 		} else if (colorIndex == 1) {
-			cube.makeMove(new Move(Face.R, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.R, 0, false));
-			cube.makeMove(new Move(Face.U, 0, false));
-			cube.makeMove(new Move(Face.R, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.R, 0, false));
+			cube.makeMove(new Move(Axis.R, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.R, 0, false));
+			cube.makeMove(new Move(Axis.U, 0, false));
+			cube.makeMove(new Move(Axis.R, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.R, 0, false));
 		} else if (colorIndex == 2) {
-			cube.makeMove(new Move(Face.R, 0, true));
-			cube.makeMove(new Move(Face.U, 0, true));
-			cube.makeMove(new Move(Face.R, 0, false));
+			cube.makeMove(new Move(Axis.R, 0, true));
+			cube.makeMove(new Move(Axis.U, 0, true));
+			cube.makeMove(new Move(Axis.R, 0, false));
 		}
 	}
 
 	private void moveCorner(Piece toSolve) {
 		while (toSolve.getPosition() != 5) {
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.U, true);
 		}
-		cube.makeMove(new Move(Face.R, 0, true));
-		cube.makeMove(new Move(Face.U, 0, true));
-		cube.makeMove(new Move(Face.R, 0, false));
+		cube.makeMove(new Move(Axis.R, 0, true));
+		cube.makeMove(new Move(Axis.U, 0, true));
+		cube.makeMove(new Move(Axis.R, 0, false));
 	}
 
 	private void solveCorner(Color c) {

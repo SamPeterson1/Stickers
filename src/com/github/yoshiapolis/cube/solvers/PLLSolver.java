@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import com.github.yoshiapolis.cube.pieces.Cube;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 
 public class PLLSolver {
@@ -64,30 +64,23 @@ public class PLLSolver {
 		addCase("", new int[] { B, B, R, R, G, G, O, O });
 	}
 
-	public Algorithm solve() {
-		cube.setLogMoves(true);
-		cube.clearMoveLog();
+	public void solve() {
 		cube.pushRotations();
 
 		Algorithm solution = getPLLSolution();
 		if (solution != null) {
 			cube.executeAlgorithm(solution);
 		} else {
-			return solveParity();
+			PLLParity();
+			solve();
 		}
 
-		Color fColor = cube.getColor(Face.F);
+		Color fColor = cube.getCenterColor(Axis.F);
 		while (cube.getCorner(0).getPiece().getColor(2) != fColor) {
-			cube.makeMove(new Move(Face.U, true));
+			cube.makeMove(new Move(Axis.U, true));
 		}
 
 		cube.popRotations();
-		cube.setLogMoves(false);
-
-		Algorithm alg = cube.getMoveLog();
-		alg.simplify();
-
-		return alg;
 	}
 
 	private void addCase(String alg, int[] faces) {
@@ -103,62 +96,52 @@ public class PLLSolver {
 					}
 				}
 			}
-			cube.makeRotation(Face.U, true);
+			cube.makeRotation(Axis.U, true);
 		}
 
 		return null;
 	}
 
 	private void PLLParity() {
-		cube.makeMove(new Move(Face.R, false));
-		cube.makeMove(new Move(Face.U, true));
-		cube.makeMove(new Move(Face.R, true));
-		cube.makeMove(new Move(Face.U, false));
+		cube.makeMove(new Move(Axis.R, false));
+		cube.makeMove(new Move(Axis.U, true));
+		cube.makeMove(new Move(Axis.R, true));
+		cube.makeMove(new Move(Axis.U, false));
 
 		int cubeSize = cube.getSize();
 
 		for (int i = 1; i < cubeSize / 2; i++) {
-			cube.makeMove(new Move(Face.R, i, true));
-			cube.makeMove(new Move(Face.R, i, true));
+			cube.makeMove(new Move(Axis.R, i, true));
+			cube.makeMove(new Move(Axis.R, i, true));
 		}
 
-		cube.makeMove(new Move(Face.U, true));
-		cube.makeMove(new Move(Face.U, true));
+		cube.makeMove(new Move(Axis.U, true));
+		cube.makeMove(new Move(Axis.U, true));
 
 		for (int i = 1; i < cubeSize / 2; i++) {
-			cube.makeMove(new Move(Face.R, i, true));
-			cube.makeMove(new Move(Face.R, i, true));
+			cube.makeMove(new Move(Axis.R, i, true));
+			cube.makeMove(new Move(Axis.R, i, true));
 		}
 
 		for (int i = 0; i < cubeSize / 2; i++) {
-			cube.makeMove(new Move(Face.U, i, true));
-			cube.makeMove(new Move(Face.U, i, true));
+			cube.makeMove(new Move(Axis.U, i, true));
+			cube.makeMove(new Move(Axis.U, i, true));
 		}
 
 		for (int i = 1; i < cubeSize / 2; i++) {
-			cube.makeMove(new Move(Face.R, i, true));
-			cube.makeMove(new Move(Face.R, i, true));
+			cube.makeMove(new Move(Axis.R, i, true));
+			cube.makeMove(new Move(Axis.R, i, true));
 		}
 
 		for (int i = 1; i < cubeSize / 2; i++) {
-			cube.makeMove(new Move(Face.U, i, true));
-			cube.makeMove(new Move(Face.U, i, true));
+			cube.makeMove(new Move(Axis.U, i, true));
+			cube.makeMove(new Move(Axis.U, i, true));
 		}
 
-		cube.makeMove(new Move(Face.U, true));
-		cube.makeMove(new Move(Face.R, false));
-		cube.makeMove(new Move(Face.U, false));
-		cube.makeMove(new Move(Face.R, true));
-	}
-
-	private Algorithm solveParity() {
-		PLLParity();
-		Algorithm alg = cube.getMoveLog();
-		cube.popRotations();
-		cube.setLogMoves(false);
-		alg.append(solve());
-		alg.simplify();
-		return alg;
+		cube.makeMove(new Move(Axis.U, true));
+		cube.makeMove(new Move(Axis.R, false));
+		cube.makeMove(new Move(Axis.U, false));
+		cube.makeMove(new Move(Axis.R, true));
 	}
 
 }

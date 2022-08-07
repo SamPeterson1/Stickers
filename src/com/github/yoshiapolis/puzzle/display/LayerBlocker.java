@@ -1,13 +1,7 @@
 package com.github.yoshiapolis.puzzle.display;
 
-import com.github.yoshiapolis.math.Mathf;
-import com.github.yoshiapolis.puzzle.lib.Face;
-import com.github.yoshiapolis.puzzle.lib.Move;
-
-import processing.core.PApplet;
-
 public abstract class LayerBlocker {
-	
+	/*
 	public abstract void drawAtLayer(PuzzleDisplay display, int layer);
 	
 	private void drawLayerBlocker(PuzzleDisplay display, int layer) {
@@ -47,5 +41,5 @@ public abstract class LayerBlocker {
 		drawLayerBlocker(display, nextLayer);
 		
 	}
-
+	*/
 }

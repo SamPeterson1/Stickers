@@ -29,17 +29,22 @@ import java.util.List;
  */
 
 public class Algorithm {
-
-	private static MoveSimplificationRule rule;
-	
-	public static void setSimplificationRule(MoveSimplificationRule newRule) {
-		rule = newRule;
-	}
 	
 	public List<Move> moves;
 	
+	public Algorithm(List<Move> moves) {
+		this.moves = moves;
+	}
+	
 	public Algorithm() {
 		this.moves = new ArrayList<Move>();
+	}
+	
+	public Algorithm copy() {
+		Algorithm copy = new Algorithm();
+		for(Move move : moves) copy.addMove(move);
+		
+		return copy;
 	}
 	
 	public List<Move> getMoves() {
@@ -73,8 +78,10 @@ public class Algorithm {
 		return this.moves.size();
 	}
 	
-	public void simplify() {
-		if(rule != null)
-			this.moves = rule.simplify(moves);
+	public Algorithm simplify(MoveSimplificationRule rule) {
+		if(rule != null) 
+			return rule.simplify(copy());
+		
+		return copy();
 	}
 }

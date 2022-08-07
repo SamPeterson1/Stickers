@@ -21,7 +21,7 @@ package com.github.yoshiapolis.cube.util;
 import java.util.HashMap;
 
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 
@@ -50,7 +50,7 @@ public class CubeCornerUtil {
 	private static HashMap<Integer, Integer> rotationMap_U;
 	private static HashMap<Integer, Integer> rotationMap_F;
 
-	private static HashMap<Face, Integer[]> positions;
+	private static HashMap<Axis, Integer[]> positions;
 
 	private static final Color[][] colors = { { Color.ORANGE, Color.WHITE, Color.GREEN },
 			{ Color.GREEN, Color.WHITE, Color.RED }, { Color.RED, Color.WHITE, Color.BLUE },
@@ -62,7 +62,7 @@ public class CubeCornerUtil {
 		return colors[position];
 	}
 
-	public static Integer[] getPositions(Face face) {
+	public static Integer[] getPositions(Axis face) {
 		return positions.get(face);
 	}
 
@@ -83,33 +83,33 @@ public class CubeCornerUtil {
 		populate(rotationArr_U, rotationMap_U);
 		populate(rotationArr_F, rotationMap_F);
 
-		positions = new HashMap<Face, Integer[]>();
-		positions.put(Face.R, new Integer[] { 1, 2, 6, 5 });
-		positions.put(Face.U, new Integer[] { 0, 3, 2, 1 });
-		positions.put(Face.F, new Integer[] { 0, 1, 5, 4 });
-		positions.put(Face.L, new Integer[] { 0, 3, 7, 4 });
-		positions.put(Face.D, new Integer[] { 4, 7, 6, 5 });
-		positions.put(Face.B, new Integer[] { 2, 6, 7, 3 });
+		positions = new HashMap<Axis, Integer[]>();
+		positions.put(Axis.R, new Integer[] { 1, 2, 6, 5 });
+		positions.put(Axis.U, new Integer[] { 0, 3, 2, 1 });
+		positions.put(Axis.F, new Integer[] { 0, 1, 5, 4 });
+		positions.put(Axis.L, new Integer[] { 0, 3, 7, 4 });
+		positions.put(Axis.D, new Integer[] { 4, 7, 6, 5 });
+		positions.put(Axis.B, new Integer[] { 2, 6, 7, 3 });
 	}
 
 	public static int[] mapCorner(Move move, int position, int cubeSize) {
 
 		move = CubeMoveUtil.normalize(move, cubeSize);
 		int layer = move.getLayer();
-		Face face = move.getFace();
+		Axis face = move.getFace();
 
 		HashMap<Integer, Integer> positionMap = null;
 		HashMap<Integer, Integer> rotationMap = null;
 
 		if (layer == 0 || layer == cubeSize - 1) {
-			if (face == Face.R) {
+			if (face == Axis.R) {
 				positionMap = positionMap_R;
 				rotationMap = rotationMap_R;
-			} else if (face == Face.U) {
+			} else if (face == Axis.U) {
 				positionMap = positionMap_U;
 				rotationMap = rotationMap_U;
 			}
-			if (face == Face.F) {
+			if (face == Axis.F) {
 				positionMap = positionMap_F;
 				rotationMap = rotationMap_F;
 			}

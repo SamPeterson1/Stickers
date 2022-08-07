@@ -40,7 +40,7 @@ public class Window {
 	
 	private static EventQueue eventQueue;
 		
-	public static long init(int width, int height, String title) {
+	public static void init(int width, int height, String title) {
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
@@ -57,8 +57,11 @@ public class Window {
 		glfwShowWindow(windowID);
 		setEventCallbacks();
 		GL.createCapabilities();
-		
-		return windowID;
+	}
+	
+	public static void initGLContext() {
+		glfwMakeContextCurrent(windowID);
+        GL.createCapabilities();
 	}
 	
 	private static void setEventCallbacks() {

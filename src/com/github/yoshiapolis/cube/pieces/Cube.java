@@ -18,24 +18,17 @@
 
 package com.github.yoshiapolis.cube.pieces;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
-import com.github.yoshiapolis.cube.solvers.CenterSolver;
-import com.github.yoshiapolis.cube.solvers.CornerSolver;
-import com.github.yoshiapolis.cube.solvers.CrossSolver;
-import com.github.yoshiapolis.cube.solvers.EdgeSolver;
-import com.github.yoshiapolis.cube.solvers.F2LSolver;
-import com.github.yoshiapolis.cube.solvers.OLLSolver;
-import com.github.yoshiapolis.cube.solvers.PLLSolver;
-import com.github.yoshiapolis.cube.util.CubeCenterUtil;
+import com.github.yoshiapolis.cube.solvers.MasterCubeSolver;
+import com.github.yoshiapolis.cube.util.CubeAlgorithmUtil;
 import com.github.yoshiapolis.cube.util.CubeCornerUtil;
 import com.github.yoshiapolis.cube.util.CubeEdgeUtil;
 import com.github.yoshiapolis.cube.util.CubeMoveUtil;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.PieceGroup;
 import com.github.yoshiapolis.puzzle.lib.PieceType;
@@ -43,106 +36,117 @@ import com.github.yoshiapolis.puzzle.lib.Puzzle;
 
 public class Cube extends Puzzle {
 
-	public static Face[] faces = { Face.R, Face.U, Face.F, Face.L, Face.D, Face.B };
+	public static Axis[] faces = { Axis.R, Axis.U, Axis.F, Axis.L, Axis.D, Axis.B };
 
-	private static Map<Face, Face> opposingFaces;
-	private static Map<Color, Color> opposingColors;
-
-	public static Face getFace(int index) {
+	private static Map<Axis, Axis> opposingFaces = initOpposingFaces();
+	private static Map<Axis, Integer> facePositions = initFacePositions();
+	private static Map<Axis, Color> faceColors = initFaceColors();
+	private static Map<Color, Color> opposingColors = initOpposingColors();
+	
+	private static final int NUM_CENTERS = 6;
+	private static final int NUM_EDGES = 12;
+	private static final int NUM_CORNERS = 8;
+	
+	private static Map<Axis, Axis> initOpposingFaces() {
+		Map<Axis, Axis> faces = new EnumMap<Axis, Axis>(Axis.class);
+		faces.put(Axis.R, Axis.L);
+		faces.put(Axis.U, Axis.D);
+		faces.put(Axis.F, Axis.B);
+		faces.put(Axis.L, Axis.R);
+		faces.put(Axis.D, Axis.U);
+		faces.put(Axis.B, Axis.F);
+		
+		return faces;
+	}
+	
+	private static Map<Axis, Integer> initFacePositions() {
+		Map<Axis, Integer> positions = new EnumMap<Axis, Integer>(Axis.class);
+		positions.put(Axis.R, 0);
+		positions.put(Axis.U, 1);
+		positions.put(Axis.F, 2);
+		positions.put(Axis.L, 3);
+		positions.put(Axis.D, 4);
+		positions.put(Axis.B, 5);
+		
+		return positions;
+	}
+	
+	private static Map<Axis, Color> initFaceColors() {
+		Map<Axis, Color> colors = new EnumMap<Axis, Color>(Axis.class);
+		colors.put(Axis.R, Color.RED);
+		colors.put(Axis.U, Color.WHITE);
+		colors.put(Axis.F, Color.GREEN);
+		colors.put(Axis.L, Color.ORANGE);
+		colors.put(Axis.D, Color.YELLOW);
+		colors.put(Axis.B, Color.BLUE);
+		
+		return colors;
+	}
+	
+	private static Map<Color, Color> initOpposingColors() {
+		Map<Color, Color> colors = new EnumMap<Color, Color>(Color.class);
+		colors = new EnumMap<Color, Color>(Color.class);
+		colors.put(Color.WHITE, Color.YELLOW);
+		colors.put(Color.RED, Color.ORANGE);
+		colors.put(Color.BLUE, Color.GREEN);
+		colors.put(Color.GREEN, Color.BLUE);
+		colors.put(Color.ORANGE, Color.RED);
+		colors.put(Color.YELLOW, Color.WHITE);
+		
+		return colors;
+	}
+	
+	public static Axis getFace(int index) {
 		return faces[index];
 	}
 
-	public static Color getOpposingColor(Color color) {
-		return opposingColors.get(color);
-	}
-
-	public static Face getOpposingFace(Face face) {
+	public static Axis getOpposingFace(Axis face) {
 		return opposingFaces.get(face);
 	}
 
+	public static Color getFaceColor(Axis face) {
+		return faceColors.get(face);
+	}
+	
+	public static int getFacePosition(Axis face) {
+		return facePositions.get(face);
+	}
+	
 	public static void init() {
-		opposingFaces = new HashMap<Face, Face>();
-		opposingFaces.put(Face.R, Face.L);
-		opposingFaces.put(Face.U, Face.D);
-		opposingFaces.put(Face.F, Face.B);
-		opposingFaces.put(Face.L, Face.R);
-		opposingFaces.put(Face.D, Face.U);
-		opposingFaces.put(Face.B, Face.F);
-
-		opposingColors = new HashMap<Color, Color>();
-		opposingColors.put(Color.WHITE, Color.YELLOW);
-		opposingColors.put(Color.RED, Color.ORANGE);
-		opposingColors.put(Color.BLUE, Color.GREEN);
-		opposingColors.put(Color.GREEN, Color.BLUE);
-		opposingColors.put(Color.ORANGE, Color.RED);
-		opposingColors.put(Color.YELLOW, Color.WHITE);
-
-		CubeCenterUtil.init();
 		CubeEdgeUtil.init();
 		CubeCornerUtil.init();
 		CubeMoveUtil.init();
 	}
 
-	public static boolean isRUF(Face face) {
-		return (face == Face.R || face == Face.U || face == Face.F);
+	public static boolean isRUF(Axis face) {
+		return (face == Axis.R || face == Axis.U || face == Axis.F);
 	}
 
-	CenterSolver centerSolver;
-	EdgeSolver edgeSolver;
-	CrossSolver crossSolver;
-	CornerSolver cornerSolver;
-	F2LSolver f2lSolver;
-	OLLSolver ollSolver;
-	PLLSolver pllSolver;
-
+	private MasterCubeSolver solver;
+	
 	public Cube(int size) {
 		super(size);
 
-		ArrayList<PieceGroup> centers = new ArrayList<PieceGroup>();
-		CubeCenter centerBehavior = new CubeCenter();
-
-		for (int i = 0; i < 6; i++) {
-			centers.add(new PieceGroup(centerBehavior, this, i));
-		}
-
-		ArrayList<PieceGroup> edges = new ArrayList<PieceGroup>();
-		CubeEdge edgeBehavior = new CubeEdge();
-
-		for (int i = 0; i < 12; i++) {
-			edges.add(new PieceGroup(edgeBehavior, this, i));
-		}
-
-		ArrayList<PieceGroup> corners = new ArrayList<PieceGroup>();
-		CubeCorner cornerBehavior = new CubeCorner();
-
-		for (int i = 0; i < 8; i++) {
-			corners.add(new PieceGroup(cornerBehavior, this, i));
-		}
-
-		super.addGroupType(PieceType.CENTER, centers);
-		super.addGroupType(PieceType.EDGE, edges);
-		super.addGroupType(PieceType.CORNER, corners);
-
-		centerSolver = new CenterSolver(this);
-		edgeSolver = new EdgeSolver(this);
-		crossSolver = new CrossSolver(this);
-		cornerSolver = new CornerSolver(this);
-		f2lSolver = new F2LSolver(this);
-		ollSolver = new OLLSolver(this);
-		pllSolver = new PLLSolver(this);
+		super.createPieces(new CubeCenterBehavior(), NUM_CENTERS);
+		super.createPieces(new CubeEdgeBehavior(), NUM_EDGES);
+		super.createPieces(new CubeCornerBehavior(), NUM_CORNERS);
+		
+		this.solver = new MasterCubeSolver(this);
 	}
 
-	public PieceGroup getCenter(Face face) {
-		return super.getGroup(PieceType.CENTER, face.getIndex());
+	public PieceGroup getCenter(Axis face) {
+		return super.getGroup(PieceType.CENTER, facePositions.get(face));
 	}
 
-	public Color getColor(Face face) {
-		if (super.getSize() > 2) {
-			return getCenter(face).getPiece(0).getColor();
-		} else {
-			Face transposed = transposeFace(face);
-			return transposed.getColor();
+	public Color getCenterColor(Axis face) {
+		if(super.getSize() == 2) {
+			face = transposeAxis(face);
+			return getFaceColor(face);
 		}
+		
+		int centerSize = (super.getSize() - 2) * (super.getSize() - 2);
+		int centerIndex = centerSize / 2;
+		return getCenter(face).getPiece(centerIndex).getColor();
 	}
 
 	public PieceGroup getCorner(int position) {
@@ -154,23 +158,28 @@ public class Cube extends Puzzle {
 	}
 
 	public Algorithm solve() {
-		Algorithm alg = centerSolver.solve();
-		alg.append(edgeSolver.solve());
-		alg.append(crossSolver.solve());
-		alg.append(cornerSolver.solve());
-		alg.append(f2lSolver.solve());
-		alg.append(ollSolver.solve());
-		alg.append(pllSolver.solve());
-
-		return alg;
+		return solver.solve();
 	}
 
 	@Override
-	public Face transposeFace(Face face) {
+	public Axis transposeAxis(Axis face) {
 		for (Move move : super.getRotations()) {
 			face = CubeMoveUtil.mapFace(face, move);
 		}
 
 		return face;
+	}
+
+	@Override
+	public Algorithm simplify(Algorithm alg) {
+		return CubeAlgorithmUtil.simplify(alg);
+	}
+
+	@Override
+	public Algorithm scramble(int length) {
+		Algorithm scramble = CubeAlgorithmUtil.generateScramble(length, super.getSize());
+		executeAlgorithm(scramble);
+		
+		return scramble;
 	}
 }
