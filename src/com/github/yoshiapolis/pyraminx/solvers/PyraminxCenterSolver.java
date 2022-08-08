@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceGroup;
@@ -69,109 +69,109 @@ public class PyraminxCenterSolver {
 	
 	public boolean isSolved(Piece piece, int layer) {
 		if(piece.getIndex() == centerIndex) return true;
-		Face face = Pyraminx.getFace(piece);
+		Axis face = Pyraminx.getFace(piece);
 		
-		int dLayer = PyraminxCenterUtil.getLayer(piece, Face.PD) - 1;
-		return (face == Face.PR && dLayer == layer)
-				|| (face == Face.PF && dLayer < layer);
+		int dLayer = PyraminxCenterUtil.getLayer(piece, Axis.PD) - 1;
+		return (face == Axis.PR && dLayer == layer)
+				|| (face == Axis.PF && dLayer < layer);
 	}
 	
 	public void movePiece_LF(Piece piece, int pairingLayer) {
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PD);
+		int layer = PyraminxCenterUtil.getLayer(piece, Axis.PD);
 		while(layer == pairingLayer + 1) {
-			pyr.makeMove(new Move(Face.PL, true));
-			layer = PyraminxCenterUtil.getLayer(piece, Face.PD);
+			pyr.makeMove(new Move(Axis.PL, true));
+			layer = PyraminxCenterUtil.getLayer(piece, Axis.PD);
 		}
-		pyr.makeMove(new Move(Face.PD, layer, true));
+		pyr.makeMove(new Move(Axis.PD, layer, true));
 	}
 	
 	public void movePiece_FL(Piece piece, int pairingLayer) {
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PD) - 1;
+		int layer = PyraminxCenterUtil.getLayer(piece, Axis.PD) - 1;
 		boolean restoreNeeded = (layer == pairingLayer);
 		
-		pyr.makeMove(new Move(Face.PD, layer + 1, false));
+		pyr.makeMove(new Move(Axis.PD, layer + 1, false));
 		while(layer == pairingLayer) {	
-			pyr.makeMove(new Move(Face.PL, 0, true));
-			layer = PyraminxCenterUtil.getLayer(piece, Face.PD) - 1;
+			pyr.makeMove(new Move(Axis.PL, 0, true));
+			layer = PyraminxCenterUtil.getLayer(piece, Axis.PD) - 1;
 		}
 		
 		if(restoreNeeded) {
-			pyr.makeMove(new Move(Face.PD, pairingLayer + 1, true));
+			pyr.makeMove(new Move(Axis.PD, pairingLayer + 1, true));
 		}
 		
-		if(Pyraminx.getFace(piece) != Face.PL) {
+		if(Pyraminx.getFace(piece) != Axis.PL) {
 			System.out.println("Badd");
 		}
 	}
 	
 	public void movePiece_RL(Piece piece, boolean keepDFace) {
-		pyr.makeMove(new Move(Face.PR, true));
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PF);
-		pyr.makeMove(new Move(Face.PF, layer, false));
+		pyr.makeMove(new Move(Axis.PR, true));
+		int layer = PyraminxCenterUtil.getLayer(piece, Axis.PF);
+		pyr.makeMove(new Move(Axis.PF, layer, false));
 		
 		if(keepDFace) {
 			int newLayer = layer;
 			while(newLayer == layer) {
-				pyr.makeMove(new Move(Face.PL, true));
-				newLayer = PyraminxCenterUtil.getLayer(piece, Face.PF);
+				pyr.makeMove(new Move(Axis.PL, true));
+				newLayer = PyraminxCenterUtil.getLayer(piece, Axis.PF);
 			}
 			
-			pyr.makeMove(new Move(Face.PF, layer, true));
+			pyr.makeMove(new Move(Axis.PF, layer, true));
 		}
 		
-		pyr.makeMove(new Move(Face.PR, false));
+		pyr.makeMove(new Move(Axis.PR, false));
 	}
 
 	public void insertPiece(Piece piece, int tgtIndex, boolean tilted, boolean keepDFace) {
-		if(tilted) pyr.makeMove(new Move(Face.PR, false));
+		if(tilted) pyr.makeMove(new Move(Axis.PR, false));
 		
-		Face face = Pyraminx.getFace(piece);
-		int index = PyraminxCenterUtil.mapIndex(face, Face.PR, Face.PF, piece.getIndex(), puzzleSize);
+		Axis face = Pyraminx.getFace(piece);
+		int index = PyraminxCenterUtil.mapIndex(face, Axis.PR, Axis.PF, piece.getIndex(), puzzleSize);
 		
 		while(index != tgtIndex) {
 			pyr.makeMove(new Move(face, true));
-			index = PyraminxCenterUtil.mapIndex(face, Face.PR, Face.PF, piece.getIndex(), puzzleSize);
+			index = PyraminxCenterUtil.mapIndex(face, Axis.PR, Axis.PF, piece.getIndex(), puzzleSize);
 		}
 		
-		int layer = PyraminxCenterUtil.getLayer(piece, Face.PF);
+		int layer = PyraminxCenterUtil.getLayer(piece, Axis.PF);
 		int numMoves = 0;
-		while(Pyraminx.getFace(piece) != Face.PR) {
-			pyr.makeMove(new Move(Face.PF, layer, true));
+		while(Pyraminx.getFace(piece) != Axis.PR) {
+			pyr.makeMove(new Move(Axis.PF, layer, true));
 			numMoves ++;
 		}
 		
 		int pairingLayer = 0;
 		if(keepDFace) {
-			Piece atIndex = new Piece(PieceType.CENTER, Face.PR.getIndex(), tgtIndex, puzzleSize);
+			Piece atIndex = new Piece(PieceType.CENTER, Pyraminx.getAxisIndex(Axis.PR), tgtIndex, puzzleSize);
 			if(tilted) {
-				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Face.PL);
+				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Axis.PL);
 			} else {
-				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Face.PD);
+				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Axis.PD);
 			}
 			
-			pyr.makeMove(new Move(Face.PR, !tilted));
+			pyr.makeMove(new Move(Axis.PR, !tilted));
 			for(int i = 0; i < numMoves; i ++) {
-				pyr.makeMove(new Move(Face.PF, layer, false));
+				pyr.makeMove(new Move(Axis.PF, layer, false));
 			}
-			pyr.makeMove(new Move(Face.PR, tilted));
+			pyr.makeMove(new Move(Axis.PR, tilted));
 			
 			if(pairingLayer == layer) {
-				pyr.makeMove(new Move(Face.PL, true));
-				pyr.makeMove(new Move(Face.PD, layer, false));
+				pyr.makeMove(new Move(Axis.PL, true));
+				pyr.makeMove(new Move(Axis.PD, layer, false));
 			}
 		}
 		
 		if(tilted && pairingLayer != layer) {
-			pyr.makeMove(new Move(Face.PR, true));
+			pyr.makeMove(new Move(Axis.PR, true));
 		}
 	}
 	
 	public void solvePiece(Piece piece, int tgtIndex, int layer, boolean tilted, boolean keepDFace) {
-		Face face = Pyraminx.getFace(piece);
+		Axis face = Pyraminx.getFace(piece);
 		
-		if(face == Face.PF) {
+		if(face == Axis.PF) {
 			movePiece_FL(piece, layer);
-		} else if(face == Face.PR) {
+		} else if(face == Axis.PR) {
 			movePiece_RL(piece, keepDFace);
 		}
 
@@ -189,7 +189,7 @@ public class PyraminxCenterSolver {
 					int tgtIndex = layerOff + 2*i;
 					
 					Piece piece = findUnsolvedPiece(color, tgtIndex, layer);
-					Piece inSlot = pyr.getGroup(PieceType.CENTER, Face.PR.getIndex()).getPiece(tgtIndex);
+					Piece inSlot = pyr.getGroup(PieceType.CENTER, Axis.PR).getPiece(tgtIndex);
 
 					if(piece != null && inSlot.getColor() != color) {
 						solvePiece(piece, tgtIndex, layer, false, keepDFace);
@@ -205,13 +205,13 @@ public class PyraminxCenterSolver {
 					
 				}
 				
-				pyr.makeMove(new Move(Face.PD, layer + 1, false));
+				pyr.makeMove(new Move(Axis.PD, layer + 1, false));
 			}
 			
-			pyr.makeRotation(Face.PL, true);
+			pyr.makeRotation(Axis.PL, true);
 		}
 		
-		pyr.makeRotation(Face.PR, false);
+		pyr.makeRotation(Axis.PR, false);
 	}
 
 	public int getIndexOff(int index, int z) {
@@ -223,14 +223,14 @@ public class PyraminxCenterSolver {
 	}
 	
 	public void executeAlternateCommutator(int tgtIndex) {
-		pyr.makeMove(new Move(Face.PD, false));
+		pyr.makeMove(new Move(Axis.PD, false));
 		
 		int z = PyraminxCenterUtil.getZPosition(tgtIndex, centerSize);
 		int indexOff = getIndexOff(tgtIndex, z);
 		int fMoves = 0;
 		
 		while(indexOff != z) {
-			pyr.makeMove(new Move(Face.PF, true));
+			pyr.makeMove(new Move(Axis.PF, true));
 			fMoves ++;
 			
 			tgtIndex = PyraminxCenterUtil.rotateIndexCW(tgtIndex, centerSize);
@@ -239,70 +239,70 @@ public class PyraminxCenterSolver {
 		}
 		
 		int layer = z + 1;
-		pyr.makeMove(new Move(Face.PF, layer, false));
-		pyr.makeMove(new Move(Face.PL, layer, true));
-		pyr.makeMove(new Move(Face.PF, layer, true));
-		pyr.makeMove(new Move(Face.PL, layer, false));
+		pyr.makeMove(new Move(Axis.PF, layer, false));
+		pyr.makeMove(new Move(Axis.PL, layer, true));
+		pyr.makeMove(new Move(Axis.PF, layer, true));
+		pyr.makeMove(new Move(Axis.PL, layer, false));
 		
-		pyr.makeMove(new Move(Face.PL, 0, false));
+		pyr.makeMove(new Move(Axis.PL, 0, false));
 		
-		pyr.makeMove(new Move(Face.PR, layer, false));
-		pyr.makeMove(new Move(Face.PL, layer, false));
-		pyr.makeMove(new Move(Face.PR, layer, true));
-		pyr.makeMove(new Move(Face.PL, layer, true));
+		pyr.makeMove(new Move(Axis.PR, layer, false));
+		pyr.makeMove(new Move(Axis.PL, layer, false));
+		pyr.makeMove(new Move(Axis.PR, layer, true));
+		pyr.makeMove(new Move(Axis.PL, layer, true));
 		
 		for(int i = 0; i < fMoves; i ++) {
-			pyr.makeMove(new Move(Face.PF, false));
+			pyr.makeMove(new Move(Axis.PF, false));
 		}
 	}
 	
-	public boolean executeCommutator(Piece piece, Face pivot) {
+	public boolean executeCommutator(Piece piece, Axis pivot) {
 
 		int layer = PyraminxCenterUtil.getLayer(piece, pivot);
-		boolean cw = (pivot == Face.PR) ? true : false;
+		boolean cw = (pivot == Axis.PR) ? true : false;
 		
 		pyr.makeMove(new Move(pivot, layer, cw));
-		pyr.makeMove(new Move(Face.PF, !cw));
+		pyr.makeMove(new Move(Axis.PF, !cw));
 		
 		int nextLayer = PyraminxCenterUtil.getLayer(piece, pivot);
 		if(nextLayer == layer) {
-			pyr.makeMove(new Move(Face.PF, cw));
+			pyr.makeMove(new Move(Axis.PF, cw));
 			pyr.makeMove(new Move(pivot, layer, !cw));
 			
 			return false;
 		}
 			
 		pyr.makeMove(new Move(pivot, nextLayer, cw));		
-		pyr.makeMove(new Move(Face.PF, cw));
+		pyr.makeMove(new Move(Axis.PF, cw));
 		
 		pyr.makeMove(new Move(pivot, layer, !cw));
-		pyr.makeMove(new Move(Face.PF, !cw));
+		pyr.makeMove(new Move(Axis.PF, !cw));
 		
 		
 		pyr.makeMove(new Move(pivot, nextLayer, !cw));
-		pyr.makeMove(new Move(Face.PF, cw));
+		pyr.makeMove(new Move(Axis.PF, cw));
 		
 		return true;
 	}
 	
-	public Piece prepareCommutator(int tgtIndex, Face pivot, Color color) {
+	public Piece prepareCommutator(int tgtIndex, Axis pivot, Color color) {
 		if(tgtIndex == centerIndex) return null;
 		
 		List<Piece> pieces = findPieces(Color.RED, tgtIndex);
 		Piece piece = null;
 		
 		for(Piece candidate : pieces) {
-			if(Pyraminx.getFace(candidate) == Face.PD) {
+			if(Pyraminx.getFace(candidate) == Axis.PD) {
 				piece = candidate;
 				break;
 			}
 		}
 		
 		if(piece != null) {
-			int mappedIndex = PyraminxCenterUtil.mapIndex(Face.PD, Face.PF, pivot, tgtIndex, puzzleSize);
+			int mappedIndex = PyraminxCenterUtil.mapIndex(Axis.PD, Axis.PF, pivot, tgtIndex, puzzleSize);
 			while(mappedIndex != tgtIndex) {
-				pyr.makeMove(new Move(Face.PD, true));
-				mappedIndex = PyraminxCenterUtil.mapIndex(Face.PD, Face.PF, pivot, piece.getIndex(), puzzleSize);
+				pyr.makeMove(new Move(Axis.PD, true));
+				mappedIndex = PyraminxCenterUtil.mapIndex(Axis.PD, Axis.PF, pivot, piece.getIndex(), puzzleSize);
 			}
 		}
 		
@@ -313,41 +313,41 @@ public class PyraminxCenterSolver {
 		if(puzzleSize % 3 == 1) {
 			for(int i = 0; i < 2; i ++) {
 				for(int j = centerLayer; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PL, j, !cw));
+					pyr.makeMove(new Move(Axis.PL, j, !cw));
 				for(int j = centerLayer; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PD, j, !cw));
+					pyr.makeMove(new Move(Axis.PD, j, !cw));
 				for(int j = centerLayer; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PL, j, cw));
+					pyr.makeMove(new Move(Axis.PL, j, cw));
 				for(int j = centerLayer; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PD, j, !cw));
+					pyr.makeMove(new Move(Axis.PD, j, !cw));
 			}	
 			
 			for(int i = 0; i < 2; i ++) {
 				for(int j = centerLayer; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PL, j, !cw));
+					pyr.makeMove(new Move(Axis.PL, j, !cw));
 				for(int j = centerLayer + 1; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PD, j, cw));
+					pyr.makeMove(new Move(Axis.PD, j, cw));
 				for(int j = centerLayer; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PL, j, cw));
+					pyr.makeMove(new Move(Axis.PL, j, cw));
 				for(int j = centerLayer + 1; j <= 2*centerLayer; j ++)
-					pyr.makeMove(new Move(Face.PD, j, cw));
+					pyr.makeMove(new Move(Axis.PD, j, cw));
 			}
 		} else {
 			for(int i = 0; i < 2; i ++) {
 				for(int j = centerLayer + 1; j < puzzleSize; j ++)
-					pyr.makeMove(new Move(Face.PR, j, !cw));
-				pyr.makeMove(new Move(Face.PL, centerLayer, !cw));
+					pyr.makeMove(new Move(Axis.PR, j, !cw));
+				pyr.makeMove(new Move(Axis.PL, centerLayer, !cw));
 				for(int j = centerLayer + 1; j < puzzleSize; j ++)
-					pyr.makeMove(new Move(Face.PR, j, cw));
-				pyr.makeMove(new Move(Face.PL, centerLayer, !cw));
+					pyr.makeMove(new Move(Axis.PR, j, cw));
+				pyr.makeMove(new Move(Axis.PL, centerLayer, !cw));
 			}
 			
 			if(cw) {
-				pyr.makeMove(new Move(Face.PR, true));
-				pyr.makeRotation(Face.PF, true);
+				pyr.makeMove(new Move(Axis.PR, true));
+				pyr.makeRotation(Axis.PF, true);
 				executeAlternateCommutator(aboveCenterIndex);
 			} else {
-				pyr.makeRotation(Face.PD, false);
+				pyr.makeRotation(Axis.PD, false);
 				executeAlternateCommutator(centerIndex + 1);
 			}
 		}
@@ -355,59 +355,59 @@ public class PyraminxCenterSolver {
 	
 	public void fourCenterSwap() {
 		for(int i = 0; i < 3; i ++) {
-			pyr.makeMove(new Move(Face.PL, centerLayer, true));
-			pyr.makeMove(new Move(Face.PR, centerLayer, false));
-			pyr.makeMove(new Move(Face.PL, centerLayer, false));
-			pyr.makeMove(new Move(Face.PR, centerLayer, true));
+			pyr.makeMove(new Move(Axis.PL, centerLayer, true));
+			pyr.makeMove(new Move(Axis.PR, centerLayer, false));
+			pyr.makeMove(new Move(Axis.PL, centerLayer, false));
+			pyr.makeMove(new Move(Axis.PR, centerLayer, true));
 		}
 	}
 	
 	public void solveMiddleCenterPieces() {
-		Face solvedFace = null;
+		Axis solvedAxis = null;
 		boolean solved = true;
 		for(int i = 0; i < 4; i ++) {
 			PieceGroup face = pyr.getGroup(PieceType.CENTER, i);
 			Piece centerPiece = face.getPiece(centerIndex);
 			Piece adjacent = face.getPiece(centerIndex + 1);
 			if(centerPiece.getColor() == adjacent.getColor()) {
-				solvedFace = Pyraminx.getFace(centerPiece);
+				solvedAxis = Pyraminx.getFace(centerPiece);
 			} else {
 				solved = false;
 			}
 		}
 		
-		PieceGroup fFace = pyr.getGroup(PieceType.CENTER, Face.PF.getIndex());
-		PieceGroup dFace = pyr.getGroup(PieceType.CENTER, Face.PD.getIndex());
+		PieceGroup fAxis = pyr.getGroup(PieceType.CENTER, Axis.PF);
+		PieceGroup dAxis = pyr.getGroup(PieceType.CENTER, Axis.PD);
 		
-		if(solvedFace == null) {
-			Color fMiddleColor = fFace.getPiece(centerIndex).getColor();
-			Color dFaceColor = dFace.getPiece(centerIndex + 1).getColor();
+		if(solvedAxis == null) {
+			Color fMiddleColor = fAxis.getPiece(centerIndex).getColor();
+			Color dFaceColor = dAxis.getPiece(centerIndex + 1).getColor();
 			
 			while(fMiddleColor != dFaceColor) {
-				pyr.makeRotation(Face.PD, true);
-				fMiddleColor = fFace.getPiece(centerIndex).getColor();
-				dFaceColor = dFace.getPiece(centerIndex + 1).getColor();
+				pyr.makeRotation(Axis.PD, true);
+				fMiddleColor = fAxis.getPiece(centerIndex).getColor();
+				dFaceColor = dAxis.getPiece(centerIndex + 1).getColor();
 			}
 			
 			fourCenterSwap();
 		} else if(!solved) {
-			if(solvedFace == Face.PD) {
-				pyr.makeRotation(Face.PF, true);
-			} else if(solvedFace == Face.PR) {
-				pyr.makeRotation(Face.PD, true);
-			} else if(solvedFace == Face.PF) {
-				pyr.makeRotation(Face.PD, false);
+			if(solvedAxis == Axis.PD) {
+				pyr.makeRotation(Axis.PF, true);
+			} else if(solvedAxis == Axis.PR) {
+				pyr.makeRotation(Axis.PD, true);
+			} else if(solvedAxis == Axis.PF) {
+				pyr.makeRotation(Axis.PD, false);
 			}
 			
-			Color dMiddleColor = dFace.getPiece(centerIndex).getColor();
-			Color fFaceColor = fFace.getPiece(centerIndex + 1).getColor();
+			Color dMiddleColor = dAxis.getPiece(centerIndex).getColor();
+			Color fFaceColor = fAxis.getPiece(centerIndex + 1).getColor();
 			
 			boolean cw = (dMiddleColor == fFaceColor);
 			threeCenterCycle(cw);
 		}
 	}
 	
-	public boolean isSolved(Face face) {
+	public boolean isSolved(Axis face) {
 		PieceGroup faceGroup = pyr.getGroup(PieceType.CENTER, face);
 		Color middleColor = faceGroup.getPiece(centerIndex).getColor();
 		Color faceColor = faceGroup.getPiece().getColor();
@@ -417,8 +417,8 @@ public class PyraminxCenterSolver {
 	
 	public void lastTwoCenters() {
 		
-		//boolean swap = !(isSolved(Face.PR) && isSolved(Face.PL));
-		//Face colorFace = swap ? Face.PD : Face.PF;
+		//boolean swap = !(isSolved(Axis.PR) && isSolved(Axis.PL));
+		//Axis colorAxis = swap ? Axis.PD : Axis.PF;
 		
 		//Color color = pyr.getGroup(PieceType.CENTER, colorFace).getPiece(centerIndex).getColor();
 		Color color = Color.RED;
@@ -429,9 +429,9 @@ public class PyraminxCenterSolver {
 				int tgtIndex = layerOff + 2*i;
 	
 				
-				Piece piece = prepareCommutator(tgtIndex, Face.PL, color);
+				Piece piece = prepareCommutator(tgtIndex, Axis.PL, color);
 				if(piece != null) {
-					if(!executeCommutator(piece, Face.PL)) {
+					if(!executeCommutator(piece, Axis.PL)) {
 						executeAlternateCommutator(tgtIndex);
 					}
 				}
@@ -439,9 +439,9 @@ public class PyraminxCenterSolver {
 				
 				if(i < centerSize - layer - 1) {
 					tgtIndex = layerOff + 2*i + 1;
-					piece = prepareCommutator(tgtIndex, Face.PR, color);
+					piece = prepareCommutator(tgtIndex, Axis.PR, color);
 					if(piece != null) {
-						if(!executeCommutator(piece, Face.PR)) {
+						if(!executeCommutator(piece, Axis.PR)) {
 							executeAlternateCommutator(tgtIndex);
 						}
 					}

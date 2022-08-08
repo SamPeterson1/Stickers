@@ -20,11 +20,11 @@ package com.github.yoshiapolis.pyraminx.pieces;
 
 import java.util.ArrayList;
 
+import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.puzzle.lib.Algorithm;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
-import com.github.yoshiapolis.puzzle.lib.PieceBehavior;
 import com.github.yoshiapolis.puzzle.lib.PieceGroup;
 import com.github.yoshiapolis.puzzle.lib.PieceType;
 import com.github.yoshiapolis.puzzle.lib.Puzzle;
@@ -34,14 +34,25 @@ import com.github.yoshiapolis.pyraminx.util.PyraminxMoveUtil;
 
 public class Pyraminx extends Puzzle {
 	
-	public static Face[] faces = {Face.PF, Face.PR, Face.PL, Face.PD};
+	public static Axis[] faces = {Axis.PF, Axis.PR, Axis.PL, Axis.PD};
+	
+	public static final int NUM_CENTERS = 4;
+	public static final int NUM_EDGES = 6;
+	public static final int NUM_CORNERS = 4;
 	
 	public static void init() {
 		PyraminxCenterUtil.init();
 		PyraminxMoveUtil.init();
 	}
 	
-	public static Face getFace(Piece piece) {
+	public static int getAxisIndex(Axis axis) {
+		if(axis == Axis.PF) return 0;
+		if(axis == Axis.PR) return 1;
+		if(axis == Axis.PL) return 2;
+		return 3;
+	}
+	
+	public static Axis getFace(Piece piece) {
 		return faces[piece.getPosition()];
 	}
 	
@@ -50,30 +61,9 @@ public class Pyraminx extends Puzzle {
 	public Pyraminx(int size) {
 		super(size);
 		
-		ArrayList<PieceGroup> centers = new ArrayList<PieceGroup>();
-		PieceBehavior centerBehavior = new PyraminxCenterBehavior();
-		
-		for(int i = 0; i < 4; i ++) {
-			centers.add(new PieceGroup(centerBehavior, this, i));
-		}
-
-		ArrayList<PieceGroup> edges = new ArrayList<PieceGroup>();
-		PieceBehavior edgeBehavior = new PyraminxEdgeBehavior();
-		
-		for(int i = 0; i < 6; i ++) {
-			edges.add(new PieceGroup(edgeBehavior, this, i));
-		}
-		
-		ArrayList<PieceGroup> corners = new ArrayList<PieceGroup>();
-		PieceBehavior cornerBehavior = new PyraminxCornerBehavior();
-		
-		for(int i = 0; i < 4; i ++) {
-			corners.add(new PieceGroup(cornerBehavior, this, i));
-		}
-		
-		super.pieces.put(PieceType.CENTER, centers);
-		super.pieces.put(PieceType.EDGE, edges);
-		super.pieces.put(PieceType.CORNER, corners);
+		super.createPieces(new PyraminxCenterBehavior(), NUM_CENTERS);
+		super.createPieces(new PyraminxEdgeBehavior(), NUM_EDGES);
+		super.createPieces(new PyraminxCornerBehavior(), NUM_CORNERS);
 		
 		centerSolver = new PyraminxCenterSolver(this);
 	}
@@ -83,14 +73,45 @@ public class Pyraminx extends Puzzle {
 		return centerSolver.solve();
 	}
 	
+	private Move getRandomMove(int puzzleSize) {
+		int i = (int) Mathf.random(0, faces.length);
+		Axis f = faces[i];
+
+		int layer = (int) Mathf.random(0, puzzleSize);
+		boolean cw = (Mathf.random(0, 1) < 0.5);
+
+		return new Move(f, layer, cw);
+	}
+	
 	@Override
-	public Face transposeFace(Face face) {
+	public Axis transposeAxis(Axis face) {
 		ArrayList<Move> cubeRotations = super.getRotations();
 		for(Move move : cubeRotations) {
 			face = PyraminxMoveUtil.mapFace(face, move);
 		}
 		
 		return face;
+	}
+
+	public PieceGroup getGroup(PieceType type, Axis face) {
+		int position = getAxisIndex(face);
+		return super.getGroup(type, position);
+	}
+	
+	@Override
+	public Algorithm simplify(Algorithm alg) {
+		return alg;
+	}
+
+	@Override
+	public Algorithm scramble(int length) {
+		Algorithm scramble = new Algorithm();
+		for(int i = 0; i < length; i ++) {
+			scramble.addMove(getRandomMove(super.getSize()));
+		}
+		
+		super.executeAlgorithm(scramble);
+		return scramble;
 	}
 
 	

@@ -31,10 +31,10 @@ public enum Axis {
 	D(new Vector3f(0, -1, 0)), 
 	B(new Vector3f(0, 0, -1)),
 	
-	PF(new Vector3f(0, -1.0f/3, -Mathf.sqrt(8.0f/9))),
-	PR(new Vector3f(-Mathf.sqrt(2.0f/3),  -1.0f/3, Mathf.sqrt(2.0f/9))),
-	PL(new Vector3f(Mathf.sqrt(2.0f/3), -1.0f/3, Mathf.sqrt(2.0f/9))),
-	PD(new Vector3f(0, 1, 0)),
+	PF(new Vector3f(0, 1.0f/3, Mathf.sqrt(8.0f/9))),
+	PR(new Vector3f(Mathf.sqrt(2.0f/3), 1.0f/3, -Mathf.sqrt(2.0f/9))),
+	PL(new Vector3f(-Mathf.sqrt(2.0f/3), 1.0f/3, -Mathf.sqrt(2.0f/9))),
+	PD(new Vector3f(0, -1, 0)),
 	
 	IR(new Vector3f(1, -1, 1)),
 	IL(new Vector3f(-1, 1, 1)),

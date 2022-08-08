@@ -1,7 +1,7 @@
 package com.github.yoshiapolis.pyraminx.util;
 
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
 
 public class PyraminxEdgeUtil {
 	
@@ -27,35 +27,35 @@ public class PyraminxEdgeUtil {
 		return 2*(puzzleSize-3) - index;
 	}
 	
-	public static int getEdgeMapVal(Face face, int position) {
+	public static int getEdgeMapVal(Axis face, int position) {
 		int[] map = null;
 		
-		if(face == Face.PL) map = edgeMap_L;
-		else if(face == Face.PR) map = edgeMap_R;
-		else if(face == Face.PD) map = edgeMap_D;
-		else if(face == Face.PF) map = edgeMap_F; 
+		if(face == Axis.PL) map = edgeMap_L;
+		else if(face == Axis.PR) map = edgeMap_R;
+		else if(face == Axis.PD) map = edgeMap_D;
+		else if(face == Axis.PF) map = edgeMap_F; 
 		
 		return map[position];
 	}
 
-	public static Face getFace(int position, int side) {
+	public static Axis getFace(int position, int side) {
 		if(side == 0) {
 			if(position >= 3 && position <= 5) {
-				return Face.PD;
+				return Axis.PD;
 			} else if(position == 0) {
-				return Face.PF;
+				return Axis.PF;
 			} else if(position == 1) {
-				return Face.PR;
+				return Axis.PR;
 			} else if(position == 2) {
-				return Face.PL;
+				return Axis.PL;
 			}
 		} else if(side == 1) {
 			if(position == 0 || position == 4) {
-				return Face.PR;
+				return Axis.PR;
 			} else if(position == 1 || position == 5) {
-				return Face.PL;
+				return Axis.PL;
 			} else if(position == 2 || position == 3) {
-				return Face.PF;
+				return Axis.PF;
 			}
 		}
 		

@@ -4,8 +4,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.github.yoshiapolis.math.Mathf;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.pyraminx.pieces.Pyraminx;
@@ -13,35 +13,35 @@ import com.github.yoshiapolis.pyraminx.pieces.Pyraminx;
 public class PyraminxCenterUtil {
 	
 	private static Color[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.YELLOW};
-	private static Map<Face, Integer> dRotation;
-	private static Map<Face, Integer> fRotation;
-	private static Map<Face, Integer> rRotation;
-	private static Map<Face, Integer> lRotation;
+	private static Map<Axis, Integer> dRotation;
+	private static Map<Axis, Integer> fRotation;
+	private static Map<Axis, Integer> rRotation;
+	private static Map<Axis, Integer> lRotation;
 
 	public static void init() {		
-		dRotation = new EnumMap<>(Face.class);
-		dRotation.put(Face.PD, 1);
-		dRotation.put(Face.PF, 0);
-		dRotation.put(Face.PR, 0);
-		dRotation.put(Face.PL, 0);
+		dRotation = new EnumMap<>(Axis.class);
+		dRotation.put(Axis.PD, 1);
+		dRotation.put(Axis.PF, 0);
+		dRotation.put(Axis.PR, 0);
+		dRotation.put(Axis.PL, 0);
 		
-		fRotation = new EnumMap<>(Face.class);
-		fRotation.put(Face.PF, 1);
-		fRotation.put(Face.PR, -1);
-		fRotation.put(Face.PD, -1);
-		fRotation.put(Face.PL, -1);
+		fRotation = new EnumMap<>(Axis.class);
+		fRotation.put(Axis.PF, 1);
+		fRotation.put(Axis.PR, -1);
+		fRotation.put(Axis.PD, -1);
+		fRotation.put(Axis.PL, -1);
 		
-		rRotation = new EnumMap<>(Face.class);
-		rRotation.put(Face.PR, 1);
-		rRotation.put(Face.PF, -1);
-		rRotation.put(Face.PL, 0);
-		rRotation.put(Face.PD, 1);
+		rRotation = new EnumMap<>(Axis.class);
+		rRotation.put(Axis.PR, 1);
+		rRotation.put(Axis.PF, -1);
+		rRotation.put(Axis.PL, 0);
+		rRotation.put(Axis.PD, 1);
 		
-		lRotation = new EnumMap<>(Face.class);
-		lRotation.put(Face.PL, 1);
-		lRotation.put(Face.PF, 1);
-		lRotation.put(Face.PD, 0);
-		lRotation.put(Face.PR, -1);
+		lRotation = new EnumMap<>(Axis.class);
+		lRotation.put(Axis.PL, 1);
+		lRotation.put(Axis.PF, 1);
+		lRotation.put(Axis.PD, 0);
+		lRotation.put(Axis.PR, -1);
 	}
 			
 	public static Color getColor(int position) {
@@ -57,25 +57,25 @@ public class PyraminxCenterUtil {
 		return indexOff + layerSize/2;
 	}
 	
-	public static int getRotationOffset(Face pivot, Face origin) {
-		Face targetFace = null;
+	public static int getRotationOffset(Axis pivot, Axis origin) {
+		Axis targetFace = null;
 		int rotation = 0;
 		
 		switch(pivot) {
 		case PD:
-			targetFace = Face.PF;
+			targetFace = Axis.PF;
 			rotation = 0;
 			break;
 		case PR:
-			targetFace = Face.PF;
+			targetFace = Axis.PF;
 			rotation = -1;
 			break;
 		case PL:
-			targetFace = Face.PF;
+			targetFace = Axis.PF;
 			rotation = 1;
 			break;
 		case PF:
-			targetFace = Face.PD;
+			targetFace = Axis.PD;
 			rotation = 0;
 			break;
 		default:
@@ -91,9 +91,9 @@ public class PyraminxCenterUtil {
 		return rotation;
 	}
 	
-	public static int getLayer(Piece piece, Face face) {
+	public static int getLayer(Piece piece, Axis face) {
 		
-		Face pieceFace = Pyraminx.faces[piece.getPosition()];
+		Axis pieceFace = Pyraminx.faces[piece.getPosition()];
 		if(pieceFace == face) return 0;		
 		
 		int rotation = (getRotationOffset(face, pieceFace) + 3) % 3;
@@ -107,21 +107,34 @@ public class PyraminxCenterUtil {
 		return getZPosition(index, centerSize) + 1;
 	}
 	
+	public static int getCenterSize(int puzzleSize) {
+		int a = puzzleSize - 3;
+		return a*a;
+	}
+
+	public static int getLayerSize(int layer, int centerSize) {
+		return 2 * (centerSize - layer) - 1;
+	}
+	
+	public static int getIndexAtZPosition(int z, int centerSize) {
+		return centerSize * centerSize - (centerSize - z) * (centerSize - z);
+	}
+	
 	public static int getZPosition(int index, int centerSize) {
 		return (int)(centerSize - Mathf.sqrt(centerSize * centerSize - index));
 	}
 	
-	public static int getRotation(Face pivot, Face from) {
-		Map<Face, Integer> rotationMap = null;
-		if(pivot == Face.PF) rotationMap = fRotation;
-		else if(pivot == Face.PL) rotationMap = lRotation;
-		else if(pivot == Face.PD) rotationMap = dRotation;
-		else if(pivot == Face.PR) rotationMap = rRotation;
+	public static int getRotation(Axis pivot, Axis from) {
+		Map<Axis, Integer> rotationMap = null;
+		if(pivot == Axis.PF) rotationMap = fRotation;
+		else if(pivot == Axis.PL) rotationMap = lRotation;
+		else if(pivot == Axis.PD) rotationMap = dRotation;
+		else if(pivot == Axis.PR) rotationMap = rRotation;
 		
 		return rotationMap.get(from);
 	}
 	
-	public static int mapIndex(Face from, Face to, Face pivot, int index, int puzzleSize) {
+	public static int mapIndex(Axis from, Axis to, Axis pivot, int index, int puzzleSize) {
 		Move move = new Move(pivot, true);
 		while(from != to) {
 			index = mapIndex(move, from, index, puzzleSize);
@@ -131,10 +144,10 @@ public class PyraminxCenterUtil {
 		return index;
 	}
 	
-	public static int mapIndex(Move move, Face from, int index, int puzzleSize) {
+	public static int mapIndex(Move move, Axis from, int index, int puzzleSize) {
 		int direction = move.isCW() ? 1 : -1;
 		
-		Face pivot = move.getFace();
+		Axis pivot = move.getFace();
 		if(direction == -1) {
 			from = PyraminxMoveUtil.mapFace(from, move);
 		}

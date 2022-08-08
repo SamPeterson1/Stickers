@@ -3,8 +3,7 @@ package com.github.yoshiapolis.pyraminx.pieces;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceBehavior;
@@ -15,9 +14,11 @@ import com.github.yoshiapolis.pyraminx.util.PyraminxMoveUtil;
 
 public class PyraminxCenterBehavior implements PieceBehavior {
 
+	private static PieceType type = PieceType.CENTER;
+	
 	@Override
 	public Piece createPiece(int position, int index, int puzzleSize) {
-		Piece center = new Piece(PieceType.CENTER, position, index, puzzleSize);
+		Piece center = new Piece(type, position, index, puzzleSize);
 		center.setColor(PyraminxCenterUtil.getColor(position));
 		
 		return center;
@@ -26,8 +27,8 @@ public class PyraminxCenterBehavior implements PieceBehavior {
 	@Override
 	public List<Piece> getAffectedPieces(Move move, PieceGroup group) {
 
-		Face face = Pyraminx.faces[group.getPosition()];
-		Face pivot = move.getFace();
+		Axis face = Pyraminx.faces[group.getPosition()];
+		Axis pivot = move.getFace();
 		
 		int layer = move.getLayer();
 		int puzzleSize = group.getPuzzleSize();
@@ -66,18 +67,23 @@ public class PyraminxCenterBehavior implements PieceBehavior {
 	@Override
 	public void movePiece(Move move, Piece piece) {
 		int puzzleSize = piece.getPuzzleSize();
-		Face currentFace = Pyraminx.faces[piece.getPosition()];
+		Axis currentFace = Pyraminx.faces[piece.getPosition()];
 		
 		int newIndex = PyraminxCenterUtil.mapIndex(move, currentFace, piece.getIndex(), puzzleSize);
-		Face newFace = PyraminxMoveUtil.mapFace(currentFace, move);
+		Axis newFace = PyraminxMoveUtil.mapFace(currentFace, move);
 		
 		piece.setIndex(newIndex);
-		piece.setPosition(newFace.getIndex());
+		piece.setPosition(Pyraminx.getAxisIndex(newFace));
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize) {
+	public int getNumPieces(int puzzleSize, int position) {
 		int a = puzzleSize - 3;
 		return a*a;
+	}
+
+	@Override
+	public PieceType getType() {
+		return type;
 	}
 }

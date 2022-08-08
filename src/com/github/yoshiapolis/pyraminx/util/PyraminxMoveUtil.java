@@ -3,47 +3,47 @@ package com.github.yoshiapolis.pyraminx.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.yoshiapolis.puzzle.lib.Face;
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 
 public class PyraminxMoveUtil {
 
-	private static Map<Face, Map<Face, Face>> faceMaps; 
+	private static Map<Axis, Map<Axis, Axis>> faceMaps; 
 
 	public static void init() {
-		Map<Face, Face> dMap = new HashMap<Face, Face>();
-		dMap.put(Face.PD, Face.PD);
-		dMap.put(Face.PL, Face.PF);
-		dMap.put(Face.PF, Face.PR);
-		dMap.put(Face.PR, Face.PL);
+		Map<Axis, Axis> dMap = new HashMap<Axis, Axis>();
+		dMap.put(Axis.PD, Axis.PD);
+		dMap.put(Axis.PL, Axis.PF);
+		dMap.put(Axis.PF, Axis.PR);
+		dMap.put(Axis.PR, Axis.PL);
 		
-		Map<Face, Face> lMap = new HashMap<Face, Face>();
-		lMap.put(Face.PL, Face.PL);
-		lMap.put(Face.PF, Face.PD);
-		lMap.put(Face.PD, Face.PR);
-		lMap.put(Face.PR, Face.PF);
+		Map<Axis, Axis> lMap = new HashMap<Axis, Axis>();
+		lMap.put(Axis.PL, Axis.PL);
+		lMap.put(Axis.PF, Axis.PD);
+		lMap.put(Axis.PD, Axis.PR);
+		lMap.put(Axis.PR, Axis.PF);
 		
-		Map<Face, Face> fMap = new HashMap<Face, Face>();
-		fMap.put(Face.PF, Face.PF);
-		fMap.put(Face.PL, Face.PR);
-		fMap.put(Face.PR, Face.PD);
-		fMap.put(Face.PD, Face.PL);
+		Map<Axis, Axis> fMap = new HashMap<Axis, Axis>();
+		fMap.put(Axis.PF, Axis.PF);
+		fMap.put(Axis.PL, Axis.PR);
+		fMap.put(Axis.PR, Axis.PD);
+		fMap.put(Axis.PD, Axis.PL);
 		
-		Map<Face, Face> rMap = new HashMap<Face, Face>();
-		rMap.put(Face.PR, Face.PR);
-		rMap.put(Face.PF, Face.PL);
-		rMap.put(Face.PL, Face.PD);
-		rMap.put(Face.PD, Face.PF);
+		Map<Axis, Axis> rMap = new HashMap<Axis, Axis>();
+		rMap.put(Axis.PR, Axis.PR);
+		rMap.put(Axis.PF, Axis.PL);
+		rMap.put(Axis.PL, Axis.PD);
+		rMap.put(Axis.PD, Axis.PF);
 		
-		faceMaps = new HashMap<Face, Map<Face, Face>>();
-		faceMaps.put(Face.PD, dMap);
-		faceMaps.put(Face.PL, lMap);
-		faceMaps.put(Face.PF, fMap);
-		faceMaps.put(Face.PR, rMap);
+		faceMaps = new HashMap<Axis, Map<Axis, Axis>>();
+		faceMaps.put(Axis.PD, dMap);
+		faceMaps.put(Axis.PL, lMap);
+		faceMaps.put(Axis.PF, fMap);
+		faceMaps.put(Axis.PR, rMap);
 	}
 	
-	public static Face mapFace(Face face, Move move) {
-		Map<Face, Face> moveMap = faceMaps.get(move.getFace());
+	public static Axis mapFace(Axis face, Move move) {
+		Map<Axis, Axis> moveMap = faceMaps.get(move.getFace());
 		int iters = move.isCW() ? 1 : 2;
 		for(int i = 0; i < iters; i ++) face = moveMap.get(face);
 		

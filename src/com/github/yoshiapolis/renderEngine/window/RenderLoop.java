@@ -1,7 +1,6 @@
 package com.github.yoshiapolis.renderEngine.window;
 
 import com.github.yoshiapolis.cube.pieces.Cube;
-import com.github.yoshiapolis.ivyCube.IvyCube;
 import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.math.Vector3f;
 import com.github.yoshiapolis.puzzle.display.PuzzleDisplay;
@@ -9,6 +8,7 @@ import com.github.yoshiapolis.puzzle.lib.Algorithm;
 import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Puzzle;
+import com.github.yoshiapolis.pyraminx.pieces.Pyraminx;
 import com.github.yoshiapolis.renderEngine.loaders.ModelLoader;
 import com.github.yoshiapolis.renderEngine.rendering.CameraSettings;
 import com.github.yoshiapolis.renderEngine.rendering.OrbitalCamera;
@@ -30,10 +30,9 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 3;
+	private int size = 20;
 	private int movePointer = 0;
 	
-	private boolean scrambling;
 	private Algorithm alg;
 	private Puzzle puzzle;
 	
@@ -43,10 +42,11 @@ public class RenderLoop implements Runnable {
 		Scene.setLightDirection(new Vector3f(0f, 0f, 1f));
 		
 		Cube.init();
-		this.display = new PuzzleDisplay(new Cube(size), 450f);
-		display.setAnimate(true);
-		display.setAnimationSpeed(5f);
-		this.puzzle = new Cube(size);
+		Pyraminx.init();
+		this.display = new PuzzleDisplay(new Pyraminx(size), 450f);
+		display.setAnimate(false);
+		display.setAnimationSpeed(20);
+		this.puzzle = new Pyraminx(size);
 		
 		this.camera = new OrbitalCamera(50f);
 		renderer = new Renderer(camera);
@@ -131,7 +131,7 @@ public class RenderLoop implements Runnable {
 		char key = e.getKeyChar();
 		
 		if(key == 'Q') {
-			alg = puzzle.scramble(20);
+			alg = puzzle.scramble(30);
 		} else if(key == 'S') {
 			alg = puzzle.solve();
 		}
@@ -139,13 +139,13 @@ public class RenderLoop implements Runnable {
 		Move move = null;
 
 		if (key == 'L')
-			move = new Move(Axis.IL, 1, true);
+			move = new Move(Axis.PL, 2, true);
 		if (key == 'R')
-			move = new Move(Axis.IR, 1, true);
+			move = new Move(Axis.PR, 2, true);
 		if (key == 'D')
-			move = new Move(Axis.ID, 1, true);
-		if (key == 'B')
-			move = new Move(Axis.IB, 1, true);
+			move = new Move(Axis.PD, 2, true);
+		if (key == 'F')
+			move = new Move(Axis.PF, 2, true);
 
 		if (key == 'P')
 			puzzle.print();

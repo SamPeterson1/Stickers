@@ -125,7 +125,7 @@ public abstract class Puzzle {
 	public final ArrayList<Move> getRotations() {
 		return this.rotations;
 	}
-	
+
 	public final PieceGroup getGroup(PieceType type, int position) {
 		return this.groupsByType.get(type).get(position);
 	}

@@ -3,8 +3,8 @@ package com.github.yoshiapolis.pyraminx.pieces;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceBehavior;
@@ -13,7 +13,9 @@ import com.github.yoshiapolis.puzzle.lib.PieceType;
 import com.github.yoshiapolis.pyraminx.util.PyraminxEdgeUtil;
 
 public class PyraminxEdgeBehavior implements PieceBehavior {
-
+	
+	private static final PieceType type = PieceType.EDGE;
+	
 	@Override
 	public Piece createPiece(int position, int index, int puzzleSize) {
 		Color[] colors = PyraminxEdgeUtil.getColors(position);
@@ -26,14 +28,14 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 
 	@Override
 	public List<Piece> getAffectedPieces(Move move, PieceGroup group) {
-		Face face = move.getFace();
+		Axis face = move.getFace();
 		int layer = move.getLayer();
 		int position = group.getPosition();
 		int edgeSize = group.getNumPieces();
 		int puzzleSize = group.getPuzzleSize();
 
-		Face face1 = PyraminxEdgeUtil.getFace(position, 0);
-		Face face2 = PyraminxEdgeUtil.getFace(position, 1);
+		Axis face1 = PyraminxEdgeUtil.getFace(position, 0);
+		Axis face2 = PyraminxEdgeUtil.getFace(position, 1);
 		List<Piece> retVal = new ArrayList<Piece>();
 
 		//System.out.println(position + " " + face1 + " " + face2 + " " + face);
@@ -48,11 +50,11 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 			int targetPosition = 0;
 			Move simulateMove = new Move(face, true);
 			
-			if (face == Face.PR) {
+			if (face == Axis.PR) {
 				targetPosition = 5;
-			} else if(face == Face.PL) {
+			} else if(face == Axis.PL) {
 				targetPosition = 3;
-			} else if(face == Face.PF) {
+			} else if(face == Axis.PF) {
 				targetPosition = 4;
 			}
 			
@@ -82,10 +84,9 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 	public void movePiece(Move move, Piece piece) {
 		int iters = move.isCW() ? 1 : 2;
 		int edgeSize = 2 * (piece.getPuzzleSize() - 3) + 1;
-		Face face = move.getFace();
+		Axis face = move.getFace();
 
 		for (int i = 0; i < iters; i++) {
-			int position = piece.getPosition();
 			int edgeMapVal = PyraminxEdgeUtil.getEdgeMapVal(face, piece.getPosition());
 			boolean flip = (edgeMapVal < 0);
 			int newPosition = Math.abs(edgeMapVal) - 1;
@@ -102,8 +103,13 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize) {
+	public int getNumPieces(int puzzleSize, int position) {
 		return 2 * (puzzleSize - 3) + 1;
+	}
+
+	@Override
+	public PieceType getType() {
+		return type;
 	}
 
 }

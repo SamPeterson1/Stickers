@@ -1,10 +1,12 @@
 package com.github.yoshiapolis.pyraminx.pieces;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
+import com.github.yoshiapolis.puzzle.lib.Axis;
 import com.github.yoshiapolis.puzzle.lib.Color;
-import com.github.yoshiapolis.puzzle.lib.Face;
 import com.github.yoshiapolis.puzzle.lib.Move;
 import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceBehavior;
@@ -14,7 +16,18 @@ import com.github.yoshiapolis.pyraminx.util.PyraminxCornerUtil;
 
 public class PyraminxCornerBehavior implements PieceBehavior {
 
-	private static int[] oppositeCorners = {2, 3, 1, 0};
+	private static final PieceType type = PieceType.CORNER;
+	private static final Map<Axis, Integer> oppositeCorners = initOppositeCorners();
+	
+	private static Map<Axis, Integer> initOppositeCorners() {
+		Map<Axis, Integer> oppositeCorners = new EnumMap<Axis, Integer>(Axis.class);
+		oppositeCorners.put(Axis.PF, 2);
+		oppositeCorners.put(Axis.PR, 3);
+		oppositeCorners.put(Axis.PL, 1);
+		oppositeCorners.put(Axis.PD, 0);
+		
+		return oppositeCorners;
+	}
 	
 	@Override
 	public Piece createPiece(int position, int index, int puzzleSize) {
@@ -29,12 +42,12 @@ public class PyraminxCornerBehavior implements PieceBehavior {
 	@Override
 	public List<Piece> getAffectedPieces(Move move, PieceGroup group) {
 		int position = group.getPosition();
-		int puzzleSize = group.getPuzzleSize();
+		int puzzleSize = group.getPuzzleSize();	
 		int layer = move.getLayer();
-		Face moveFace = move.getFace();
+		Axis moveFace = move.getFace();
 		
 		List<Piece> pieces = new ArrayList<Piece>();
-		if(position == oppositeCorners[moveFace.getIndex()]) {
+		if(position == oppositeCorners.get(moveFace)) {
 			if(layer == puzzleSize - 2) {
 				pieces.add(group.getPiece(0)); 
 			} else if(layer == puzzleSize - 1) {
@@ -53,8 +66,13 @@ public class PyraminxCornerBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize) {
+	public int getNumPieces(int puzzleSize, int position) {
 		return 2;
+	}
+
+	@Override
+	public PieceType getType() {
+		return type;
 	}
 
 }

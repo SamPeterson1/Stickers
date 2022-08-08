@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.yoshiapolis.cube.display.CubeDisplayPiece;
 import com.github.yoshiapolis.math.Mathf;
 import com.github.yoshiapolis.math.Matrix3D;
 import com.github.yoshiapolis.math.Vector3f;
@@ -32,6 +31,7 @@ import com.github.yoshiapolis.puzzle.lib.Piece;
 import com.github.yoshiapolis.puzzle.lib.PieceGroup;
 import com.github.yoshiapolis.puzzle.lib.PieceType;
 import com.github.yoshiapolis.puzzle.lib.Puzzle;
+import com.github.yoshiapolis.pyraminx.display.PyraminxDisplayPiece;
 import com.github.yoshiapolis.renderEngine.rendering.Scene;
 
 public class PuzzleDisplay {
@@ -59,7 +59,7 @@ public class PuzzleDisplay {
 		createPieces();
 		
 		this.lastTime = System.currentTimeMillis();
-		this.turnRotation = Mathf.PI / 2;
+		this.turnRotation = 2 * Mathf.PI / 3;
 	}
 	
 	private void createPieces() {
@@ -67,7 +67,7 @@ public class PuzzleDisplay {
 		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
 		for(Piece piece : puzzle.getAllPieces()) {
-			DisplayPiece displayPiece = new CubeDisplayPiece(piece);
+			DisplayPiece displayPiece = new PyraminxDisplayPiece(piece);
 			Scene.addPiece(displayPiece);
 			pieceMap.put(piece, displayPiece);	
 			allDisplayPieces.add(displayPiece);

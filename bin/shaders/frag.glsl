@@ -12,7 +12,7 @@ void main(void) {
 	vec3 unitLightDirection = normalize(lightDirection);
 
 	float diffuse = dot(unitNormal, unitLightDirection);
-	diffuse = max(diffuse, 0);
+	diffuse = max(diffuse, 0.3);
 	
 	outColor = diffuse * vec4(passVertColor, 1.0);
 }

@@ -41,6 +41,11 @@ public class OBJLoader {
 		return reader;
 	}
 	
+	private static int safeParseInt(String str) {
+		if(str.equals("")) return 0;
+		return Integer.parseInt(str);
+	}
+	
 	private static OBJData loadObject(BufferedReader reader) {
 		OBJData data = new OBJData();
 		String line = null;
@@ -76,15 +81,19 @@ public class OBJLoader {
 						indices.add(index);
 						
 						int relativeIndex = index - totalPositionsRead;
-						int normalIndex = Integer.parseInt(indicesStr[2]) - 1 - totalNormalsRead;
-						int texCoordIndex = Integer.parseInt(indicesStr[1]) - 1 - totalTexCoordsRead;
-												
-						normalsArr[3 * relativeIndex] = normals.get(3 * normalIndex);
-						normalsArr[3 * relativeIndex + 1] = normals.get(3 * normalIndex + 1);
-						normalsArr[3 * relativeIndex + 2] = normals.get(3 * normalIndex + 2);
+						int normalIndex = safeParseInt(indicesStr[2]) - 1 - totalNormalsRead;
+						int texCoordIndex = safeParseInt(indicesStr[1]) - 1 - totalTexCoordsRead;
 						
-						texCoordsArr[2 * relativeIndex] = texCoords.get(2 * texCoordIndex);
-						texCoordsArr[2 * relativeIndex + 1] = texCoords.get(2 * texCoordIndex + 1);
+						if(normalIndex >= 0) {
+							normalsArr[3 * relativeIndex] = normals.get(3 * normalIndex);
+							normalsArr[3 * relativeIndex + 1] = normals.get(3 * normalIndex + 1);
+							normalsArr[3 * relativeIndex + 2] = normals.get(3 * normalIndex + 2);
+						}
+						
+						if(texCoordIndex >= 0) {
+							texCoordsArr[2 * relativeIndex] = texCoords.get(2 * texCoordIndex);
+							texCoordsArr[2 * relativeIndex + 1] = texCoords.get(2 * texCoordIndex + 1);
+						}
 					}					
 				} else if(tokens[0].equals("o")) {
 					if(data.objectName == null) {
