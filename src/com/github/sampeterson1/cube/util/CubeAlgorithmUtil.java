@@ -1,7 +1,9 @@
 package com.github.sampeterson1.cube.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
@@ -11,6 +13,30 @@ import com.github.sampeterson1.puzzle.lib.Move;
 public class CubeAlgorithmUtil {
 	
 	private static Axis[] axes = {Axis.R, Axis.U, Axis.F, Axis.L, Axis.D, Axis.B};
+
+	private static Map<String, String> moveReplacements = initMoveReplacements();
+	
+	private static Map<String, String> initMoveReplacements() {
+		Map<String, String> moveReplacements = new HashMap<String, String>();
+		moveReplacements.put("r", "L ~R");	
+		moveReplacements.put("u", "D ~U");
+		moveReplacements.put("f", "B ~F");	
+		moveReplacements.put("l", "R ~L");	
+		moveReplacements.put("d", "U ~D");	
+		moveReplacements.put("b", "F ~B");	
+		moveReplacements.put("x", "~R");
+		moveReplacements.put("y", "~U");
+		moveReplacements.put("z", "~F");
+		moveReplacements.put("M", "R L' ~R'");
+		
+		return moveReplacements;
+	}
+	
+	
+	
+	public static Algorithm parseAlgorithm(String str) {
+		return Algorithm.parseAlgorithm(str.toString(), moveReplacements);
+	}
 	
 	private static List<Move> removeInversePairs(List<Move> moves) {
 		List<Move> newMoves = new ArrayList<Move>();

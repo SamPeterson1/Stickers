@@ -22,10 +22,10 @@ import java.util.Objects;
 
 public class Move {
 	
-	protected boolean isCubeRotation;
-	protected boolean cw;
-	protected int layer;
-	protected Axis face;
+	private boolean isCubeRotation;
+	private boolean cw;
+	private int layer;
+	private Axis face;
 	
 	public Move(Axis face, int layer, boolean cw, boolean isCubeRotation) {
 		this.face = face;

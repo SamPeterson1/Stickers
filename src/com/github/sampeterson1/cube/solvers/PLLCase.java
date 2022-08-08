@@ -21,7 +21,7 @@ package com.github.sampeterson1.cube.solvers;
 import java.util.HashMap;
 
 import com.github.sampeterson1.cube.pieces.Cube;
-import com.github.sampeterson1.cube.util.CubeMoveUtil;
+import com.github.sampeterson1.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
@@ -33,7 +33,7 @@ public class PLLCase {
 	private Algorithm solution;
 
 	public PLLCase(String solution, int[] faces) {
-		this.solution = CubeMoveUtil.parseAlgorithm(solution);
+		this.solution = CubeAlgorithmUtil.parseAlgorithm(solution);
 
 		cornerColors = new int[4];
 		for (int i = 0; i < 8; i += 2) {

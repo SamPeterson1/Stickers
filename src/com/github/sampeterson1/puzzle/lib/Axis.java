@@ -24,30 +24,43 @@ import com.github.sampeterson1.math.Vector3f;
 
 public enum Axis {
 
-	R(new Vector3f(1, 0, 0)), 
-	U(new Vector3f(0, 1, 0)), 
-	F(new Vector3f(0, 0, 1)), 
-	L(new Vector3f(-1, 0, 0)), 
-	D(new Vector3f(0, -1, 0)), 
-	B(new Vector3f(0, 0, -1)),
+	R("R", new Vector3f(1, 0, 0), Mathf.PI/2), 
+	U("U", new Vector3f(0, 1, 0), Mathf.PI/2), 
+	F("F", new Vector3f(0, 0, 1), Mathf.PI/2), 
+	L("L", new Vector3f(-1, 0, 0), Mathf.PI/2), 
+	D("D", new Vector3f(0, -1, 0), Mathf.PI/2), 
+	B("B", new Vector3f(0, 0, -1), Mathf.PI/2),
 	
-	PF(new Vector3f(0, 1.0f/3, Mathf.sqrt(8.0f/9))),
-	PR(new Vector3f(Mathf.sqrt(2.0f/3), 1.0f/3, -Mathf.sqrt(2.0f/9))),
-	PL(new Vector3f(-Mathf.sqrt(2.0f/3), 1.0f/3, -Mathf.sqrt(2.0f/9))),
-	PD(new Vector3f(0, -1, 0)),
+	PF("PF", new Vector3f(0, 1.0f/3, Mathf.sqrt(8.0f/9)), 2*Mathf.PI/3),
+	PR("PR", new Vector3f(Mathf.sqrt(2.0f/3), 1.0f/3, -Mathf.sqrt(2.0f/9)), 2*Mathf.PI/3),
+	PL("PL", new Vector3f(-Mathf.sqrt(2.0f/3), 1.0f/3, -Mathf.sqrt(2.0f/9)), 2*Mathf.PI/3),
+	PD("PD", new Vector3f(0, -1, 0), 2*Mathf.PI/3),
 	
-	IR(new Vector3f(1, -1, 1)),
-	IL(new Vector3f(-1, 1, 1)),
-	IB(new Vector3f(1, 1, -1)),
-	ID(new Vector3f(-1, -1, -1));
+	IR("IR", new Vector3f(1, -1, 1), 2*Mathf.PI/3),
+	IL("IL", new Vector3f(-1, 1, 1), 2*Mathf.PI/3),
+	IB("IB", new Vector3f(1, 1, -1), 2*Mathf.PI/3),
+	ID("ID", new Vector3f(-1, -1, -1), 2*Mathf.PI/3);
 	
 	private Vector3f rotationAxis;
+	private float rotationAmount;
+	private String name;
 
-	Axis(Vector3f rotationAxis) {
+	Axis(String name, Vector3f rotationAxis, float rotationAmount) {
+		this.name = name;
 		this.rotationAxis = rotationAxis;
+		this.rotationAmount = rotationAmount;
+		Algorithm.addAxis(this);
 		rotationAxis.normalize();
 	}
 
+	public String getName() {
+		return this.name;
+	}
+	
+	public float getRotationAmount() {
+		return this.rotationAmount;
+	}
+	
 	public Vector3f getRotationAxis() {
 		return this.rotationAxis;
 	}

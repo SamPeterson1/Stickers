@@ -1,6 +1,7 @@
 package com.github.sampeterson1.renderEngine.window;
 
 import com.github.sampeterson1.cube.pieces.Cube;
+import com.github.sampeterson1.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
@@ -30,7 +31,7 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 20;
+	private int size = 8;
 	private int movePointer = 0;
 	
 	private Algorithm alg;
@@ -44,8 +45,8 @@ public class RenderLoop implements Runnable {
 		Cube.init();
 		Pyraminx.init();
 		this.display = new PuzzleDisplay(new Pyraminx(size), 450f);
-		display.setAnimate(false);
-		display.setAnimationSpeed(20);
+		display.setAnimate(true);
+		display.setAnimationSpeed(5);
 		this.puzzle = new Pyraminx(size);
 		
 		this.camera = new OrbitalCamera(50f);
@@ -139,13 +140,13 @@ public class RenderLoop implements Runnable {
 		Move move = null;
 
 		if (key == 'L')
-			move = new Move(Axis.PL, 2, true);
+			move = new Move(Axis.PL, 1, true);
 		if (key == 'R')
-			move = new Move(Axis.PR, 2, true);
+			move = new Move(Axis.PR, 1, true);
 		if (key == 'D')
-			move = new Move(Axis.PD, 2, true);
+			move = new Move(Axis.PD, 1, true);
 		if (key == 'F')
-			move = new Move(Axis.PF, 2, true);
+			move = new Move(Axis.PF, 1, true);
 
 		if (key == 'P')
 			puzzle.print();

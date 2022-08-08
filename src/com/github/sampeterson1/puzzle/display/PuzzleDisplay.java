@@ -44,7 +44,7 @@ public class PuzzleDisplay {
 	private int direction = 0;
 	private int puzzleSize;
 	private float drawSize;
-	private float turnRotation;
+	private float targetRotation;
 
 	private Puzzle puzzle;
 
@@ -59,7 +59,6 @@ public class PuzzleDisplay {
 		createPieces();
 		
 		this.lastTime = System.currentTimeMillis();
-		this.turnRotation = 2 * Mathf.PI / 3;
 	}
 	
 	private void createPieces() {
@@ -107,11 +106,14 @@ public class PuzzleDisplay {
 	}
 
 	public void makeMove(Move move) {
-		this.animatingMove = move;
-		this.movedPieces = getAffectedPieces();
-		direction = animatingMove.isCW() ? 1 : -1;
-		if(!animate) {
-			finishAnimation();
+		if(!move.isCubeRotation()) {
+			this.animatingMove = move;
+			this.movedPieces = getAffectedPieces();
+			this.targetRotation = move.getFace().getRotationAmount();
+			direction = animatingMove.isCW() ? 1 : -1;
+			if(!animate) {
+				finishAnimation();
+			}
 		}
 	}
 
@@ -145,7 +147,7 @@ public class PuzzleDisplay {
 				displayPiece.setRotationMat(rotationMat);
 			}
 			
-			if(Mathf.abs(currentRotation) >= turnRotation) {
+			if(Mathf.abs(currentRotation) >= targetRotation) {
 				finishAnimation();  
 			}
 		}
@@ -160,7 +162,7 @@ public class PuzzleDisplay {
 	}
 	
 	public final void finishAnimation() {
-		currentRotation = direction * turnRotation;
+		currentRotation = direction * targetRotation;
 
 		Matrix3D rotationMat = getMoveRotationMatrix();	
 		for(Piece position : movedPieces) {
