@@ -18,17 +18,20 @@
 
 package com.github.sampeterson1.main;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.github.sampeterson1.renderEngine.window.RenderLoop;
 import com.github.sampeterson1.renderEngine.window.Window;
 
 public class Main {
 	
 	public static void main(String[] args) {
-		Window.init(600, 600, "Test");
 		
+		Window.init(600, 600, "Test");
 		Thread renderThread = new Thread(new RenderLoop());
 		renderThread.start();
 		
+		GLFW.glfwMakeContextCurrent(0);
 		while(Window.isOpen()) {
 			Window.pollEvents();
 		}

@@ -95,6 +95,7 @@ public class OLLSolver {
 	}
 
 	public void solve() {
+		System.out.println("Solving OLL...");
 		cube.pushRotations();
 
 		Algorithm solution = getOLLSolution();

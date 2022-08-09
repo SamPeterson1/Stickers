@@ -46,7 +46,7 @@ public class OLLCase {
 	}
 
 	public boolean recognize(Cube cube) {
-		Color top = cube.getCenterColor(Axis.U);
+		Color top = cube.getSolveColor(Axis.U);
 		boolean retVal = true;
 		if (cube.getSize() > 2) {
 			for (int i = 0; i < 4; i++) {

@@ -46,6 +46,8 @@ public class EdgeSolver {
 			for (int i = 0; i < 8; i++) {
 				solveEdge();
 				saveEdge();
+				int percent = 100 * (i + 1) / 11;
+				System.out.println("Solving Edges... " + percent + "%");
 			}
 	
 			restoreCenters();
@@ -53,8 +55,10 @@ public class EdgeSolver {
 			for (int i = 0; i < 3; i++) {
 				solveBodyEdge();
 				cube.makeRotation(Axis.U, true);
+				int percent = 100 * (i + 9) / 11;
+				System.out.println("Solving Edges... " + percent + "%");
 			}
-	
+			
 			solveParity();
 			cube.popRotations();
 		}

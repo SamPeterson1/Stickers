@@ -54,10 +54,12 @@ public class CubeCornerBehavior implements PieceBehavior {
 		
 		List<Piece> retVal = new ArrayList<Piece>();
 		
+		//Only move corners when either the first or last layer is turned
 		if(layer == 0) {
-			Integer[] facePositions = CubeCornerUtil.getPositions(face);
+			//Move all corners that belong to the move's face
+			Integer[] positions = CubeCornerUtil.getPositions(face);
 			for(int i = 0; i < 4; i ++) {
-				if(facePositions[i] == group.getPosition()) {
+				if(positions[i] == group.getPosition()) {
 					retVal.add(group.getPiece());
 				}
 			}
@@ -68,14 +70,16 @@ public class CubeCornerBehavior implements PieceBehavior {
 
 	@Override
 	public void movePiece(Move move, Piece piece) {
-		int puzzleSize = piece.getPuzzleSize();
-		move = CubeMoveUtil.normalize(move, puzzleSize);
+		//one clockwise move = three counterclockwise moves
+		move = CubeMoveUtil.normalize(move, piece.getPuzzleSize());
 		int iters = (move.isCW() ? 1 : 3);
-				
+		
 		for(int i = 0; i < iters; i ++) {
-			int[] mapping = CubeCornerUtil.mapCorner(move, piece.getPosition(), puzzleSize);
-			piece.setPosition(mapping[0]);
-			for(int j = 0; j < mapping[1]; j ++) {
+			int[] mapping = CubeCornerUtil.mapCorner(move, piece);
+			int newPosition = mapping[0];
+			int rotation = mapping[1];
+			piece.setPosition(newPosition);
+			for(int j = 0; j < rotation; j ++) {
 				CubeCornerUtil.rotateCW(piece);
 			}
 		}

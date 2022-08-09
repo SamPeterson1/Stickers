@@ -92,8 +92,10 @@ public class CubeCornerUtil {
 		positions.put(Axis.B, new Integer[] { 2, 6, 7, 3 });
 	}
 
-	public static int[] mapCorner(Move move, int position, int cubeSize) {
+	public static int[] mapCorner(Move move, Piece piece) {
 
+		int cubeSize = piece.getPuzzleSize();
+		int position = piece.getPosition();
 		move = CubeMoveUtil.normalize(move, cubeSize);
 		int layer = move.getLayer();
 		Axis face = move.getFace();

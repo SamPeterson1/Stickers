@@ -1,7 +1,6 @@
 package com.github.sampeterson1.renderEngine.window;
 
 import com.github.sampeterson1.cube.pieces.Cube;
-import com.github.sampeterson1.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
@@ -31,32 +30,29 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 8;
+	private int size = 12;
 	private int movePointer = 0;
 	
 	private Algorithm alg;
 	private Puzzle puzzle;
-	
-	public RenderLoop() {		
+
+	@Override
+	public void run() {
+		Window.initGLContext();
 		CameraSettings settings = new CameraSettings();
 		Scene.setCameraSettings(settings);
 		Scene.setLightDirection(new Vector3f(0f, 0f, 1f));
 		
 		Cube.init();
 		Pyraminx.init();
-		this.display = new PuzzleDisplay(new Pyraminx(size), 450f);
+		this.display = new PuzzleDisplay(new Cube(size), 450f);
 		display.setAnimate(true);
-		display.setAnimationSpeed(5);
-		this.puzzle = new Pyraminx(size);
+		display.setAnimationSpeed(30);
+		this.puzzle = new Cube(size);
 		
 		this.camera = new OrbitalCamera(50f);
 		renderer = new Renderer(camera);
-	}
-	
-	@Override
-	public void run() {
-		Window.initGLContext();
-		
+
         while(Window.isOpen()) { 	
 			Window.clear();		
 			handleEvents();
@@ -92,14 +88,16 @@ public class RenderLoop implements Runnable {
 		Window.lockEvents();
 		while(Window.hasEventToProcess()) {
 			Event e = Window.getEvent();
-			if(e.getType() == Event.EVENT_MOUSE_DRAG) {
-				mouseDragged(e);
-			} else if(e.getType() == Event.EVENT_MOUSE_BUTTON_PRESS) {
-				mousePressed(e);
-			} else if(e.getType() == Event.EVENT_KEY_PRESS) {
-				keyPressed(e);
-			} else if(e.getType() == Event.EVENT_SCROLL) {
-				mouseScrolled(e);
+			if(e != null) {
+				if(e.getType() == Event.EVENT_MOUSE_DRAG) {
+					mouseDragged(e);
+				} else if(e.getType() == Event.EVENT_MOUSE_BUTTON_PRESS) {
+					mousePressed(e);
+				} else if(e.getType() == Event.EVENT_KEY_PRESS) {
+					keyPressed(e);
+				} else if(e.getType() == Event.EVENT_SCROLL) {
+					mouseScrolled(e);
+				}
 			}
 		}
 		Window.unlockEvents();

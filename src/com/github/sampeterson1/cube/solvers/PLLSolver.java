@@ -65,6 +65,7 @@ public class PLLSolver {
 	}
 
 	public void solve() {
+		System.out.println("Solving PLL...");
 		cube.pushRotations();
 
 		Algorithm solution = getPLLSolution();
@@ -75,7 +76,7 @@ public class PLLSolver {
 			solve();
 		}
 
-		Color fColor = cube.getCenterColor(Axis.F);
+		Color fColor = cube.getSolveColor(Axis.F);
 		while (cube.getCorner(0).getPiece().getColor(2) != fColor) {
 			cube.makeMove(new Move(Axis.U, true));
 		}

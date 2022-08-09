@@ -38,15 +38,19 @@ public class CubeAlgorithmUtil {
 		return Algorithm.parseAlgorithm(str.toString(), moveReplacements);
 	}
 	
-	private static List<Move> removeInversePairs(List<Move> moves) {
+	private static List<Move> mergeInversePairs(List<Move> moves) {
 		List<Move> newMoves = new ArrayList<Move>();
+		
+		newMoves.add(moves.get(0));
+		int mergeIndex = -1;
 		
 		for (int i = 1; i < moves.size(); i ++) {
 			Move move = moves.get(i);
 			Move previous = moves.get(i - 1);
 			
-			if (move.getInverse().equals(previous)) {
-				newMoves.remove(i - 1);
+			if (i - mergeIndex >= 2 && move.getInverse().equals(previous)) {
+				newMoves.remove(newMoves.size() - 1);
+				mergeIndex = i;
 			} else {
 				newMoves.add(move);
 				previous = move;
@@ -59,14 +63,20 @@ public class CubeAlgorithmUtil {
 	private static List<Move> mergeRepeatedMoves(List<Move> moves) {
 		List<Move> newMoves = new ArrayList<Move>();
 		
+		newMoves.add(moves.get(0));
+		newMoves.add(moves.get(1));
+		int mergeIndex = -1;
+		
 		for (int i = 2; i < moves.size(); i ++) {
 			Move move = moves.get(i);
 			Move prev1 = moves.get(i - 1);
 			Move prev2 = moves.get(i - 2);
 			
-			if (move.equals(prev1) && prev1.equals(prev2)) {
-				newMoves.remove(i - 1);
-				newMoves.remove(i - 1);
+			if (i - mergeIndex >= 3 && move.equals(prev1) && prev1.equals(prev2)) {
+				newMoves.remove(newMoves.size() - 1);				
+				newMoves.remove(newMoves.size() - 1);
+				newMoves.add(move.getInverse());
+				mergeIndex = i;
 			} else {
 				newMoves.add(move);
 			}
@@ -82,7 +92,7 @@ public class CubeAlgorithmUtil {
 		while (moves.size() < prevNumMoves) {
 			prevNumMoves = moves.size();
 			moves = mergeRepeatedMoves(moves);
-			moves = removeInversePairs(moves);
+			moves = mergeInversePairs(moves);
 		}
 		
 		return new Algorithm(moves);

@@ -34,9 +34,10 @@ public class CornerSolver {
 	}
 
 	public void solve() {
+		System.out.println("Solving Corners...");
 		cube.pushRotations();
 		
-		Color c = cube.getCenterColor(Axis.D);
+		Color c = cube.getSolveColor(Axis.D);
 		for (int i = 0; i < 4; i++) {
 			solveCorner(c);
 		}
@@ -49,14 +50,14 @@ public class CornerSolver {
 			cube.makeMove(new Move(Axis.U, 0, true));
 		}
 
-		Color fColor = cube.getCenterColor(Axis.F);
-		Color rColor = cube.getCenterColor(Axis.R);
+		Color fColor = cube.getSolveColor(Axis.F);
+		Color rColor = cube.getSolveColor(Axis.R);
 		while (toSolve.indexOfColor(fColor) == -1 || toSolve.indexOfColor(rColor) == -1) {
 			cube.makeMove(new Move(Axis.U, 0, true));
 			cube.makeRotation(Axis.U, false);
 			
-			fColor = cube.getCenterColor(Axis.F);
-			rColor = cube.getCenterColor(Axis.R);
+			fColor = cube.getSolveColor(Axis.F);
+			rColor = cube.getSolveColor(Axis.R);
 		}
 	}
 
@@ -69,7 +70,7 @@ public class CornerSolver {
 				while (piece.getPosition() != 5) {
 					cube.makeRotation(Axis.U, true);
 				}
-				if (piece.getColor(0) != cube.getCenterColor(Axis.F)) {
+				if (piece.getColor(0) != cube.getSolveColor(Axis.F)) {
 					cube.popRotations();
 					return piece;
 				} else {

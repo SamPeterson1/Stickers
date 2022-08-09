@@ -5,7 +5,6 @@ import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.puzzle.display.Colors;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.pyraminx.util.PyraminxAlgorithmUtil;
@@ -67,9 +66,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		super(position);
 	}
 
-	/*
-	 * Given a piece, determine if it should use the up facing piece model
-	 */
+	//Given a piece, determine if we should use the up facing piece model
 	private boolean isUpFacing(Piece piece) {
 		PieceType type = piece.getType();
 		int index = piece.getIndex();
@@ -81,11 +78,13 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		} else {
 			int size = piece.getPuzzleSize();
 			int layer = PyraminxCenterUtil.getZPosition(piece.getIndex(), size - 3);
+			//calculate the index relative to the layer that the piece is in
 			int indexOff = piece.getIndex() - PyraminxCenterUtil.getIndexAtZPosition(layer, size - 3);
 			return (indexOff % 2) == 0;
 		}
 	}
 	
+	//Return the position of an up facing piece given its layer, index, and the size of the puzzle
 	private Matrix3D placeUpPiece(int layer, int centeredIndex, int puzzleSize) {
 		Matrix3D transform = new Matrix3D();
 
@@ -107,6 +106,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		return transform;
 	}
 	
+	//Return the position of a down facing piece given its layer, index, and the size of the puzzle
 	private Matrix3D placeDownPiece(int layer, int centeredIndex, int puzzleSize) {
 		Matrix3D transform = new Matrix3D();
 
@@ -130,6 +130,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		return transform;
 	}
 	
+	//Given a center piece, return its world position centered at the front face of the pyraminx
 	private Matrix3D getCenterOrigin(Piece piece) {
 		int size = piece.getPuzzleSize();
 		int layer = PyraminxCenterUtil.getZPosition(piece.getIndex(), size - 3);
@@ -144,6 +145,10 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	
 	}
 	
+	/*
+	 * Given a corner piece, return its world position centered at 
+	 * the bottom right corner of the front face of the pyraminx
+	 */
 	private Matrix3D getCornerOrigin(Piece piece) {
 		Matrix3D transform = new Matrix3D();
 		int puzzleSize = piece.getPuzzleSize();
@@ -163,6 +168,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		return transform;
 	}
 	
+	//Given an edge piece, return its world position centered at the bottom edge of the front face of the pyraminx
 	private Matrix3D getEdgeOrigin(Piece piece) {
 		int index = piece.getIndex();
 		int puzzleSize = piece.getPuzzleSize();
@@ -176,6 +182,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		}
 	}
 	
+	//Apply the correct rotation algorithm to a rotation matrix
 	private Matrix3D getPieceRotation(Piece piece) {
 		PieceType type = piece.getType();
 		int position = piece.getPosition();
@@ -193,6 +200,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		return Algorithm.getRotationFromAlgorithm(alg);
 	}
 	
+	//See DisplayPiece.java
 	@Override
 	public void setWorldPosition(Piece piece) {
 		PieceType type = piece.getType();
@@ -210,9 +218,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		super.setTransformationMat(transform);
 	}
 	
-	/*
-	 * See DisplayPiece
-	 */
+	//See DisplayPiece.java
 	@Override
 	protected ColoredModel loadModel(Piece piece) {
 		ColoredModel model = null;

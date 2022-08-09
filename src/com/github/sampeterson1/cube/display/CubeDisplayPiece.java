@@ -146,9 +146,6 @@ public class CubeDisplayPiece extends DisplayPiece {
 		return Algorithm.getRotationFromAlgorithm(alg);
 	}
 	
-	/*
-	 * See DisplayPiece.java
-	 */
 	@Override
 	public void setWorldPosition(Piece piece) {
 		pieceSize = CUBE_DRAW_SIZE / piece.getPuzzleSize();
@@ -169,9 +166,6 @@ public class CubeDisplayPiece extends DisplayPiece {
 		super.setTransformationMat(transformation);
 	}
 	
-	/*
-	 * See DisplayPiece.java
-	 */
 	@Override
 	protected ColoredModel loadModel(Piece piece) {
 		ColoredModel model = null;

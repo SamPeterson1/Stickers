@@ -33,10 +33,11 @@ public class F2LSolver {
 	}
 
 	public void solve() {
+		System.out.println("Solving F2L...");
 		if(cube.getSize() > 2) {
 			cube.pushRotations();
 	
-			Color avoid = cube.getCenterColor(Axis.U);
+			Color avoid = cube.getSolveColor(Axis.U);
 			for (int i = 0; i < 4; i++) {
 				solveEdge(avoid);
 			}
@@ -51,8 +52,8 @@ public class F2LSolver {
 		if (toInsert != null) {
 			allignEdge(toInsert);
 
-			Color rColor = cube.getCenterColor(Axis.R);
-			Color lColor = cube.getCenterColor(Axis.L);
+			Color rColor = cube.getSolveColor(Axis.R);
+			Color lColor = cube.getSolveColor(Axis.L);
 			Color c1 = toInsert.getColor(0);
 
 			if (c1 == rColor) {
@@ -74,11 +75,11 @@ public class F2LSolver {
 			cube.makeMove(new Move(Axis.U, 0, true));
 		}
 
-		Color fColor = cube.getCenterColor(Axis.F);
+		Color fColor = cube.getSolveColor(Axis.F);
 		while (toInsert.getColor(1) != fColor) {
 			cube.makeMove(new Move(Axis.U, 0, true));
 			cube.makeRotation(Axis.U, false);
-			fColor = cube.getCenterColor(Axis.F);
+			fColor = cube.getSolveColor(Axis.F);
 		}
 	}
 
@@ -89,7 +90,7 @@ public class F2LSolver {
 			while (piece.getPosition() != 5) {
 				cube.makeRotation(Axis.U, true);
 			}
-			Color fColor = cube.getCenterColor(Axis.F);
+			Color fColor = cube.getSolveColor(Axis.F);
 			if (piece.getColor(0) != avoid && piece.getColor(1) != avoid && piece.getColor(0) != fColor) {
 				return piece;
 			}

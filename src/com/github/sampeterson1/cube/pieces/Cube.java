@@ -37,11 +37,10 @@ import com.github.sampeterson1.puzzle.lib.Puzzle;
 public class Cube extends Puzzle {
 
 	public static Axis[] faces = { Axis.R, Axis.U, Axis.F, Axis.L, Axis.D, Axis.B };
-
+	
 	private static Map<Axis, Axis> opposingFaces = initOpposingFaces();
 	private static Map<Axis, Integer> facePositions = initFacePositions();
 	private static Map<Axis, Color> faceColors = initFaceColors();
-	private static Map<Color, Color> opposingColors = initOpposingColors();
 	
 	private static final int NUM_CENTERS = 6;
 	private static final int NUM_EDGES = 12;
@@ -79,19 +78,6 @@ public class Cube extends Puzzle {
 		colors.put(Axis.L, Color.ORANGE);
 		colors.put(Axis.D, Color.YELLOW);
 		colors.put(Axis.B, Color.BLUE);
-		
-		return colors;
-	}
-	
-	private static Map<Color, Color> initOpposingColors() {
-		Map<Color, Color> colors = new EnumMap<Color, Color>(Color.class);
-		colors = new EnumMap<Color, Color>(Color.class);
-		colors.put(Color.WHITE, Color.YELLOW);
-		colors.put(Color.RED, Color.ORANGE);
-		colors.put(Color.BLUE, Color.GREEN);
-		colors.put(Color.GREEN, Color.BLUE);
-		colors.put(Color.ORANGE, Color.RED);
-		colors.put(Color.YELLOW, Color.WHITE);
 		
 		return colors;
 	}
@@ -134,11 +120,20 @@ public class Cube extends Puzzle {
 		this.solver = new MasterCubeSolver(this);
 	}
 
+	public PieceGroup getCorner(int position) {
+		return super.getGroup(PieceType.CORNER, position);
+	}
+
+	public PieceGroup getEdge(int position) {
+		return super.getGroup(PieceType.EDGE, position);
+	}
+	
 	public PieceGroup getCenter(Axis face) {
 		return super.getGroup(PieceType.CENTER, facePositions.get(face));
 	}
 
-	public Color getCenterColor(Axis face) {
+	//Given a face, return the color that it should be when solved
+	public Color getSolveColor(Axis face) {
 		if(super.getSize() == 2) {
 			face = transposeAxis(face);
 			return getFaceColor(face);
@@ -149,14 +144,7 @@ public class Cube extends Puzzle {
 		return getCenter(face).getPiece(centerIndex).getColor();
 	}
 
-	public PieceGroup getCorner(int position) {
-		return super.getGroup(PieceType.CORNER, position);
-	}
-
-	public PieceGroup getEdge(int position) {
-		return super.getGroup(PieceType.EDGE, position);
-	}
-
+	@Override
 	public Algorithm solve() {
 		return solver.solve();
 	}

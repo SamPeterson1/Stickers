@@ -53,15 +53,14 @@ public class Window {
 
 		glfwMakeContextCurrent(windowID);
 		glfwSwapInterval(1);
-
 		glfwShowWindow(windowID);
 		setEventCallbacks();
-		GL.createCapabilities();
+		
+        GL.createCapabilities();
 	}
 	
 	public static void initGLContext() {
-		glfwMakeContextCurrent(windowID);
-        GL.createCapabilities();
+		GL.createCapabilities();
 	}
 	
 	private static void setEventCallbacks() {

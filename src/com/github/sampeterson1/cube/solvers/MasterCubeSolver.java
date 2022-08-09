@@ -16,6 +16,8 @@ public class MasterCubeSolver {
 	private Cube cube;
 	
 	public MasterCubeSolver(Cube cube) {
+		
+		
 		centerSolver = new CenterSolver(cube);
 		edgeSolver = new EdgeSolver(cube);
 		crossSolver = new CrossSolver(cube);
@@ -24,10 +26,14 @@ public class MasterCubeSolver {
 		ollSolver = new OLLSolver(cube);
 		pllSolver = new PLLSolver(cube);
 		
+		
+		
 		this.cube = cube;
 	}
 	
 	public Algorithm solve() {
+		long startTime = System.currentTimeMillis();
+		
 		cube.setLogMoves(true);
 		cube.clearMoveLog();
 		
@@ -39,8 +45,12 @@ public class MasterCubeSolver {
 		ollSolver.solve();
 		pllSolver.solve();
 		
+		System.out.println("Simplifying solution...");
 		Algorithm solution = cube.getMoveLog();
-		//solution = cube.simplify(solution);
+		solution = cube.simplify(solution);
+		
+		float seconds = (System.currentTimeMillis() - startTime) / 1000.0f;
+		System.out.println("Solved in " + seconds + " seconds!");
 		
 		return solution;
 	}

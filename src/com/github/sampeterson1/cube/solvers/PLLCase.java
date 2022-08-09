@@ -90,6 +90,6 @@ public class PLLCase {
 		else if (index == 3)
 			f = Axis.L;
 
-		return cube.getCenterColor(f);
+		return cube.getSolveColor(f);
 	}
 }

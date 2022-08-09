@@ -79,9 +79,6 @@ public class Algorithm {
 			if(i < iters - 1) algStr.append(" ");
 		}
 		
-		
-		System.out.println("Old: " + str);
-		System.out.println("New: " + algStr);
 		Algorithm alg = new Algorithm();
 		String[] moves = algStr.toString().split(" ");
 		for(String move : moves) {
@@ -127,9 +124,6 @@ public class Algorithm {
 		if(c == '[') {
 			String[] layers = move.substring(i + 1, move.length() - 1).split(",");
 			if(layers.length > 1) {
-				System.out.println(layers[0] + " a " + layers[1]);
-				System.out.println("Layer: " + move.substring(i+1, move.length() - 1) + " " + move);
-
 				startLayer = parseLayer(layers[0], puzzleSize);
 				endLayer = parseLayer(layers[1], puzzleSize);
 			} else {
@@ -138,8 +132,6 @@ public class Algorithm {
 		}
 		
 		List<Move> moves = new ArrayList<Move>();
-
-		System.out.println(startLayer + " " + endLayer);
 		
 		if(isCubeRotation) {
 			for(int j = 0; j < iters; j ++) {
@@ -186,7 +178,6 @@ public class Algorithm {
 		for(Move move : alg.getMoves()) {
 			Axis axis = move.getFace();
 			Vector3f rotationAxis = axis.getRotationAxis();
-			System.out.println(axis);
 			float rotationAmount = axis.getRotationAmount();
 			if(move.isCW()) {
 				rotation.rotateAroundAxis(rotationAxis, rotationAmount);

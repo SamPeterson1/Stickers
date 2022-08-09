@@ -22,7 +22,6 @@ import java.util.ArrayList;
 
 import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeCenterUtil;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
@@ -223,7 +222,7 @@ public class CenterSolver {
 			if(size % 2 == 0) {
 				color = (i == 1) ? Color.WHITE : Color.YELLOW;
 			} else {
-				color = cube.getCenterColor(Axis.U);
+				color = cube.getSolveColor(Axis.U);
 			}
 			boolean safe = (i == 1);
 			for (int line = 0; line < size; line++) {
@@ -271,7 +270,7 @@ public class CenterSolver {
 			if(size % 2 == 0) {
 				color = (i == 0) ? Color.ORANGE : Color.BLUE;
 			} else {
-				color = cube.getCenterColor(Axis.U);
+				color = cube.getSolveColor(Axis.U);
 			}
 
 			for (int line = 0; line < size; line++) {
@@ -337,7 +336,7 @@ public class CenterSolver {
 		if(size % 2 == 0) {
 			color = Color.RED;
 		} else {
-			color = cube.getCenterColor(Axis.U);
+			color = cube.getSolveColor(Axis.U);
 		}
 
 		PieceGroup uCenter = cube.getCenter(Axis.U);
@@ -388,7 +387,7 @@ public class CenterSolver {
 	}
 
 	private void printProgress() {
-		System.out.println("Solving... " + ((int) (progress * 100)) + "%");
+		System.out.println("Solving Centers... " + ((int) (progress * 100)) + "%");
 	}
 
 }

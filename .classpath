@@ -8,5 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Linux x64"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -58,27 +58,32 @@ public class CubeEdgeBehavior implements PieceBehavior {
 	@Override
 	public List<Piece> getAffectedPieces(Move move, PieceGroup group) {
 		int puzzleSize = group.getPuzzleSize();
-		int size = puzzleSize - 2;
+		int edgeSize = puzzleSize - 2;
 		int position = group.getPosition();
 
-		move = CubeMoveUtil.normalize(move, size + 2);
+		move = CubeMoveUtil.normalize(move, puzzleSize);
 		Axis moveFace = move.getFace();
 		Axis oppMoveFace = Cube.getOpposingFace(moveFace);
 		Axis edgeFace1 = CubeEdgeUtil.getFace(position, 0);
 		Axis edgeFace2 = CubeEdgeUtil.getFace(position, 1);
-
+		
+		int layer = move.getLayer();
 		List<Piece> retVal = new ArrayList<Piece>();
 
-		if ((move.getLayer() == 0 && (moveFace == edgeFace1 || moveFace == edgeFace2))
-				|| (move.getLayer() == size + 1 && (oppMoveFace == edgeFace1 || oppMoveFace == edgeFace2))) {
+		boolean firstLayerTurn = (layer == 0);
+		boolean lastLayerTurn = (layer == edgeSize + 1);
+		boolean innerLayerTurn = (!firstLayerTurn && !lastLayerTurn);
+		boolean edgeOnMoveFace = (moveFace == edgeFace1 || moveFace == edgeFace2);
+		boolean edgeOnOppMoveFace = (oppMoveFace == edgeFace1 || oppMoveFace == edgeFace2);
+		
+		if ((firstLayerTurn && edgeOnMoveFace )|| (lastLayerTurn && edgeOnOppMoveFace)) {
 			return group.getPieces();
-		} else if (move.getLayer() != 0 && move.getLayer() != size + 1 && moveFace != edgeFace1 && moveFace != edgeFace2
-				&& oppMoveFace != edgeFace1 && oppMoveFace != edgeFace2) {
+		} else if (innerLayerTurn && !edgeOnMoveFace && !edgeOnOppMoveFace) {
 			Piece calc = null;
 			if (moveFace == Axis.R) {
-				calc = new Piece(PieceType.EDGE, 0, size - move.getLayer(), puzzleSize);
+				calc = new Piece(PieceType.EDGE, 0, edgeSize - move.getLayer(), puzzleSize);
 			} else if (moveFace == Axis.U) {
-				calc = new Piece(PieceType.EDGE, 4, size - move.getLayer(), puzzleSize);
+				calc = new Piece(PieceType.EDGE, 4, edgeSize - move.getLayer(), puzzleSize);
 			} else if (moveFace == Axis.F) {
 				calc = new Piece(PieceType.EDGE, 1, move.getLayer() - 1, puzzleSize);
 			}

@@ -35,10 +35,11 @@ public class CrossSolver {
 	}
 
 	public void solve() {
+		System.out.println("Solving Cross...");
 		if (cube.getSize() > 2) {
 			cube.pushRotations();
 	
-			Color c = cube.getCenterColor(Axis.D);
+			Color c = cube.getSolveColor(Axis.D);
 			for (int i = 0; i < 4; i++) {
 				solveEdge(c);
 			}
@@ -140,27 +141,24 @@ public class CrossSolver {
 	}
 
 	private void solveEdge(Color c) {
-
 		Piece toSolve = findEdge(c);
-		System.out.println("0");
 		cube.pushRotations();
+		
 		if (toSolve != null) {
 			int pos = toSolve.getPosition();
 			if (pos >= 0 && pos <= 3) {
-				System.out.println("1");
 				boolean flipped = (toSolve.getColor(1) == c);
 				insertTopEdge(toSolve, flipped);
 			} else if (pos >= 4 && pos <= 7) {
-				System.out.println("2");
 				int turns = getEdgeDistance(toSolve, c);
 				boolean flipped = (toSolve.getColor(1) == c);
 				insertSideEdge(toSolve, turns, flipped);
 			} else if (pos >= 8 && pos <= 11) {
-				System.out.println("3");
 				moveCorner(toSolve);
 				solveEdge(c);
 			}
 		}
+		
 		cube.popRotations();
 	}
 

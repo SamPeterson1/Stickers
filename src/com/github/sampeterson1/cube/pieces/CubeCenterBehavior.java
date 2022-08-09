@@ -110,7 +110,6 @@ public class CubeCenterBehavior implements PieceBehavior {
 		Axis moveFace = move.getFace();
 		int index = piece.getIndex();
 		int centerSize = piece.getPuzzleSize() - 2;
-		int layer = move.getLayer();
 
 		int newIndex = index;
 		if (face == moveFace || face == Cube.getOpposingFace(moveFace)) {
