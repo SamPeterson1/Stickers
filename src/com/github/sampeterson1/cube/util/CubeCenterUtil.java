@@ -21,9 +21,7 @@ package com.github.sampeterson1.cube.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 

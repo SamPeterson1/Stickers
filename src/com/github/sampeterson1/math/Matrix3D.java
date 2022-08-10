@@ -21,7 +21,6 @@ package com.github.sampeterson1.math;
 import java.nio.FloatBuffer;
 
 import com.github.sampeterson1.renderEngine.rendering.CameraSettings;
-import com.github.sampeterson1.renderEngine.window.Window;
 
 public class Matrix3D {
 

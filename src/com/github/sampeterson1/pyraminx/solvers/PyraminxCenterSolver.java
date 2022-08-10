@@ -39,10 +39,7 @@ public class PyraminxCenterSolver {
 	private int centerIndex;
 	private int centerLayer;
 	private int aboveCenterIndex;
-	
-	
-	private boolean first = true;
-	
+
 	public PyraminxCenterSolver(Pyraminx pyr) {
 		this.pyr = pyr;
 		this.puzzleSize = pyr.getSize();

@@ -41,6 +41,7 @@ public class OBJLoader {
 	private static class OBJData {
 		public String objectName;
 		public float[] positions;
+		@SuppressWarnings("unused")
 		public float[] texCoords;
 		public float[] normals;
 		public int[] indices;

@@ -19,7 +19,6 @@
 package com.github.sampeterson1.puzzle.lib;
 
 import com.github.sampeterson1.math.Mathf;
-import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
 
 public enum Axis {
