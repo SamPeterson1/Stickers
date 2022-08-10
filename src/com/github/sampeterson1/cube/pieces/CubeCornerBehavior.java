@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.github.sampeterson1.cube.util.CubeCornerUtil;
 import com.github.sampeterson1.cube.util.CubeMoveUtil;
+import com.github.sampeterson1.cube.util.CubeUtil;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
@@ -31,6 +32,7 @@ import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 
+//An implementation of PieceBehavior that defines the behavior of corner pieces on a Rubik's Cube
 public class CubeCornerBehavior implements PieceBehavior {
 	
 	private static final PieceType type = PieceType.CORNER;
@@ -47,9 +49,11 @@ public class CubeCornerBehavior implements PieceBehavior {
 	public List<Piece> getAffectedPieces(Move move, PieceGroup group) {
 		Axis face = move.getFace();
 		int layer = move.getLayer();
+		
+		//we can treat a move on the last layer as a move on the first layer if we invert its face
 		if(layer == group.getPuzzleSize() - 1) {
 			layer = 0;
-			face = Cube.getOpposingFace(face);
+			face = CubeUtil.getOpposingFace(face);
 		}
 		
 		List<Piece> retVal = new ArrayList<Piece>();
@@ -79,6 +83,7 @@ public class CubeCornerBehavior implements PieceBehavior {
 			int newPosition = mapping[0];
 			int rotation = mapping[1];
 			piece.setPosition(newPosition);
+			//rotate the indices of the colors on the corner such that they match up with their new position
 			for(int j = 0; j < rotation; j ++) {
 				CubeCornerUtil.rotateCW(piece);
 			}

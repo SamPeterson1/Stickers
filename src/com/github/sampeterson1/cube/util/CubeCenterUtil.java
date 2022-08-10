@@ -69,17 +69,17 @@ public class CubeCenterUtil {
 
 	public static int getLayer(Piece piece, Axis moveFace, int size) {
 
-		Axis face = Cube.getFace(piece.getPosition());
+		Axis face = CubeUtil.getFace(piece.getPosition());
 		int index = piece.getIndex();
 
 		if (face == moveFace)
 			return 0;
-		if (face == Cube.getOpposingFace(moveFace))
+		if (face == CubeUtil.getOpposingFace(moveFace))
 			return size + 1;
 
 		boolean invert = (moveFace == Axis.D || moveFace == Axis.B || moveFace == Axis.L);
 		if (invert)
-			moveFace = Cube.getOpposingFace(moveFace);
+			moveFace = CubeUtil.getOpposingFace(moveFace);
 
 		int layer = 0;
 

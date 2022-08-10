@@ -18,30 +18,44 @@
 
 package com.github.sampeterson1.cube.solvers;
 
-import java.util.HashMap;
-
 import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 
+//A representation of a full PLL case in the CFOP method
 public class PLLCase {
 
-	private int[] edgeColors;
-	private int[] cornerColors;
+	/*
+	 * Where each edge should be in counterclockwise order starting from the edge at position 0.
+	 * We use the color at index 1 to determine which face it belongs to.
+	 */
+	private Axis[] edgeLocations;
+	
+	/*
+	 * Where each corner should be in counterclockwise order starting from the corner at position 0.
+	 * We use the color at index 2 to determine which face it belongs to.
+	 */
+	private Axis[] cornerLocations;
+	
 	private Algorithm solution;
-
-	public PLLCase(String solution, int[] faces) {
+	
+	/*
+	 * The locations array is interleaved with edge and corner positions, starting with the corner at position 0.
+	 * The array must be in the following order: 
+	 * corner position 0, edge position 0, corner position 1, edge position 1, corner position 2, edge position 2... etc.
+	 */
+	public PLLCase(String solution, Axis[] locations) {
 		this.solution = CubeAlgorithmUtil.parseAlgorithm(solution);
 
-		cornerColors = new int[4];
+		cornerLocations = new Axis[4];
 		for (int i = 0; i < 8; i += 2) {
-			cornerColors[i / 2] = faces[i];
+			cornerLocations[i / 2] = locations[i];
 		}
-		edgeColors = new int[4];
+		edgeLocations = new Axis[4];
 		for (int i = 1; i < 8; i += 2) {
-			edgeColors[i / 2] = faces[i];
+			edgeLocations[i / 2] = locations[i];
 		}
 	}
 
@@ -49,47 +63,27 @@ public class PLLCase {
 		return this.solution;
 	}
 
-	public boolean recognize(Cube cube, int off) {
-
-		HashMap<Integer, Color> colorMap = new HashMap<Integer, Color>();
+	//Return true if the cube matches this case
+	public boolean recognize(Cube cube) {
+		//Check the permutations of the corners
 		for (int i = 0; i < 4; i++) {
-			colorMap.put(i, getColor(cube, (i + off) % 4));
-		}
-
-		for (int i = 0; i < 4; i++) {
-			Color compareTo = colorMap.get(cornerColors[i]);
+			Color compareTo = cube.getSolveColor(cornerLocations[i]);
 			Color actual = cube.getCorner(i).getPiece().getColor(2);
 
-			if (compareTo != actual) {
-				return false;
-			}
+			if (compareTo != actual) return false;
 		}
 
+		//Check the permutations of the edges, but only if the cube has edges (size > 2)
 		if (cube.getSize() > 2) {
 			for (int i = 0; i < 4; i++) {
-				Color compareTo = colorMap.get(edgeColors[i]);
+				Color compareTo = cube.getSolveColor(edgeLocations[i]);
 				Color actual = cube.getEdge(i).getPiece(0).getColor(1);
 
-				if (compareTo != actual) {
-					return false;
-				}
+				if (compareTo != actual) return false;
 			}
 		}
 
 		return true;
 	}
 
-	private Color getColor(Cube cube, int index) {
-		Axis f = null;
-		if (index == 0)
-			f = Axis.F;
-		else if (index == 1)
-			f = Axis.R;
-		else if (index == 2)
-			f = Axis.B;
-		else if (index == 3)
-			f = Axis.L;
-
-		return cube.getSolveColor(f);
-	}
 }

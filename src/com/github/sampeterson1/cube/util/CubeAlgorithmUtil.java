@@ -32,8 +32,6 @@ public class CubeAlgorithmUtil {
 		return moveReplacements;
 	}
 	
-	
-	
 	public static Algorithm parseAlgorithm(String str) {
 		return Algorithm.parseAlgorithm(str.toString(), moveReplacements);
 	}

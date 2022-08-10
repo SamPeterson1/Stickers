@@ -21,8 +21,6 @@ package com.github.sampeterson1.cube.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.cube.pieces.Cube;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
 
@@ -40,7 +38,7 @@ public class CubeMoveUtil {
 		Axis face = move.getFace();
 		boolean flipped = false;
 		if (face == Axis.L || face == Axis.D || face == Axis.B) {
-			face = Cube.getOpposingFace(face);
+			face = CubeUtil.getOpposingFace(face);
 			flipped = true;
 		}
 
@@ -119,7 +117,7 @@ public class CubeMoveUtil {
 		Axis face = move.getFace();
 		boolean flipped = false;
 		if (face == Axis.L || face == Axis.D || face == Axis.B) {
-			face = Cube.getOpposingFace(face);
+			face = CubeUtil.getOpposingFace(face);
 			flipped = true;
 		}
 

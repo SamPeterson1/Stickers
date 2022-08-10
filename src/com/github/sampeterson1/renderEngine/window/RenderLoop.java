@@ -1,6 +1,9 @@
 package com.github.sampeterson1.renderEngine.window;
 
+import org.lwjgl.opengl.GL11;
+
 import com.github.sampeterson1.cube.pieces.Cube;
+import com.github.sampeterson1.cube.util.CubeUtil;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
@@ -30,7 +33,7 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 12;
+	private int size = 3;
 	private int movePointer = 0;
 	
 	private Algorithm alg;
@@ -39,11 +42,12 @@ public class RenderLoop implements Runnable {
 	@Override
 	public void run() {
 		Window.initGLContext();
+		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		CameraSettings settings = new CameraSettings();
 		Scene.setCameraSettings(settings);
 		Scene.setLightDirection(new Vector3f(0f, 0f, 1f));
 		
-		Cube.init();
+		CubeUtil.init();
 		Pyraminx.init();
 		this.display = new PuzzleDisplay(new Cube(size), 450f);
 		display.setAnimate(true);

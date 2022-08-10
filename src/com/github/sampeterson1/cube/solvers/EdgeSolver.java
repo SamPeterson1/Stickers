@@ -22,12 +22,19 @@ import java.util.ArrayList;
 
 import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeEdgeUtil;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
+
+/*
+ * This class solves the centers on a cube using a free-sliced variant of the reduction method.
+ * 
+ * This implementation is not meant to be readable.
+ * See https://www.youtube.com/watch?v=Uzqo_L-1BMM for more information.
+ * Free slicing: https://www.youtube.com/watch?v=rqVcAsun4YE
+ */
 
 public class EdgeSolver {
 

@@ -20,12 +20,17 @@ package com.github.sampeterson1.cube.solvers;
 
 import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeEdgeUtil;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 
+/*
+ * This class solves the bottom cross of a cube using the CFOP method.
+ * 
+ * This implementation is not meant to be readable.
+ * See https://solvethecube.com/#step1 for more information.
+ */
 public class CrossSolver {
 
 	private Cube cube;

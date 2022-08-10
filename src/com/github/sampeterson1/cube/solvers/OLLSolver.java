@@ -21,10 +21,15 @@ package com.github.sampeterson1.cube.solvers;
 import java.util.ArrayList;
 
 import com.github.sampeterson1.cube.pieces.Cube;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
 
+/*
+ * This class is an implementation of the full OLL step of the CFOP method
+ * with an extra step to solve parity on big cubes.
+ * 
+ * Algorithms from https://jperm.net/algs/oll
+ */
 public class OLLSolver {
 
 	private Cube cube;
@@ -98,10 +103,8 @@ public class OLLSolver {
 		System.out.println("Solving OLL...");
 		cube.pushRotations();
 
-		Algorithm solution = getOLLSolution();
-		if (solution != null) {
-			cube.executeAlgorithm(solution);
-		} else {
+		//If we cannot find a solution ,we must have parity. Execute the parity algorithm and try again
+		if(!solveOLL()){
 			OLLParity();
 			solve();
 		}
@@ -113,20 +116,22 @@ public class OLLSolver {
 		cases.add(new OLLCase(alg, position));
 	}
 
-	private Algorithm getOLLSolution() {
-		Algorithm solution = null;
+	//Check every case and orientation to find the solution
+	private boolean solveOLL() {
 		for (int i = 0; i < 4; i++) {
 			for (OLLCase c : cases) {
 				if (c.recognize(cube)) {
-					return c.getSolution();
+					cube.executeAlgorithm(c.getSolution());
+					return true;
 				}
 			}
 			cube.makeRotation(Axis.U, true);
 		}
-
-		return solution;
+		
+		return false;
 	}
-
+	
+	//Solves OLL Parity
 	private void OLLParity() {
 		int cubeSize = cube.getSize();
 		for (int layer = 1; layer < cubeSize / 2; layer++) {

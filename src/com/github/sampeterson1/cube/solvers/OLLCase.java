@@ -25,12 +25,16 @@ import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 
+//This class represents a case in the OLL step of the CFOP method
 public class OLLCase {
 
 	private Algorithm solution;
+	
+	//The index of the top face's color on each edge and corner in counterclockwise order starting at position 0
 	int[] edgeLocations;
 	int[] cornerLocations;
 
+	//The locations array must be interleaved in the same way as in PLLCase
 	public OLLCase(String solution, int[] locations) {
 		this.solution = CubeAlgorithmUtil.parseAlgorithm(solution);
 		cornerLocations = new int[4];
@@ -45,25 +49,28 @@ public class OLLCase {
 		return this.solution;
 	}
 
+	//Returns true if the cube matches this OLL case
 	public boolean recognize(Cube cube) {
 		Color top = cube.getSolveColor(Axis.U);
-		boolean retVal = true;
+		
+		//Check the orientation of the edges, but only if the cube has edges (size > 2)
 		if (cube.getSize() > 2) {
 			for (int i = 0; i < 4; i++) {
 				Piece piece = cube.getEdge(i).getPiece(0);
 				if (piece.indexOfColor(top) != edgeLocations[i]) {
-					retVal = false;
+					return false;
 				}
 			}
 		}
 
+		//Check the orientation of the corners
 		for (int i = 0; i < 4; i++) {
 			Piece piece = cube.getCorner(i).getPiece();
 			if (piece.indexOfColor(top) != cornerLocations[i]) {
-				retVal = false;
+				return false;
 			}
 		}
 
-		return retVal;
+		return true;
 	}
 }

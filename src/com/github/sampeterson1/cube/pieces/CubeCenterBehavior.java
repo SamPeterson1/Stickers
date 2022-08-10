@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.github.sampeterson1.cube.util.CubeCenterUtil;
 import com.github.sampeterson1.cube.util.CubeMoveUtil;
+import com.github.sampeterson1.cube.util.CubeUtil;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
@@ -30,6 +31,7 @@ import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 
+//An implementation of PieceBehavior that defines the behavior of center pieces on a Rubik's Cube
 public class CubeCenterBehavior implements PieceBehavior {
 	
 	private static final PieceType type = PieceType.CENTER;
@@ -37,17 +39,30 @@ public class CubeCenterBehavior implements PieceBehavior {
 	@Override
 	public Piece createPiece(int position, int index, int puzzleSize) {
 		Piece piece = new Piece(PieceType.CENTER, position, index, puzzleSize);
-		piece.setColor(Cube.getFaceColor(Cube.getFace(position)));
+		piece.setColor(CubeUtil.getFaceColor(CubeUtil.getFace(position)));
 		return piece;
 	}
 
-	//returns a list of center pieces affected by a slice move
+	/*
+	 * Returns a list of center pieces affected by a slice (inner layer) move
+	 * 
+	 * To determine the correct indices, we first pick an arbitrary face and iterate over a line of pieces 
+	 * that are affected by the move. Then, for each index we iterate over, we map that index to the face 
+	 * that the center PieceGroup is on.
+	 *
+	 * For example, if the given move is rotating about the U face, we iterate over the indices of 
+	 * a horizontal line of pieces on the F face. The y position of this line is determined 
+	 * by the layer of the move. We then take those indices and map them to the face that the center is on
+	 * as if they were being rotated about the U face, and we can now use these mapped indices 
+	 * to determine which pieces will move. A similar process is implemented for the U and F faces.
+	 */
 	private List<Piece> getSlice(Move move, PieceGroup center) {
 		List<Piece> slice = new ArrayList<Piece>();
-		Axis centerFace = Cube.getFace(center.getPosition());
+		Axis centerFace = CubeUtil.getFace(center.getPosition());
 		Axis moveFace = move.getFace();
 		int relativeLayer = move.getLayer() - 1;
 		int centerSize = center.getPuzzleSize() - 2;
+		
 		
 		if (moveFace == Axis.U) {
 			//iterate over a horizontal line
@@ -81,7 +96,7 @@ public class CubeCenterBehavior implements PieceBehavior {
 		int centerSize = center.getPuzzleSize() - 2;
 		move = CubeMoveUtil.normalize(move, center.getPuzzleSize());
 		Axis moveFace = move.getFace();
-		Axis centerFace = Cube.getFace(center.getPosition());
+		Axis centerFace = CubeUtil.getFace(center.getPosition());
 		int relativeLayer = move.getLayer() - 1;
 
 		List<Piece> retVal = new ArrayList<Piece>();
@@ -89,13 +104,13 @@ public class CubeCenterBehavior implements PieceBehavior {
 		boolean isFirstLayerTurn = (relativeLayer == -1);
 		boolean onFirstLayer = (moveFace == centerFace);
 		boolean isLastLayerTurn = (relativeLayer == centerSize);
-		boolean onLastLayer = (moveFace == Cube.getOpposingFace(centerFace));
+		boolean onLastLayer = (moveFace == CubeUtil.getOpposingFace(centerFace));
 		
 		boolean isInnerSliceTurn = !isFirstLayerTurn && !isLastLayerTurn;
 		boolean onInnerSlice = !onFirstLayer && !onLastLayer;
 		
 		if ((isFirstLayerTurn && onFirstLayer) || (isLastLayerTurn && onLastLayer)) {
-			//first and last layer turns affect all of the center pieces in the group
+			//first and last layer turns affect all of the center pieces on a face
 			return center.getPieces();
 		} else if (isInnerSliceTurn && onInnerSlice) {
 			return getSlice(move, center);
@@ -106,24 +121,27 @@ public class CubeCenterBehavior implements PieceBehavior {
 
 	@Override
 	public void movePiece(Move move, Piece piece) {
-		Axis face = Cube.getFace(piece.getPosition());
+		Axis face = CubeUtil.getFace(piece.getPosition());
 		Axis moveFace = move.getFace();
 		int index = piece.getIndex();
 		int centerSize = piece.getPuzzleSize() - 2;
 
 		int newIndex = index;
-		if (face == moveFace || face == Cube.getOpposingFace(moveFace)) {
+		if (face == moveFace || face == CubeUtil.getOpposingFace(moveFace)) {
+			//rotate an entire face
 			//if we are rotating from the last layer, we invert the rotation direction
 			boolean rotateCW = move.isCW() ^ (face != moveFace);
+			//determine the new index of a piece given the direction it is rotated
 			if (rotateCW) {
 				newIndex = CubeCenterUtil.rotateCW(index, centerSize);
 			} else {
 				newIndex = CubeCenterUtil.rotateCCW(index, centerSize);
 			}
 		} else {
+			//map center pieces on one face to another face determined by the given move
 			Axis newFace = CubeMoveUtil.mapFace(face, move);
 			newIndex = CubeCenterUtil.mapIndex(moveFace, face, newFace, index, centerSize);
-			piece.setPosition(Cube.getFacePosition(newFace));
+			piece.setPosition(CubeUtil.getFacePosition(newFace));
 		}
 
 		piece.setIndex(newIndex);

@@ -19,12 +19,17 @@
 package com.github.sampeterson1.cube.solvers;
 
 import com.github.sampeterson1.cube.pieces.Cube;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 
+/*
+ * This class solves the four bottom corners of the cube using the beginner's method.
+ * 
+ * This implementation is not meant to be readable.
+ * See https://solvethecube.com/#step2 for more information.
+ */
 public class CornerSolver {
 
 	private Cube cube;

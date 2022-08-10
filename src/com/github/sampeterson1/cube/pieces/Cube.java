@@ -18,14 +18,10 @@
 
 package com.github.sampeterson1.cube.pieces;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import com.github.sampeterson1.cube.solvers.MasterCubeSolver;
 import com.github.sampeterson1.cube.util.CubeAlgorithmUtil;
-import com.github.sampeterson1.cube.util.CubeCornerUtil;
-import com.github.sampeterson1.cube.util.CubeEdgeUtil;
 import com.github.sampeterson1.cube.util.CubeMoveUtil;
+import com.github.sampeterson1.cube.util.CubeUtil;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
@@ -34,80 +30,13 @@ import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 
+//An implementation of Puzzle that represents the pieces of an n by n Rubk's Cube
 public class Cube extends Puzzle {
 
-	public static Axis[] faces = { Axis.R, Axis.U, Axis.F, Axis.L, Axis.D, Axis.B };
-	
-	private static Map<Axis, Axis> opposingFaces = initOpposingFaces();
-	private static Map<Axis, Integer> facePositions = initFacePositions();
-	private static Map<Axis, Color> faceColors = initFaceColors();
-	
 	private static final int NUM_CENTERS = 6;
 	private static final int NUM_EDGES = 12;
 	private static final int NUM_CORNERS = 8;
 	
-	private static Map<Axis, Axis> initOpposingFaces() {
-		Map<Axis, Axis> faces = new EnumMap<Axis, Axis>(Axis.class);
-		faces.put(Axis.R, Axis.L);
-		faces.put(Axis.U, Axis.D);
-		faces.put(Axis.F, Axis.B);
-		faces.put(Axis.L, Axis.R);
-		faces.put(Axis.D, Axis.U);
-		faces.put(Axis.B, Axis.F);
-		
-		return faces;
-	}
-	
-	private static Map<Axis, Integer> initFacePositions() {
-		Map<Axis, Integer> positions = new EnumMap<Axis, Integer>(Axis.class);
-		positions.put(Axis.R, 0);
-		positions.put(Axis.U, 1);
-		positions.put(Axis.F, 2);
-		positions.put(Axis.L, 3);
-		positions.put(Axis.D, 4);
-		positions.put(Axis.B, 5);
-		
-		return positions;
-	}
-	
-	private static Map<Axis, Color> initFaceColors() {
-		Map<Axis, Color> colors = new EnumMap<Axis, Color>(Axis.class);
-		colors.put(Axis.R, Color.RED);
-		colors.put(Axis.U, Color.WHITE);
-		colors.put(Axis.F, Color.GREEN);
-		colors.put(Axis.L, Color.ORANGE);
-		colors.put(Axis.D, Color.YELLOW);
-		colors.put(Axis.B, Color.BLUE);
-		
-		return colors;
-	}
-	
-	public static Axis getFace(int index) {
-		return faces[index];
-	}
-
-	public static Axis getOpposingFace(Axis face) {
-		return opposingFaces.get(face);
-	}
-
-	public static Color getFaceColor(Axis face) {
-		return faceColors.get(face);
-	}
-	
-	public static int getFacePosition(Axis face) {
-		return facePositions.get(face);
-	}
-	
-	public static void init() {
-		CubeEdgeUtil.init();
-		CubeCornerUtil.init();
-		CubeMoveUtil.init();
-	}
-
-	public static boolean isRUF(Axis face) {
-		return (face == Axis.R || face == Axis.U || face == Axis.F);
-	}
-
 	private MasterCubeSolver solver;
 	
 	public Cube(int size) {
@@ -129,19 +58,24 @@ public class Cube extends Puzzle {
 	}
 	
 	public PieceGroup getCenter(Axis face) {
-		return super.getGroup(PieceType.CENTER, facePositions.get(face));
+		return super.getGroup(PieceType.CENTER, CubeUtil.getFacePosition(face));
 	}
 
-	//Given a face, return the color that it should be when solved
+	/*
+	 * Given a face, return the color that it should be when solved.
+	 * 
+	 * If the cube has center pieces (its size is greater than 2), we
+	 * can determine this by looking at the color of the center piece on that face.
+	 * Otherwise, we transpose the face to align with the current cube rotations
+	 * and return a predetermined face color defined by CubeUtil.
+	 */
 	public Color getSolveColor(Axis face) {
 		if(super.getSize() == 2) {
 			face = transposeAxis(face);
-			return getFaceColor(face);
+			return CubeUtil.getFaceColor(face);
 		}
 		
-		int centerSize = (super.getSize() - 2) * (super.getSize() - 2);
-		int centerIndex = centerSize / 2;
-		return getCenter(face).getPiece(centerIndex).getColor();
+		return getCenter(face).getPiece().getColor();
 	}
 
 	@Override

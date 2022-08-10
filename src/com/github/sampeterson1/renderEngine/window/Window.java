@@ -60,6 +60,8 @@ public class Window {
 	}
 	
 	public static void initGLContext() {
+		System.out.println("Initializing GL Context");
+		glfwMakeContextCurrent(windowID);
 		GL.createCapabilities();
 	}
 	

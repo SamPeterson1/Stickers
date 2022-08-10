@@ -10,12 +10,14 @@ import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
 import com.github.sampeterson1.renderEngine.models.ColoredModel;
 
+//An implementation of DisplayPiece that represents a piece on a cube
 public class CubeDisplayPiece extends DisplayPiece {
 	
 	private static final float CUBE_DRAW_SIZE = 20;
 	
 	/*
-	 * These algorithms take a piece at a fixed position and move them to their correct positions and orientations
+	 * These algorithms take pieces at their "origin positions" (see getOrigin methods below)
+	 * and move them to their correct positions and orientations
 	 */
 	private static final Algorithm[] cornerRotations = initCornerRotations();
 	private static final Algorithm[] edgeRotations = initEdgeRotations();
@@ -76,7 +78,8 @@ public class CubeDisplayPiece extends DisplayPiece {
 	
 	/*
 	 * Return a matrix representing the world position of a corner piece at
-	 * the bottom right corner of the front face
+	 * the bottom right corner of the front face. This position is the "origin"
+	 * at which every corner piece will be placed initially.
 	 */
 	private Matrix3D getCornerOrigin() {
 		float positionCoord = (CUBE_DRAW_SIZE - pieceSize) / 2;
@@ -89,47 +92,56 @@ public class CubeDisplayPiece extends DisplayPiece {
 	
 	/*
 	 * Return a matrix representing the world position of an edge piece at
-	 * the bottom edge of the front face
+	 * the bottom edge of the front face. This position is the "origin"
+	 * at which every edge piece will be placed initially.
 	 */
 	private Matrix3D getEdgeOrigin(Piece piece) {
 		int edgeSize = piece.getPuzzleSize() - 2;
 		int index = piece.getIndex();
 		
-		float positionCoord = (CUBE_DRAW_SIZE - pieceSize) / 2;
-		float edgeStart = (pieceSize - edgeSize * pieceSize) / 2;
-		float indexCoord = edgeStart + index * pieceSize;
+		//the distance from the center of the cube to the center of the edge piece
+		float displacement = (CUBE_DRAW_SIZE - pieceSize) / 2;
+		
+		//the x position of an edge piece with index 0
+		float edgeXOrigin = -(pieceSize - edgeSize * pieceSize) / 2;
+		
+		float xPos = edgeXOrigin - index * pieceSize;
 
 		Matrix3D translation = new Matrix3D();
-		translation.translate(-indexCoord, -positionCoord, positionCoord);
+		translation.translate(xPos, -displacement, displacement);
 		
 		return translation;
 	}
 	
 	/*
-	 * Return a matrix representing the world position of a center piece on the front face
+	 * Return a matrix representing the world position of a center piece on the front face.
+	 * This position is the "origin" at which every center piece will be placed initially.
 	 */
 	private Matrix3D getCenterOrigin(Piece piece) {
 		int centerSize = piece.getPuzzleSize() - 2;
 		
+		//split the 1-dimensional center index into an x and y index
 		int index = piece.getIndex();
 		int xIndex = index % centerSize;
 		int yIndex = index / centerSize;
 		
-		float positionCoord = (CUBE_DRAW_SIZE - pieceSize) / 2;
+		//the distance from the center of the cube to the center of the center piece
+		float displacement = (CUBE_DRAW_SIZE - pieceSize) / 2;
+		
+		//the position of a center piece with index 0
 		float centerStart = (pieceSize - centerSize * pieceSize) / 2;
 		
-		float centerXCoord = centerStart + pieceSize * xIndex;
-		float centerYCoord = centerStart + pieceSize * yIndex;
+		//use the x and y indices to calculate the position of the piece
+		float xCoord = centerStart + pieceSize * xIndex;
+		float yCoord = -centerStart - pieceSize * yIndex;
 		
 		Matrix3D translation = new Matrix3D();
-		translation.translate(centerXCoord, -centerYCoord, positionCoord);
+		translation.translate(xCoord, yCoord, displacement);
 		
 		return translation;
 	}
 	
-	/*
-	 * Apply the rotation algorithms into a rotation matrix
-	 */
+	//Apply the rotation algorithms into a rotation matrix
 	private Matrix3D getPieceRotation(Piece piece) {
 		PieceType type = piece.getType();
 		int position = piece.getPosition();

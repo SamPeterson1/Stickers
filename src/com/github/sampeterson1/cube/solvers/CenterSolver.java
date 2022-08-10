@@ -22,11 +22,19 @@ import java.util.ArrayList;
 
 import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeCenterUtil;
+import com.github.sampeterson1.cube.util.CubeUtil;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
+
+/*
+ * This class solves the centers on a cube using the reduction method.
+ * 
+ * This implementation is not meant to be readable.
+ * See https://www.youtube.com/watch?v=Uzqo_L-1BMM for more information.
+ */
 
 public class CenterSolver {
 
@@ -40,7 +48,7 @@ public class CenterSolver {
 	public ArrayList<Piece> findPieces(int index, Color color) {
 		ArrayList<Piece> retVal = new ArrayList<Piece>();
 
-		for (Axis face : Cube.faces) {
+		for (Axis face : CubeUtil.getFaces()) {
 			PieceGroup center = cube.getCenter(face);
 			int j = index;
 			for (int i = 0; i < 4; i++) {
@@ -61,19 +69,19 @@ public class CenterSolver {
 			// ignore the center piece
 			if (size % 2 != 1 || p.getIndex() != size * size / 2) {
 				// ignore solved pieces on the U face
-				if (!(p.getIndex() % size < line && Cube.getFace(p.getPosition()) == Axis.U)) {
+				if (!(p.getIndex() % size < line && CubeUtil.getFace(p.getPosition()) == Axis.U)) {
 					// ignore solved pieces on the F face
 					if (!vertical
-							&& !(p.getIndex() / size == size - line - 1 && Cube.getFace(p.getPosition()) == Axis.F)) {
+							&& !(p.getIndex() / size == size - line - 1 && CubeUtil.getFace(p.getPosition()) == Axis.F)) {
 						return p;
-					} else if (vertical && !(p.getIndex() % size == line && Cube.getFace(p.getPosition()) == Axis.F)) {
+					} else if (vertical && !(p.getIndex() % size == line && CubeUtil.getFace(p.getPosition()) == Axis.F)) {
 						return p;
 					}
 				}
 			} else {
 				return null;
 			}
-			if (p.getIndex() == index && Cube.getFace(p.getPosition()) == Axis.F) {
+			if (p.getIndex() == index && CubeUtil.getFace(p.getPosition()) == Axis.F) {
 				return null;
 			}
 		}
@@ -123,7 +131,7 @@ public class CenterSolver {
 
 	// moves a center piece from the U face or the D face
 	public void moveCenter_UD(Piece piece, int line, boolean safe) {
-		Axis face = Cube.getFace(piece.getPosition());
+		Axis face = CubeUtil.getFace(piece.getPosition());
 		int size = cube.getSize() - 2;
 
 		if (!safe && CubeCenterUtil.getLayer(piece, Axis.L, size) - 1 > line
@@ -232,7 +240,7 @@ public class CenterSolver {
 					ArrayList<Piece> pieces = findPieces(index, color);
 					Piece piece = getUnsolvedPiece(pieces, line, index, true);
 					if (piece != null) {
-						Axis face = Cube.getFace(piece.getPosition());
+						Axis face = CubeUtil.getFace(piece.getPosition());
 						if (face == Axis.U || face == Axis.D) {
 							moveCenter_UD(piece, line, safe);
 						} else if (face == Axis.F) {
@@ -240,10 +248,10 @@ public class CenterSolver {
 						}
 
 						while (piece.getIndex() != index) {
-							cube.makeMove(new Move(Cube.getFace(piece.getPosition()), 0, true));
+							cube.makeMove(new Move(CubeUtil.getFace(piece.getPosition()), 0, true));
 						}
 
-						while (Cube.getFace(piece.getPosition()) != Axis.F) {
+						while (CubeUtil.getFace(piece.getPosition()) != Axis.F) {
 							cube.makeMove(new Move(Axis.U, CubeCenterUtil.getLayer(piece, Axis.U, size), true));
 						}
 					}
@@ -282,18 +290,18 @@ public class CenterSolver {
 					Piece piece = getUnsolvedPiece(pieces, line, index, false);
 
 					if (piece != null) {
-						if (Cube.getFace(piece.getPosition()) == Axis.U) {
+						if (CubeUtil.getFace(piece.getPosition()) == Axis.U) {
 							moveCenterHorizontal_U(piece, index, safe);
-						} else if (Cube.getFace(piece.getPosition()) == Axis.F) {
+						} else if (CubeUtil.getFace(piece.getPosition()) == Axis.F) {
 							moveCenterHorizontal_F(piece);
 						}
 
 						// move piece to the F face in the right position
-						int fIndex = CubeCenterUtil.mapIndex(Axis.R, Cube.getFace(piece.getPosition()), Axis.F,
+						int fIndex = CubeCenterUtil.mapIndex(Axis.R, CubeUtil.getFace(piece.getPosition()), Axis.F,
 								piece.getIndex(), size);
 						while (fIndex != index) {
-							cube.makeMove(new Move(Cube.getFace(piece.getPosition()), 0, true));
-							fIndex = CubeCenterUtil.mapIndex(Axis.R, Cube.getFace(piece.getPosition()), Axis.F,
+							cube.makeMove(new Move(CubeUtil.getFace(piece.getPosition()), 0, true));
+							fIndex = CubeCenterUtil.mapIndex(Axis.R, CubeUtil.getFace(piece.getPosition()), Axis.F,
 									piece.getIndex(), size);
 						}
 
@@ -301,7 +309,7 @@ public class CenterSolver {
 						int rMoves = 0;
 						int fMoves = 0;
 						int rLayer = CubeCenterUtil.getLayer(piece, Axis.R, size);
-						while (Cube.getFace(piece.getPosition()) != Axis.F) {
+						while (CubeUtil.getFace(piece.getPosition()) != Axis.F) {
 							cube.makeMove(new Move(Axis.R, rLayer, true));
 							rMoves++;
 						}
@@ -352,7 +360,7 @@ public class CenterSolver {
 				Piece toMove = null;
 				// find a pair of pieces to exchange
 				for (Piece piece : pieces) {
-					if (Cube.getFace(piece.getPosition()) == Axis.F) {
+					if (CubeUtil.getFace(piece.getPosition()) == Axis.F) {
 						toMove = piece;
 						break;
 					}

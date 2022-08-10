@@ -30,7 +30,6 @@ public class Main {
 		Window.init(600, 600, "Test");
 		Thread renderThread = new Thread(new RenderLoop());
 		renderThread.start();
-		
 		GLFW.glfwMakeContextCurrent(0);
 		while(Window.isOpen()) {
 			Window.pollEvents();
