@@ -29,8 +29,8 @@ public abstract class GUIComponent extends Entity {
 	
 	public GUIComponent(String name, float x, float y, float width, float height) {
 		this.name = name;
-		MeshData meshData = ModelLoader.loadData(quadVertices, quadVertices, quadIndices);
-		super.setMesh(new Mesh(meshData));
+		//MeshData meshData = ModelLoader.loadData(quadVertices, quadVertices, quadIndices);
+		//super.setMesh(new Mesh(meshData));
 		GUIMaster.addComponent(this);
 	}
 	

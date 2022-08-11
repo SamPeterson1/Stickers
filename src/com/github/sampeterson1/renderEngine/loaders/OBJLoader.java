@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
-import com.github.sampeterson1.renderEngine.models.ColoredVertexGroup;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 
 public class OBJLoader {
@@ -160,9 +159,9 @@ public class OBJLoader {
 	public static ColoredMesh loadColoredMesh(String filePath) {
 		List<Float> positions = new ArrayList<Float>();
 		List<Float> normals = new ArrayList<Float>();
+		List<Integer> colorIndices = new ArrayList<Integer>();
 		List<Integer> indices = new ArrayList<Integer>();
 		
-		List<ColoredVertexGroup> colorGroups = new ArrayList<ColoredVertexGroup>();
 		BufferedReader reader = openFile(filePath);
 		
 		totalPositionsRead = 0;
@@ -171,27 +170,26 @@ public class OBJLoader {
 		lastObjectName = null;
 		
 		OBJData object = null;
+		int currentColorIndex = 0;
 		while((object = loadObject(reader)) != null) {
 			addFloatArr(positions, object.positions);
 			addFloatArr(normals, object.normals);
 			addIntArr(indices, object.indices);
 			
-			ColoredVertexGroup colorGroup = new ColoredVertexGroup(object.objectName, object.indices);
-			colorGroups.add(colorGroup);
+			int numVerts = object.positions.length / 3;
+			for(int i = 0; i < numVerts; i ++) {
+				colorIndices.add(currentColorIndex);
+			}
 		}
 		
 		float[] positionsArr = toFloatArr(positions);
-		float[] emptyColors = new float[positionsArr.length]; 
-		for(int i = 0; i < positionsArr.length; i ++) emptyColors[i] = 1;
 		float[] normalsArr = toFloatArr(normals);
 		int[] indicesArr = toIntArr(indices);
+		int[] colorIndicesArr = toIntArr(colorIndices);
 		
-		MeshData meshData = ModelLoader.loadDynamicColoredModel(positionsArr, normalsArr, emptyColors, indicesArr);
+		MeshData meshData = ModelLoader.loadColoredModel(positionsArr, normalsArr, colorIndicesArr, indicesArr);
 		ColoredMesh mesh = new ColoredMesh(meshData);
-		
-		for(ColoredVertexGroup colorGroup : colorGroups)
-			mesh.addColorGroup(colorGroup);
-		
+
 		return mesh;
 	}
 	

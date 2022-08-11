@@ -21,19 +21,11 @@ package com.github.sampeterson1.renderEngine.models;
 public class MeshData {
 	
 	private int vaoID;
-	private int[] vboIDs;
-	private int numIndices;
-	private int numVertices;
+	private int numIndices;	
 	
-	public MeshData(int vaoID, int[] vboIDs, int numVertices, int numIndices) {
+	public MeshData(int vaoID, int numIndices) {
 		this.vaoID = vaoID;
-		this.vboIDs = vboIDs;
 		this.numIndices = numIndices;
-		this.numVertices = numVertices;
-	}
-	
-	public int getVboID(int attributeID) {
-		return this.vboIDs[attributeID];
 	}
 	
 	public int getVaoID() {
@@ -42,10 +34,6 @@ public class MeshData {
 	
 	public int getNumIndices() {
 		return numIndices;
-	}
-
-	public int getNumVertices() {
-		return numVertices;
 	}
 	
 }

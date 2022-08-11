@@ -29,6 +29,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.Texture;
@@ -39,30 +40,17 @@ public class ModelLoader {
 	private static List<Integer> vbos = new ArrayList<Integer>();
 	private static List<Integer> textures = new ArrayList<Integer>();
 	
-	public static MeshData loadData(float[] positions, float[] texCoords, int[] indices) {
+	public static MeshData loadColoredModel(float[] positions, float[] normals, int[] colorIndices, int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);
 		
-		int[] vboIDs = new int[2];
-		vboIDs[0] = storeAttributeData(0, 3, positions, GL15.GL_STATIC_DRAW);
-		vboIDs[1] = storeAttributeData(1, 2, texCoords, GL15.GL_STATIC_DRAW);
-		//vboIDs[2] = storeAttributeData(2, 3, normals, GL15.GL_STATIC_DRAW);
+		storeAttributeData(0, 3, positions);
+		storeAttributeData(1, 3, normals);
+		storeAttributeData(2, 1, colorIndices);
+		
 		GL30.glBindVertexArray(0);
 		
-		return new MeshData(vaoID, vboIDs, positions.length/3, indices.length);
-	}
-	
-	public static MeshData loadDynamicColoredModel(float[] positions, float[] normals, float[] colors, int[] indices) {
-		int vaoID = createVAO();
-		storeIndicesBuffer(indices);
-		
-		int[] vboIDs = new int[3];
-		vboIDs[0] = storeAttributeData(0, 3, positions, GL15.GL_STATIC_DRAW);
-		vboIDs[1] = storeAttributeData(1, 3, colors, GL15.GL_DYNAMIC_DRAW);
-		vboIDs[2] = storeAttributeData(2, 3, normals, GL15.GL_STATIC_DRAW);
-		GL30.glBindVertexArray(0);
-		
-		return new MeshData(vaoID, vboIDs, positions.length/3, indices.length);
+		return new MeshData(vaoID, indices.length);
 	}
 	
 	public static Texture loadTexture(String fileName) {
@@ -80,16 +68,6 @@ public class ModelLoader {
 		return texture;
 	}
 	
-	public static void updateAttributeData(MeshData modelData, int attributeID, float[] data) {
-		int vboID = modelData.getVboID(attributeID);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-		
-		FloatBuffer buffer = storeDataInFloatBuffer(data);
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
-		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-	}
-	
 	public static void cleanUp() {
 		for(int vao : vaos)
 			GL30.glDeleteVertexArrays(vao);
@@ -97,6 +75,29 @@ public class ModelLoader {
 			GL15.glDeleteBuffers(vbo);
 		for(int texture : textures)
 			GL11.glDeleteTextures(texture);
+	}
+	
+	private static void addInstancedAttribute(int vao, int vbo, int attributeID, 
+			int coordinteSize, int dataLength, int offset) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL30.glBindVertexArray(vao);
+		
+		GL20.glVertexAttribPointer(attributeID, coordinteSize, GL11.GL_FLOAT, false, dataLength * 4, offset);
+		GL33.glVertexAttribDivisor(attributeID, 1);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
+	}
+	
+	private static int createEmptyStreamVBO(int numFloats) {
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, numFloats * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		
+		return vboID;
 	}
 	
 	private static int createVAO() {
@@ -115,14 +116,28 @@ public class ModelLoader {
 		IntBuffer buffer = storeDataInIntBuffer(indices);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	}
+	
+	private static int storeAttributeData(int attributeID, int coordinateSize, int[] data) {
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		
+		IntBuffer buffer = storeDataInIntBuffer(data);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(attributeID, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
+	
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		
+		return vboID;
+	}
 
-	private static int storeAttributeData(int attributeID, int coordinateSize, float[] data, int drawMode) {
+	private static int storeAttributeData(int attributeID, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, drawMode);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeID, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
 	
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
