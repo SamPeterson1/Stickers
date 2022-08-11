@@ -31,10 +31,11 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
+import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.Texture;
 
-public class ModelLoader {
+public class Loader {
 	
 	private static List<Integer> vaos = new ArrayList<Integer>();
 	private static List<Integer> vbos = new ArrayList<Integer>();
@@ -77,19 +78,25 @@ public class ModelLoader {
 			GL11.glDeleteTextures(texture);
 	}
 	
-	private static void addInstancedAttribute(int vao, int vbo, int attributeID, 
-			int coordinteSize, int dataLength, int offset) {
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-		GL30.glBindVertexArray(vao);
+	public static void addInstancedAttribute(int vboID, int vaoID, int attributeID, 
+			int coordinateSize, int dataLength, int offset) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		GL30.glBindVertexArray(vaoID);
 		
-		GL20.glVertexAttribPointer(attributeID, coordinteSize, GL11.GL_FLOAT, false, dataLength * 4, offset);
-		GL33.glVertexAttribDivisor(attributeID, 1);
+		GL20.glVertexAttribPointer(attributeID, coordinateSize, GL11.GL_FLOAT, false, dataLength * 4, offset);
+		GL33.glVertexAttribDivisor(attributeID, 1);	
 		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		GL30.glBindVertexArray(0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
-	private static int createEmptyStreamVBO(int numFloats) {
+	public static void updateVBO(int vboID, FloatBuffer data) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, data);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	public static int createInstancedVBO(int numFloats) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		
@@ -143,6 +150,16 @@ public class ModelLoader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
 		return vboID;
+	}
+	
+	private static FloatBuffer storeDataInFloatBuffer(Matrix3D[] data) {
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length * 16);
+		
+		for(Matrix3D mat : data)
+			mat.store(buffer);	
+		buffer.flip();
+		
+		return buffer;
 	}
 	
 	private static IntBuffer storeDataInIntBuffer(int[] data) {

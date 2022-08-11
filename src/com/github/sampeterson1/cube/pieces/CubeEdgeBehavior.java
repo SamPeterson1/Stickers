@@ -121,7 +121,7 @@ public class CubeEdgeBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize, int position) {
+	public int getNumPieces(int puzzleSize) {
 		return puzzleSize - 2;
 	}
 

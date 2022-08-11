@@ -1,6 +1,5 @@
 #version 460 core
 
-in vec3 passVertColor;
 in vec3 passNormal;
 
 out vec4 outColor;
@@ -14,5 +13,5 @@ void main(void) {
 	float diffuse = dot(unitNormal, unitLightDirection);
 	diffuse = max(diffuse, 0.3);
 	
-	outColor = diffuse * vec4(passVertColor, 1.0);
+	outColor = diffuse * vec4(1.0);
 }

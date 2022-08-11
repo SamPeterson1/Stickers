@@ -40,7 +40,11 @@ public class CubeDisplayPiece extends DisplayPiece {
 	private static final Algorithm[] cornerRotations = initCornerRotations();
 	private static final Algorithm[] edgeRotations = initEdgeRotations();
 	private static final Algorithm[] centerRotations = initCenterRotations();
-
+	
+	private static ColoredMesh cornerPieceMesh;
+	private static ColoredMesh edgePieceMesh;
+	private static ColoredMesh centerPieceMesh;
+	
 	private float pieceSize;
 	
 	private static final Algorithm[] initCornerRotations() {
@@ -202,16 +206,16 @@ public class CubeDisplayPiece extends DisplayPiece {
 		
 		if(piece.getType() == PieceType.CORNER) {
 			mesh = OBJLoader.loadColoredMesh("cube/Corner.obj");
-			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
-			mesh.setColor("Right", Colors.convertColor(piece.getColor(1)));
-			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(2)));
+			//mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
+			//mesh.setColor("Right", Colors.convertColor(piece.getColor(1)));
+			//mesh.setColor("Bottom", Colors.convertColor(piece.getColor(2)));
 		} else if(piece.getType() == PieceType.EDGE) {
 			mesh = OBJLoader.loadColoredMesh("cube/Edge.obj");
-			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(0)));
-			mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
+			//mesh.setColor("Bottom", Colors.convertColor(piece.getColor(0)));
+			//mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
 		} else if(piece.getType() == PieceType.CENTER) {
 			mesh = OBJLoader.loadColoredMesh("cube/Center.obj");
-			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
+			//mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
 		}
 
 		return mesh;

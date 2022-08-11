@@ -26,7 +26,6 @@ public class StaticShader extends Shader {
 	private static final String VERTEX_FILE = "vertex.glsl";
 	private static final String FRAGMENT_FILE = "frag.glsl";
 	
-	private int location_transformationMatrix;
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
 	private int location_lightDirection;
@@ -38,13 +37,13 @@ public class StaticShader extends Shader {
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "vertColor");
-		super.bindAttribute(2, "normal");
+		super.bindAttribute(1, "normal");
+		super.bindAttribute(2, "colorIndex");
+		super.bindAttribute(3, "transformationMatrix");
 	}
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_lightDirection = super.getUniformLocation("lightDirection");
@@ -54,9 +53,6 @@ public class StaticShader extends Shader {
 		super.loadVector3f(location_lightDirection, direction);
 	}
 	
-	public void setTransformationMatrix(Matrix3D matrix) {
-		super.loadMatrix(location_transformationMatrix, matrix);
-	}
 	
 	public void setProjectionMatrix(Matrix3D matrix) {
 		super.loadMatrix(location_projectionMatrix, matrix);

@@ -21,9 +21,8 @@ package com.github.sampeterson1.puzzle.display;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
-import com.github.sampeterson1.renderEngine.models.Entity;
 
-public abstract class DisplayPiece extends Entity {
+public abstract class DisplayPiece {
 	
 	private Piece position;
 	private Matrix3D transformationMat;
@@ -36,22 +35,18 @@ public abstract class DisplayPiece extends Entity {
 	public abstract void setWorldPosition(Piece position);
 	
 	public DisplayPiece(Piece position) {
-		super();
 		this.transformationMat = new Matrix3D();
 		this.rotationMat = new Matrix3D();
 		this.position = position;
 		this.firstPosition = position.getPosition();
 		
-		super.setMesh(loadMesh(position));
 		setWorldPosition(position);
 	}
 
 	public Piece getPosition() {
-		//System.out.println(this.position.getPosition() + " " + this.firstPosition);
 		return this.position;
 	}
 	
-	@Override
 	public Matrix3D getTransform() {
 		Matrix3D retVal = new Matrix3D();
 		retVal.multiply(transformationMat);

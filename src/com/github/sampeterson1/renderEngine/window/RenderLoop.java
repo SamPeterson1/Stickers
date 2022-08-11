@@ -30,7 +30,7 @@ import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
-import com.github.sampeterson1.renderEngine.loaders.ModelLoader;
+import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.rendering.CameraSettings;
 import com.github.sampeterson1.renderEngine.rendering.OrbitalCamera;
 import com.github.sampeterson1.renderEngine.rendering.Renderer;
@@ -83,7 +83,7 @@ public class RenderLoop implements Runnable {
         }
         
         renderer.cleanUp();
-		ModelLoader.cleanUp();
+		Loader.cleanUp();
 	}
 	
 	private void makeMove(Move move) {

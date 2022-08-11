@@ -2,7 +2,7 @@ package com.github.sampeterson1.renderEngine.gui;
 
 import java.util.List;
 
-import com.github.sampeterson1.renderEngine.loaders.ModelLoader;
+import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.models.Entity;
 import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.MeshData;

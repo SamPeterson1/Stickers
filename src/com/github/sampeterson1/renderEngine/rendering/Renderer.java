@@ -21,15 +21,18 @@ package com.github.sampeterson1.renderEngine.rendering;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL31;
 
 import com.github.sampeterson1.math.Matrix3D;
-import com.github.sampeterson1.puzzle.display.DisplayPiece;
-import com.github.sampeterson1.renderEngine.models.ColoredMesh;
+import com.github.sampeterson1.renderEngine.models.InstancedMeshBatch;
 import com.github.sampeterson1.renderEngine.models.MeshData;
+import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.shaders.StaticShader;
 
 public class Renderer {
-
+	
+	private static final int NUM_ATTRIBS = 6;
+	
 	private StaticShader shader = new StaticShader();
 	private OrbitalCamera camera;
 	
@@ -46,25 +49,19 @@ public class Renderer {
 		shader.setViewMatrix(camera.getViewMatrix());
 		shader.setLightDirection(Scene.getLightDirection());
 		
-		for(DisplayPiece piece : Scene.getPieces()) {
-			ColoredMesh mesh = (ColoredMesh) piece.getMesh();
-			mesh.prepareColors();
-			MeshData data = mesh.getData();
-			Matrix3D pieceTransformation = new Matrix3D();
-			pieceTransformation.multiply(piece.getTransform());
-			shader.setTransformationMatrix(pieceTransformation);
+		for(InstancedMeshBatch batch : Scene.getInstancedMeshes()) {
+			PieceBatch pieceBatch = (PieceBatch) batch;
+			pieceBatch.prepare();
+			MeshData data = batch.getMesh().getData();
 			
 			GL30.glBindVertexArray(data.getVaoID());
-			GL20.glEnableVertexAttribArray(0);
-			GL20.glEnableVertexAttribArray(1);
-			GL20.glEnableVertexAttribArray(2);
-
-			GL11.glDrawElements(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0);
+			for(int i = 0; i < NUM_ATTRIBS; i ++)
+				GL20.glEnableVertexAttribArray(i);
 			
-			GL20.glDisableVertexAttribArray(0);
-			GL20.glDisableVertexAttribArray(1);
-			GL20.glDisableVertexAttribArray(2);
+			GL31.glDrawElementsInstanced(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0, batch.getNumInstances());
 			
+			for(int i = 0; i < NUM_ATTRIBS; i ++)
+				GL20.glDisableVertexAttribArray(i);
 			GL30.glBindVertexArray(0);
 		}
 		

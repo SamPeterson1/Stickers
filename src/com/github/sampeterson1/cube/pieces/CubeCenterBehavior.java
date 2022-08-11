@@ -148,7 +148,7 @@ public class CubeCenterBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize, int position) {
+	public int getNumPieces(int puzzleSize) {
 		int size = puzzleSize - 2;
 		return size * size;
 	}

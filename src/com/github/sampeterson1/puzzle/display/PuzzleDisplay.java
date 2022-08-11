@@ -19,6 +19,7 @@
 package com.github.sampeterson1.puzzle.display;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.rendering.Scene;
 
 public class PuzzleDisplay {
@@ -48,6 +50,7 @@ public class PuzzleDisplay {
 
 	private Puzzle puzzle;
 
+	private Map<PieceType, PieceBatch> pieceBatches;
 	private Map<Piece, DisplayPiece> pieceMap;
 	private List<Piece> movedPieces;
 	private List<DisplayPiece> allDisplayPieces;
@@ -62,12 +65,27 @@ public class PuzzleDisplay {
 	}
 	
 	private void createPieces() {
+		this.pieceBatches = new EnumMap<PieceType, PieceBatch>(PieceType.class);
+		
+		for(PieceType type : puzzle.getAllGroups().keySet()) {
+			PieceGroup group = puzzle.getGroup(type, 0);
+			int numGroups = puzzle.getGroups(type).size();
+			PieceBatch pieceBatch = new PieceBatch(group.getNumPieces() * numGroups);
+			pieceBatches.put(type, pieceBatch);
+			Scene.addInstancedMesh(pieceBatch);
+		}
+		
 		this.pieceMap = new HashMap<Piece, DisplayPiece>();
 		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
 		for(Piece piece : puzzle.getAllPieces()) {
 			DisplayPiece displayPiece = new CubeDisplayPiece(piece);
-			Scene.addPiece(displayPiece);
+			
+			PieceBatch pieceBatch = pieceBatches.get(piece.getType());
+			if(pieceBatch.getMesh() == null)
+				pieceBatch.setMesh(displayPiece.loadMesh(piece));
+			pieceBatch.addPiece(displayPiece);
+			
 			pieceMap.put(piece, displayPiece);	
 			allDisplayPieces.add(displayPiece);
 		}

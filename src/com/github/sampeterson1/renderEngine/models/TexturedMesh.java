@@ -18,7 +18,7 @@
 
 package com.github.sampeterson1.renderEngine.models;
 
-import com.github.sampeterson1.renderEngine.loaders.ModelLoader;
+import com.github.sampeterson1.renderEngine.loaders.Loader;
 
 public class TexturedMesh extends Mesh {
 	
@@ -26,7 +26,7 @@ public class TexturedMesh extends Mesh {
 	
 	public TexturedMesh(MeshData data, String texture) {
 		super(data);
-		this.texture = ModelLoader.loadTexture(texture);
+		this.texture = Loader.loadTexture(texture);
 	}
 	
 	public int getTextureID() {

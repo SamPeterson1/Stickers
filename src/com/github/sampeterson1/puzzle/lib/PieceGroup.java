@@ -38,7 +38,7 @@ public class PieceGroup {
 		this.puzzleSize = puzzle.getSize();
 		this.behavior = behavior;
 		
-		int numPieces = behavior.getNumPieces(puzzleSize, position);
+		int numPieces = behavior.getNumPieces(puzzleSize);
 		for(int i = 0; i < numPieces; i ++) {
 			pieces.add(behavior.createPiece(position, i, puzzleSize));
 		}

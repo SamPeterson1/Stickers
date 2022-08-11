@@ -187,7 +187,7 @@ public class OBJLoader {
 		int[] indicesArr = toIntArr(indices);
 		int[] colorIndicesArr = toIntArr(colorIndices);
 		
-		MeshData meshData = ModelLoader.loadColoredModel(positionsArr, normalsArr, colorIndicesArr, indicesArr);
+		MeshData meshData = Loader.loadColoredModel(positionsArr, normalsArr, colorIndicesArr, indicesArr);
 		ColoredMesh mesh = new ColoredMesh(meshData);
 
 		return mesh;
