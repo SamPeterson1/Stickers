@@ -20,8 +20,8 @@ package com.github.sampeterson1.renderEngine.window;
 
 import org.lwjgl.opengl.GL11;
 
-import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeUtil;
+import com.github.sampeterson1.ivyCube.IvyCube;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
@@ -51,7 +51,7 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 3;
+	private int size = 100;
 	private int movePointer = 0;
 	
 	private Algorithm alg;
@@ -67,10 +67,10 @@ public class RenderLoop implements Runnable {
 		
 		CubeUtil.init();
 		Pyraminx.init();
-		this.display = new PuzzleDisplay(new Cube(size), 450f);
+		this.display = new PuzzleDisplay(new Pyraminx(size), 450f);
 		display.setAnimate(true);
 		display.setAnimationSpeed(30);
-		this.puzzle = new Cube(size);
+		this.puzzle = new Pyraminx(size);
 		
 		this.camera = new OrbitalCamera(50f);
 		renderer = new Renderer(camera);

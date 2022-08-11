@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
-import com.github.sampeterson1.renderEngine.models.MeshData;
 
 public class OBJLoader {
 	
@@ -138,10 +137,10 @@ public class OBJLoader {
 				}
 			}
 			
-			data.positions = toFloatArr(positions);
+			data.positions = listToFloatArr(positions);
 			data.normals = normalsArr;
 			data.texCoords = texCoordsArr;
-			data.indices = toIntArr(indices);
+			data.indices = listToIntArr(indices);
 			
 			totalPositionsRead += positions.size() / 3;
 			totalTexCoordsRead += texCoords.size() / 2;
@@ -161,6 +160,7 @@ public class OBJLoader {
 		List<Float> normals = new ArrayList<Float>();
 		List<Integer> colorIndices = new ArrayList<Integer>();
 		List<Integer> indices = new ArrayList<Integer>();
+		List<String> objectNames = new ArrayList<String>();
 		
 		BufferedReader reader = openFile(filePath);
 		
@@ -172,9 +172,10 @@ public class OBJLoader {
 		OBJData object = null;
 		int currentColorIndex = 0;
 		while((object = loadObject(reader)) != null) {
-			addFloatArr(positions, object.positions);
-			addFloatArr(normals, object.normals);
-			addIntArr(indices, object.indices);
+			addArr(positions, object.positions);
+			addArr(normals, object.normals);
+			addArr(indices, object.indices);
+			objectNames.add(object.objectName);
 			
 			int numVerts = object.positions.length / 3;
 			for(int i = 0; i < numVerts; i ++) {
@@ -182,30 +183,37 @@ public class OBJLoader {
 			}
 		}
 		
-		float[] positionsArr = toFloatArr(positions);
-		float[] normalsArr = toFloatArr(normals);
-		int[] indicesArr = toIntArr(indices);
-		int[] colorIndicesArr = toIntArr(colorIndices);
+		float[] positionsArr = listToFloatArr(positions);
+		float[] normalsArr = listToFloatArr(normals);
+		int[] indicesArr = listToIntArr(indices);
+		int[] colorIndicesArr = listToIntArr(colorIndices);
+		String[] objectNamesArr = listToStringArr(objectNames);
 		
-		MeshData meshData = Loader.loadColoredModel(positionsArr, normalsArr, colorIndicesArr, indicesArr);
-		ColoredMesh mesh = new ColoredMesh(meshData);
-
-		return mesh;
+		return Loader.loadColoredMesh(positionsArr, normalsArr, colorIndicesArr, indicesArr, objectNamesArr);
 	}
 	
-	private static void addIntArr(List<Integer> list, int[] arr) {
+	private static void addArr(List<Integer> list, int[] arr) {
 		for(int i : arr) {
 			list.add(i);
 		}
 	}
 	
-	public static void addFloatArr(List<Float> list, float[] arr) {
+	public static void addArr(List<Float> list, float[] arr) {
 		for(float f : arr) {
 			list.add(f);
 		}
 	}
 	
-	private static float[] toFloatArr(List<Float> list) {
+	private static String[] listToStringArr(List<String> list) {
+		String[] arr = new String[list.size()];
+		for(int i = 0; i < arr.length; i ++) {
+			arr[i] = list.get(i);
+		}
+		
+		return arr;
+	}
+	
+	private static float[] listToFloatArr(List<Float> list) {
 		float[] arr = new float[list.size()];
 		for(int i = 0; i < arr.length; i ++) {
 			arr[i] = list.get(i);
@@ -214,7 +222,7 @@ public class OBJLoader {
 		return arr;
 	}
 	
-	private static int[] toIntArr(List<Integer> list) {
+	private static int[] listToIntArr(List<Integer> list) {
 		int[] arr = new int[list.size()];
 		for(int i = 0; i < arr.length; i ++) {
 			arr[i] = list.get(i);

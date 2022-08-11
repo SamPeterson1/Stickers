@@ -121,7 +121,7 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize, int position) {
+	public int getNumPieces(int puzzleSize) {
 		return 2 * (puzzleSize - 3) + 1;
 	}
 

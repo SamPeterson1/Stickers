@@ -24,27 +24,24 @@ import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 
 public abstract class DisplayPiece {
 	
-	private Piece position;
+	private Piece piece;
 	private Matrix3D transformationMat;
 	private Matrix3D rotationMat;
 	
-	public int firstPosition;
+	protected abstract ColoredMesh getMesh();
 	
-	protected abstract ColoredMesh loadMesh(Piece position);
+	public abstract void setWorldPosition();
 	
-	public abstract void setWorldPosition(Piece position);
-	
-	public DisplayPiece(Piece position) {
+	public DisplayPiece(Piece piece) {
 		this.transformationMat = new Matrix3D();
 		this.rotationMat = new Matrix3D();
-		this.position = position;
-		this.firstPosition = position.getPosition();
+		this.piece = piece;
 		
-		setWorldPosition(position);
+		setWorldPosition();
 	}
 
-	public Piece getPosition() {
-		return this.position;
+	public Piece getPiece() {
+		return this.piece;
 	}
 	
 	public Matrix3D getTransform() {

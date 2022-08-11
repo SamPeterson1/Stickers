@@ -19,12 +19,10 @@
 package com.github.sampeterson1.puzzle.display;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.sampeterson1.cube.display.CubeDisplayPiece;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
@@ -33,6 +31,8 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.pyraminx.display.PyraminxDisplayPiece;
+import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.rendering.Scene;
 
@@ -50,7 +50,7 @@ public class PuzzleDisplay {
 
 	private Puzzle puzzle;
 
-	private Map<PieceType, PieceBatch> pieceBatches;
+	private Map<Mesh, PieceBatch> pieceBatches;
 	private Map<Piece, DisplayPiece> pieceMap;
 	private List<Piece> movedPieces;
 	private List<DisplayPiece> allDisplayPieces;
@@ -65,30 +65,32 @@ public class PuzzleDisplay {
 	}
 	
 	private void createPieces() {
-		this.pieceBatches = new EnumMap<PieceType, PieceBatch>(PieceType.class);
-		
-		for(PieceType type : puzzle.getAllGroups().keySet()) {
-			PieceGroup group = puzzle.getGroup(type, 0);
-			int numGroups = puzzle.getGroups(type).size();
-			PieceBatch pieceBatch = new PieceBatch(group.getNumPieces() * numGroups);
-			pieceBatches.put(type, pieceBatch);
-			Scene.addInstancedMesh(pieceBatch);
-		}
-		
+		this.pieceBatches = new HashMap<Mesh, PieceBatch>();		
 		this.pieceMap = new HashMap<Piece, DisplayPiece>();
 		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
 		for(Piece piece : puzzle.getAllPieces()) {
-			DisplayPiece displayPiece = new CubeDisplayPiece(piece);
+			DisplayPiece displayPiece = new PyraminxDisplayPiece(piece);
+			Mesh mesh = displayPiece.getMesh();
 			
-			PieceBatch pieceBatch = pieceBatches.get(piece.getType());
-			if(pieceBatch.getMesh() == null)
-				pieceBatch.setMesh(displayPiece.loadMesh(piece));
-			pieceBatch.addPiece(displayPiece);
+			if(pieceBatches.containsKey(mesh)) {
+				PieceBatch pieceBatch = pieceBatches.get(mesh);
+				pieceBatch.addPiece(displayPiece);
+			} else {
+				PieceBatch pieceBatch = new PieceBatch(mesh);
+				pieceBatch.addPiece(displayPiece);
+				
+				pieceBatches.put(mesh, pieceBatch);
+				Scene.addInstancedMesh(pieceBatch);
+			}
 			
 			pieceMap.put(piece, displayPiece);	
 			allDisplayPieces.add(displayPiece);
 		}
+		
+		for(PieceBatch batch : pieceBatches.values()) {
+			batch.create();
+		}		
 	}
 	
 	public void print() {

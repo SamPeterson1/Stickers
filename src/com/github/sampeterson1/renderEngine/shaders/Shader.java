@@ -61,6 +61,18 @@ public abstract class Shader {
 		GL20.glUniform1f(location, value);
 	}
 	
+	protected void loadVector3fArr(int location, Vector3f[] value) {
+		float[] arr = new float[value.length * 3];
+		for(int i = 0; i < arr.length; i += 3) {
+			Vector3f v = value[i/3];
+			arr[i] = v.x;
+			arr[i + 1] = v.y;
+			arr[i + 2] = v.z;
+		}
+		
+		GL20.glUniform3fv(location, arr);
+	}
+	
 	protected void loadVector3f(int location, Vector3f value) {
 		GL20.glUniform3f(location, value.x, value.y, value.z);
 	}

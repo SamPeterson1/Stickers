@@ -84,7 +84,7 @@ public class PyraminxCornerBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize, int position) {
+	public int getNumPieces(int puzzleSize) {
 		return 2;
 	}
 

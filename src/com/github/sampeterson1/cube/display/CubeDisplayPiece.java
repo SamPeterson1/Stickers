@@ -96,6 +96,14 @@ public class CubeDisplayPiece extends DisplayPiece {
 	
 	public CubeDisplayPiece(Piece position) {
 		super(position);
+		if(cornerPieceMesh == null)
+			loadMeshes();
+	}
+	
+	private void loadMeshes() {
+		cornerPieceMesh = OBJLoader.loadColoredMesh("cube/Corner.obj");
+		edgePieceMesh = OBJLoader.loadColoredMesh("cube/Edge.obj");
+		centerPieceMesh = OBJLoader.loadColoredMesh("cube/Center.obj");
 	}
 	
 	/*
@@ -181,10 +189,12 @@ public class CubeDisplayPiece extends DisplayPiece {
 	}
 	
 	@Override
-	public void setWorldPosition(Piece piece) {
+	public void setWorldPosition() {
+		Piece piece = super.getPiece();
 		pieceSize = CUBE_DRAW_SIZE / piece.getPuzzleSize();
 		Matrix3D transformation = new Matrix3D();
 		transformation.scale(pieceSize / 2);
+		
 		PieceType type = piece.getType();
 		
 		if(type == PieceType.EDGE) {
@@ -201,20 +211,21 @@ public class CubeDisplayPiece extends DisplayPiece {
 	}
 	
 	@Override
-	protected ColoredMesh loadMesh(Piece piece) {
+	public ColoredMesh getMesh() {
 		ColoredMesh mesh = null;
+		Piece piece = super.getPiece();
 		
 		if(piece.getType() == PieceType.CORNER) {
-			mesh = OBJLoader.loadColoredMesh("cube/Corner.obj");
+			return cornerPieceMesh;
 			//mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
 			//mesh.setColor("Right", Colors.convertColor(piece.getColor(1)));
 			//mesh.setColor("Bottom", Colors.convertColor(piece.getColor(2)));
 		} else if(piece.getType() == PieceType.EDGE) {
-			mesh = OBJLoader.loadColoredMesh("cube/Edge.obj");
+			return edgePieceMesh;
 			//mesh.setColor("Bottom", Colors.convertColor(piece.getColor(0)));
 			//mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
 		} else if(piece.getType() == PieceType.CENTER) {
-			mesh = OBJLoader.loadColoredMesh("cube/Center.obj");
+			return centerPieceMesh;
 			//mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
 		}
 

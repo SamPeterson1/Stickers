@@ -43,6 +43,9 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	private static final Algorithm[] edgeRotationAlgs = initEdgeRotationAlgs();
 	private static final Algorithm[] centerRotationAlgs = initCenterRotationAlgs();
 	
+	private static ColoredMesh upPieceMesh;
+	private static ColoredMesh downPieceMesh;
+	
 	private static Algorithm[] initCornerRotationAlgs() {
 		Algorithm[] algs = new Algorithm[4];
 		
@@ -79,9 +82,15 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		return algs;
 	}
 	
+	private static void loadMeshes() {
+		upPieceMesh = OBJLoader.loadColoredMesh("PyraminxUp.obj");
+		downPieceMesh = OBJLoader.loadColoredMesh("PyraminxDown.obj");
+	}
 	
 	public PyraminxDisplayPiece(Piece position) {
 		super(position);
+		if(upPieceMesh == null)
+			loadMeshes();
 	}
 
 	//Given a piece, determine if we should use the up facing piece model
@@ -108,18 +117,11 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 
 		transform.translateY((layer - puzzleSize/3 + 1) * LAYER_HEIGHT);
 		transform.translateZ(-(layer - puzzleSize + 1) * LAYER_DEPTH / 3);
-		if(puzzleSize % 3 == 0) {
-			transform.translateX(centeredIndex * X_OFFSET);
-			transform.translateZ(-Z_OFFSET);
-			transform.translateY((puzzleSize/3 + 1) * Y_OFFSET);
-		} else if(puzzleSize % 3 == 1) {
-			transform.translateX(centeredIndex * X_OFFSET);
-			transform.translateY((puzzleSize/3) * Y_OFFSET);
-		} else if(puzzleSize % 3 == 2) {
-			transform.translateX(centeredIndex * X_OFFSET);
-			transform.translateZ(-Z_OFFSET);
-			transform.translateY((puzzleSize/3 - 1) * Y_OFFSET);
-		}
+		
+		int yOff = 1 - (puzzleSize % 3);
+		transform.translateX(centeredIndex * X_OFFSET);
+		transform.translateY((puzzleSize/3 + yOff) * Y_OFFSET);
+		transform.translateZ(-Z_OFFSET);
 
 		return transform;
 	}
@@ -131,20 +133,11 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		transform.translateY((layer - puzzleSize/3 + 1) * LAYER_HEIGHT);
 		transform.translateZ(-(layer - puzzleSize + 1) * LAYER_DEPTH / 3);
 
-		if(puzzleSize % 3 == 0) {
-			transform.translateX(centeredIndex * X_OFFSET);
-			transform.translateZ(-2*Z_OFFSET);
-			transform.translateY((puzzleSize/3 + 2) * Y_OFFSET);
-		} else if(puzzleSize % 3 == 1) {
-			transform.translateX(centeredIndex * X_OFFSET);
-			transform.translateZ(-Z_OFFSET);
-			transform.translateY((puzzleSize/3 + 1) * Y_OFFSET);
-		} else if(puzzleSize % 3 == 2) {
-			transform.translateX(centeredIndex * X_OFFSET);
-			transform.translateZ(-2*Z_OFFSET);
-			transform.translateY((puzzleSize/3) * Y_OFFSET);
-		}
-	
+		int yOff = 2 - (puzzleSize % 3);
+		transform.translateX(centeredIndex * X_OFFSET);
+		transform.translateY((puzzleSize/3 + yOff) * Y_OFFSET);
+		transform.translateZ(-2*Z_OFFSET);
+
 		return transform;
 	}
 	
@@ -218,9 +211,9 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		return Algorithm.getRotationFromAlgorithm(alg);
 	}
 	
-	//See DisplayPiece.java
 	@Override
-	public void setWorldPosition(Piece piece) {
+	public void setWorldPosition() {
+		Piece piece = super.getPiece();
 		PieceType type = piece.getType();
 		Matrix3D transform = new Matrix3D();
 		
@@ -236,15 +229,16 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		super.setTransformationMat(transform);
 	}
 	
-	//See DisplayPiece.java
 	@Override
-	protected ColoredMesh loadMesh(Piece piece) {
+	protected ColoredMesh getMesh() {
+		Piece piece = super.getPiece();
 		ColoredMesh mesh = null;
 		if(isUpFacing(piece)) {
-			mesh = OBJLoader.loadColoredMesh("PyraminxUp.obj");
+			mesh = upPieceMesh;
 		} else {
-			mesh = OBJLoader.loadColoredMesh("PyraminxDown.obj");
+			mesh = downPieceMesh;
 		}
+		
 		
 		mesh.setColor("Border", Colors.WHITE);
 		PieceType type = piece.getType();

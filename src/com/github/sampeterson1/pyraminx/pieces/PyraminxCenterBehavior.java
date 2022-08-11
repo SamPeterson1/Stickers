@@ -95,7 +95,7 @@ public class PyraminxCenterBehavior implements PieceBehavior {
 	}
 
 	@Override
-	public int getNumPieces(int puzzleSize, int position) {
+	public int getNumPieces(int puzzleSize) {
 		int a = puzzleSize - 3;
 		return a*a;
 	}

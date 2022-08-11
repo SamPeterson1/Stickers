@@ -27,18 +27,20 @@ import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.renderEngine.models.InstancedMeshBatch;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
-import com.github.sampeterson1.renderEngine.shaders.StaticShader;
+import com.github.sampeterson1.renderEngine.shaders.PieceShader;
 
 public class Renderer {
 	
-	private static final int NUM_ATTRIBS = 6;
+	private static final int NUM_ATTRIBS = 7;
 	
-	private StaticShader shader = new StaticShader();
+	private PieceShader shader = new PieceShader();
 	private OrbitalCamera camera;
 	
 	public Renderer(OrbitalCamera camera) {
 		this.camera = camera;
 		GL11.glEnable(GL11.GL_DEPTH_TEST);  
+		//GL11.glEnable(GL11.GL_CULL_FACE);  
+		//GL11.glCullFace(GL11.GL_BACK);
 	}
 	
 	public void render() {

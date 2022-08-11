@@ -20,7 +20,6 @@ package com.github.sampeterson1.ivyCube;
 
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
-import com.github.sampeterson1.puzzle.display.Colors;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
@@ -28,32 +27,41 @@ import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 
 public class IvyCubeDisplayPiece extends DisplayPiece {
-
+	
+	private static ColoredMesh petalPieceMesh;
+	private static ColoredMesh cornerPieceMesh;
+	
+	private static void loadMeshes() {
+		petalPieceMesh = OBJLoader.loadColoredMesh("IvyPetal.obj");
+		cornerPieceMesh = OBJLoader.loadColoredMesh("IvyCorner.obj");
+	}
+	
 	public IvyCubeDisplayPiece(Piece position) {
 		super(position);
+		if(petalPieceMesh == null)
+			loadMeshes();
 	}
 	
 	@Override
-	protected ColoredMesh loadMesh(Piece piece) {
+	protected ColoredMesh getMesh() {
+		Piece piece = super.getPiece();
 		PieceType type = piece.getType();
-		ColoredMesh mesh = null;
 		if(type == PieceType.CENTER) {
-			mesh = OBJLoader.loadColoredMesh("IvyPetal.obj"); 
-			mesh.setColor("Front", Colors.convertColor(piece.getColor()));
-			mesh.setColor("Border", Colors.WHITE);
-		} else if(type == PieceType.CORNER) {
-			mesh = OBJLoader.loadColoredMesh("IvyCorner.obj");
-			mesh.setColor("Border", Colors.WHITE);
-			mesh.setColor("Top", Colors.convertColor(piece.getColor(0)));
-			mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
-			mesh.setColor("Left", Colors.convertColor(piece.getColor(2)));
+			return petalPieceMesh;
+			//mesh.setColor("Front", Colors.convertColor(piece.getColor()));
+			//mesh.setColor("Border", Colors.WHITE);
+		} else {
+			return cornerPieceMesh;
+			//mesh.setColor("Border", Colors.WHITE);
+			//mesh.setColor("Top", Colors.convertColor(piece.getColor(0)));
+			//mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
+			//mesh.setColor("Left", Colors.convertColor(piece.getColor(2)));
 		}
-		
-		return mesh;
 	}
 	
 	@Override
-	public void setWorldPosition(Piece piece) {
+	public void setWorldPosition() {
+		Piece piece = super.getPiece();
 		PieceType type = piece.getType();
 		int position = piece.getPosition();
 		

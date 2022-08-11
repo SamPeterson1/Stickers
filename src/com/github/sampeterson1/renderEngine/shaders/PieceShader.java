@@ -21,7 +21,7 @@ package com.github.sampeterson1.renderEngine.shaders;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
 
-public class StaticShader extends Shader {
+public class PieceShader extends Shader {
 	
 	private static final String VERTEX_FILE = "vertex.glsl";
 	private static final String FRAGMENT_FILE = "frag.glsl";
@@ -29,8 +29,9 @@ public class StaticShader extends Shader {
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
 	private int location_lightDirection;
+	private int location_colorPalette;
 	
-	public StaticShader() {
+	public PieceShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
 
@@ -47,6 +48,11 @@ public class StaticShader extends Shader {
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_lightDirection = super.getUniformLocation("lightDirection");
+		location_colorPalette = super.getUniformLocation("colorPalette");
+	}
+	
+	public void setColorPalette(Vector3f[] colorPalette) {
+		super.loadVector3fArr(location_colorPalette, colorPalette);
 	}
 	
 	public void setLightDirection(Vector3f direction) {

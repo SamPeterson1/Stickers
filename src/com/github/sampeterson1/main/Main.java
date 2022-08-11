@@ -32,7 +32,6 @@ public class Main {
 		renderThread.start();
 		GLFW.glfwMakeContextCurrent(0);
 		while(Window.isOpen()) {
-			System.out.println("run");
 			Window.pollEvents();
 		}
 	}

@@ -6,13 +6,15 @@
  in mat4 transformationMatrix;
  
  out vec3 passNormal;
+ out vec3 vertColor;
  
  uniform mat4 projectionMatrix;
  uniform mat4 viewMatrix;
+ uniform vec3[3] colorPalette;
  
  void main(void) {
  
  	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
  	passNormal = (viewMatrix * transformationMatrix * vec4(normal, 0.0)).xyz;
- 	
+ 	vertColor = colorPalette[colorIndex];
  }

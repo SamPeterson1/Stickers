@@ -11,21 +11,16 @@ public class InstancedMeshBatch {
 	private int instanceDataLength;
 	private int numInstances;
 	private int instancedVboID;
-	
-	public InstancedMeshBatch(int instanceDataLength, int numInstances) {
-		this(null, instanceDataLength, numInstances);
-	}
-	
-	public InstancedMeshBatch(Mesh mesh, int instanceDataLength, int numInstances) {
+
+	public InstancedMeshBatch(Mesh mesh) {
 		this.mesh = mesh;
+	}
+
+	public void createInstances(int instanceDataLength, int numInstances) {
 		this.instanceDataLength = instanceDataLength;
 		this.numInstances = numInstances;
 		int numFloats = instanceDataLength * numInstances;
 		this.instancedVboID = Loader.createInstancedVBO(numFloats);
-	}
-	
-	public void setMesh(Mesh mesh) {
-		this.mesh = mesh;
 	}
 	
 	public Mesh getMesh() {

@@ -18,34 +18,31 @@
 
 package com.github.sampeterson1.renderEngine.models;
 
-public class MeshData {
+public class ColoredVertexGroup {
 	
-	private int[] vboIDs;
-	private int vaoID;
-	private int numVertices;
-	private int numIndices;	
+	private String name;
+	private int colorID;
+	private int[] indices;
 	
-	public MeshData(int vaoID, int[] vboIDs, int numIndices, int numVertices) {
-		this.vaoID = vaoID;
-		this.vboIDs = vboIDs;
-		this.numIndices = numIndices;
-		this.numVertices = numVertices;
+	public ColoredVertexGroup(String name, int[] indices) {
+		this.name = name;
+		this.indices = indices;
+		this.colorID = 0;
 	}
 	
-	public int getNumVertices() {
-		return this.numVertices;
+	public int[] getIndices() {
+		return this.indices;
 	}
 	
-	public int getVboID(int attributeID) {
-		return vboIDs[attributeID];
+	public String getName() {
+		return this.name;
 	}
 	
-	public int getVaoID() {
-		return vaoID;
+	public int getColorID() {
+		return this.colorID;
 	}
-	
-	public int getNumIndices() {
-		return numIndices;
+
+	public void setColorID(int colorID) {
+		this.colorID = colorID;
 	}
-	
 }
