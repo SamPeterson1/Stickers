@@ -28,7 +28,7 @@ import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.pyraminx.util.PyraminxAlgorithmUtil;
 import com.github.sampeterson1.pyraminx.util.PyraminxCenterUtil;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
-import com.github.sampeterson1.renderEngine.models.ColoredModel;
+import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 
 public class PyraminxDisplayPiece extends DisplayPiece {
 
@@ -238,28 +238,28 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	
 	//See DisplayPiece.java
 	@Override
-	protected ColoredModel loadModel(Piece piece) {
-		ColoredModel model = null;
+	protected ColoredMesh loadMesh(Piece piece) {
+		ColoredMesh mesh = null;
 		if(isUpFacing(piece)) {
-			model = OBJLoader.loadColoredModel("PyraminxUp.obj");
+			mesh = OBJLoader.loadColoredMesh("PyraminxUp.obj");
 		} else {
-			model = OBJLoader.loadColoredModel("PyraminxDown.obj");
+			mesh = OBJLoader.loadColoredMesh("PyraminxDown.obj");
 		}
 		
-		model.setColor("Border", Colors.WHITE);
+		mesh.setColor("Border", Colors.WHITE);
 		PieceType type = piece.getType();
 		if(type == PieceType.CENTER) {
-			model.setColor("Front", Colors.convertColor(piece.getColor()));
+			mesh.setColor("Front", Colors.convertColor(piece.getColor()));
 		} else if(type == PieceType.EDGE) {
-			model.setColor("Front", Colors.convertColor(piece.getColor(0)));
-			model.setColor("Bottom", Colors.convertColor(piece.getColor(1)));
+			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
+			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(1)));
 		} else if(type == PieceType.CORNER) {
-			model.setColor("Front", Colors.convertColor(piece.getColor(0)));
-			model.setColor("Bottom", Colors.convertColor(piece.getColor(1)));
-			model.setColor("BackRight", Colors.convertColor(piece.getColor(2)));
+			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
+			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(1)));
+			mesh.setColor("BackRight", Colors.convertColor(piece.getColor(2)));
 		}
 		
-		return model;
+		return mesh;
 	}
 	
 }

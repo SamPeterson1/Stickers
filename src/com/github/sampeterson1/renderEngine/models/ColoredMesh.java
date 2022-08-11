@@ -24,14 +24,12 @@ import java.util.Map;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.renderEngine.loaders.ModelLoader;
 
-public class ColoredModel {
-	
-	private ModelData modelData;
+public class ColoredMesh extends Mesh {
 	private Map<String, ColoredVertexGroup> colorGroups;
 	
-	public ColoredModel(ModelData modelData) {
+	public ColoredMesh(MeshData modelData) {
+		super(modelData);
 		this.colorGroups = new HashMap<String, ColoredVertexGroup>();
-		this.modelData = modelData;
 	}
 	
 	public void addColorGroup(ColoredVertexGroup group) {
@@ -39,7 +37,8 @@ public class ColoredModel {
 	}
 	
 	public void prepareColors() {
-		float[] vertexColors = new float[modelData.getNumVertices() * 3];
+		MeshData meshData = super.getData();
+		float[] vertexColors = new float[meshData.getNumVertices() * 3];
 		
 		for(ColoredVertexGroup group : colorGroups.values()) {
 			Vector3f color = group.getColor();
@@ -50,7 +49,7 @@ public class ColoredModel {
 			}
 		}
 
-		ModelLoader.updateAttributeData(modelData, 1, vertexColors);
+		ModelLoader.updateAttributeData(meshData, 1, vertexColors);
 	}
 	
 	public void setColor(Vector3f color) {
@@ -62,8 +61,5 @@ public class ColoredModel {
 	public void setColor(String groupName, Vector3f color) {
 		colorGroups.get(groupName).setColor(color);
 	}
-	
-	public ModelData getData() {
-		return this.modelData;
-	}
+
 }

@@ -18,24 +18,34 @@
 
 package com.github.sampeterson1.renderEngine.models;
 
-import com.github.sampeterson1.renderEngine.loaders.ModelLoader;
+public class MeshData {
+	
+	private int vaoID;
+	private int[] vboIDs;
+	private int numIndices;
+	private int numVertices;
+	
+	public MeshData(int vaoID, int[] vboIDs, int numVertices, int numIndices) {
+		this.vaoID = vaoID;
+		this.vboIDs = vboIDs;
+		this.numIndices = numIndices;
+		this.numVertices = numVertices;
+	}
+	
+	public int getVboID(int attributeID) {
+		return this.vboIDs[attributeID];
+	}
+	
+	public int getVaoID() {
+		return vaoID;
+	}
+	
+	public int getNumIndices() {
+		return numIndices;
+	}
 
-public class TexturedModel {
-	
-	private ModelData data;
-	private Texture texture;
-	
-	public TexturedModel(ModelData data, String texture) {
-		this.data = data;
-		this.texture = ModelLoader.loadTexture(texture);
-	}
-	
-	public int getTextureID() {
-		return this.texture.getID();
-	}
-	
-	public ModelData getData() {
-		return this.data;
+	public int getNumVertices() {
+		return numVertices;
 	}
 	
 }

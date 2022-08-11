@@ -30,7 +30,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import com.github.sampeterson1.renderEngine.models.ModelData;
+import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.Texture;
 
 public class ModelLoader {
@@ -39,7 +39,7 @@ public class ModelLoader {
 	private static List<Integer> vbos = new ArrayList<Integer>();
 	private static List<Integer> textures = new ArrayList<Integer>();
 	
-	public static ModelData loadData(float[] positions, float[] texCoords, int[] indices) {
+	public static MeshData loadData(float[] positions, float[] texCoords, int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);
 		
@@ -49,10 +49,10 @@ public class ModelLoader {
 		//vboIDs[2] = storeAttributeData(2, 3, normals, GL15.GL_STATIC_DRAW);
 		GL30.glBindVertexArray(0);
 		
-		return new ModelData(vaoID, vboIDs, positions.length/3, indices.length);
+		return new MeshData(vaoID, vboIDs, positions.length/3, indices.length);
 	}
 	
-	public static ModelData loadDynamicColoredModel(float[] positions, float[] normals, float[] colors, int[] indices) {
+	public static MeshData loadDynamicColoredModel(float[] positions, float[] normals, float[] colors, int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);
 		
@@ -62,7 +62,7 @@ public class ModelLoader {
 		vboIDs[2] = storeAttributeData(2, 3, normals, GL15.GL_STATIC_DRAW);
 		GL30.glBindVertexArray(0);
 		
-		return new ModelData(vaoID, vboIDs, positions.length/3, indices.length);
+		return new MeshData(vaoID, vboIDs, positions.length/3, indices.length);
 	}
 	
 	public static Texture loadTexture(String fileName) {
@@ -80,7 +80,7 @@ public class ModelLoader {
 		return texture;
 	}
 	
-	public static void updateAttributeData(ModelData modelData, int attributeID, float[] data) {
+	public static void updateAttributeData(MeshData modelData, int attributeID, float[] data) {
 		int vboID = modelData.getVboID(attributeID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		

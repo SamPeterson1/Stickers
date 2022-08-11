@@ -26,7 +26,7 @@ import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
-import com.github.sampeterson1.renderEngine.models.ColoredModel;
+import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 
 //An implementation of DisplayPiece that represents a piece on a cube
 public class CubeDisplayPiece extends DisplayPiece {
@@ -197,24 +197,24 @@ public class CubeDisplayPiece extends DisplayPiece {
 	}
 	
 	@Override
-	protected ColoredModel loadModel(Piece piece) {
-		ColoredModel model = null;
+	protected ColoredMesh loadMesh(Piece piece) {
+		ColoredMesh mesh = null;
 		
 		if(piece.getType() == PieceType.CORNER) {
-			model = OBJLoader.loadColoredModel("cube/Corner.obj");
-			model.setColor("Front", Colors.convertColor(piece.getColor(0)));
-			model.setColor("Right", Colors.convertColor(piece.getColor(1)));
-			model.setColor("Bottom", Colors.convertColor(piece.getColor(2)));
+			mesh = OBJLoader.loadColoredMesh("cube/Corner.obj");
+			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
+			mesh.setColor("Right", Colors.convertColor(piece.getColor(1)));
+			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(2)));
 		} else if(piece.getType() == PieceType.EDGE) {
-			model = OBJLoader.loadColoredModel("cube/Edge.obj");
-			model.setColor("Bottom", Colors.convertColor(piece.getColor(0)));
-			model.setColor("Front", Colors.convertColor(piece.getColor(1)));
+			mesh = OBJLoader.loadColoredMesh("cube/Edge.obj");
+			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(0)));
+			mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
 		} else if(piece.getType() == PieceType.CENTER) {
-			model = OBJLoader.loadColoredModel("cube/Center.obj");
-			model.setColor("Front", Colors.convertColor(piece.getColor(0)));
+			mesh = OBJLoader.loadColoredMesh("cube/Center.obj");
+			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
 		}
 
-		return model;
+		return mesh;
 	}
 
 }

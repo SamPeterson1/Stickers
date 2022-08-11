@@ -24,8 +24,8 @@ import org.lwjgl.opengl.GL30;
 
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
-import com.github.sampeterson1.renderEngine.models.ColoredModel;
-import com.github.sampeterson1.renderEngine.models.ModelData;
+import com.github.sampeterson1.renderEngine.models.ColoredMesh;
+import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.shaders.StaticShader;
 
 public class Renderer {
@@ -47,11 +47,11 @@ public class Renderer {
 		shader.setLightDirection(Scene.getLightDirection());
 		
 		for(DisplayPiece piece : Scene.getPieces()) {
-			ColoredModel model = piece.getModel();
-			model.prepareColors();
-			ModelData data = model.getData();
+			ColoredMesh mesh = (ColoredMesh) piece.getMesh();
+			mesh.prepareColors();
+			MeshData data = mesh.getData();
 			Matrix3D pieceTransformation = new Matrix3D();
-			pieceTransformation.multiply(piece.getTransformationMat());
+			pieceTransformation.multiply(piece.getTransform());
 			shader.setTransformationMatrix(pieceTransformation);
 			
 			GL30.glBindVertexArray(data.getVaoID());

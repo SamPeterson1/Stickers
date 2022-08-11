@@ -25,32 +25,31 @@ import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
-import com.github.sampeterson1.renderEngine.models.ColoredModel;
+import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 
 public class IvyCubeDisplayPiece extends DisplayPiece {
 
-	
 	public IvyCubeDisplayPiece(Piece position) {
 		super(position);
 	}
 	
 	@Override
-	protected ColoredModel loadModel(Piece piece) {
+	protected ColoredMesh loadMesh(Piece piece) {
 		PieceType type = piece.getType();
-		ColoredModel model = null;
+		ColoredMesh mesh = null;
 		if(type == PieceType.CENTER) {
-			model = OBJLoader.loadColoredModel("IvyPetal.obj"); 
-			model.setColor("Front", Colors.convertColor(piece.getColor()));
-			model.setColor("Border", Colors.WHITE);
+			mesh = OBJLoader.loadColoredMesh("IvyPetal.obj"); 
+			mesh.setColor("Front", Colors.convertColor(piece.getColor()));
+			mesh.setColor("Border", Colors.WHITE);
 		} else if(type == PieceType.CORNER) {
-			model = OBJLoader.loadColoredModel("IvyCorner.obj");
-			model.setColor("Border", Colors.WHITE);
-			model.setColor("Top", Colors.convertColor(piece.getColor(0)));
-			model.setColor("Front", Colors.convertColor(piece.getColor(1)));
-			model.setColor("Left", Colors.convertColor(piece.getColor(2)));
+			mesh = OBJLoader.loadColoredMesh("IvyCorner.obj");
+			mesh.setColor("Border", Colors.WHITE);
+			mesh.setColor("Top", Colors.convertColor(piece.getColor(0)));
+			mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
+			mesh.setColor("Left", Colors.convertColor(piece.getColor(2)));
 		}
 		
-		return model;
+		return mesh;
 	}
 	
 	@Override

@@ -25,9 +25,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sampeterson1.renderEngine.models.ColoredModel;
+import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 import com.github.sampeterson1.renderEngine.models.ColoredVertexGroup;
-import com.github.sampeterson1.renderEngine.models.ModelData;
+import com.github.sampeterson1.renderEngine.models.MeshData;
 
 public class OBJLoader {
 	
@@ -157,7 +157,7 @@ public class OBJLoader {
 		return data;
 	}
 	
-	public static ColoredModel loadColoredModel(String filePath) {
+	public static ColoredMesh loadColoredMesh(String filePath) {
 		List<Float> positions = new ArrayList<Float>();
 		List<Float> normals = new ArrayList<Float>();
 		List<Integer> indices = new ArrayList<Integer>();
@@ -186,13 +186,13 @@ public class OBJLoader {
 		float[] normalsArr = toFloatArr(normals);
 		int[] indicesArr = toIntArr(indices);
 		
-		ModelData modelData = ModelLoader.loadDynamicColoredModel(positionsArr, normalsArr, emptyColors, indicesArr);
-		ColoredModel model = new ColoredModel(modelData);
+		MeshData meshData = ModelLoader.loadDynamicColoredModel(positionsArr, normalsArr, emptyColors, indicesArr);
+		ColoredMesh mesh = new ColoredMesh(meshData);
 		
 		for(ColoredVertexGroup colorGroup : colorGroups)
-			model.addColorGroup(colorGroup);
+			mesh.addColorGroup(colorGroup);
 		
-		return model;
+		return mesh;
 	}
 	
 	private static void addIntArr(List<Integer> list, int[] arr) {
