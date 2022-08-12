@@ -52,8 +52,9 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 150;
+	private int size = 100;
 	private int movePointer = 0;
+	private int movesPerFrame = 50;
 	
 	private Algorithm alg;
 	private Puzzle puzzle;
@@ -69,7 +70,7 @@ public class RenderLoop implements Runnable {
 		CubeUtil.init();
 		Pyraminx.init();
 		this.display = new PuzzleDisplay(new Cube(size), 450f);
-		display.setAnimate(true);
+		display.setAnimate(false);
 		display.setAnimationSpeed(30);
 		this.puzzle = new Cube(size);
 		
@@ -93,13 +94,15 @@ public class RenderLoop implements Runnable {
 	}
 	
 	private void render() {
-		if(!display.isAnimating() && alg != null) {
-			if(movePointer < alg.length()) {
-				display.makeMove(alg.getMove(movePointer));
-				movePointer ++;
-			} else {
-				movePointer = 0;
-				alg = null;
+		for(int i = 0; i < movesPerFrame; i ++) {
+			if(!display.isAnimating() && alg != null) {
+				if(movePointer < alg.length()) {
+					display.makeMove(alg.getMove(movePointer));
+					movePointer ++;
+				} else {
+					movePointer = 0;
+					alg = null;
+				}
 			}
 		}
 		
@@ -153,7 +156,7 @@ public class RenderLoop implements Runnable {
 		char key = e.getKeyChar();
 		
 		if(key == 'Q') {
-			alg = puzzle.scramble(30);
+			alg = puzzle.scramble(1000);
 		} else if(key == 'S') {
 			alg = puzzle.solve();
 		}

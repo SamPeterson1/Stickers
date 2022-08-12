@@ -27,7 +27,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		Window.init(600, 600, "Test");
+		Window.init(600, 600, "Stickers");
 		Thread renderThread = new Thread(new RenderLoop());
 		renderThread.start();
 		GLFW.glfwMakeContextCurrent(0);
