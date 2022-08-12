@@ -183,6 +183,7 @@ public class OBJLoader {
 				colorIndices.add(currentColorIndex);
 			}
 			
+			System.out.println("Object: " + object.objectName + " ID: " + currentColorIndex);
 			currentColorIndex ++;
 		}
 		

@@ -190,32 +190,41 @@ public class CubeDisplayPiece extends DisplayPiece {
 	}
 	
 	@Override
-	public void setWorldPosition() {
+	protected void setColors() {
+		Piece piece = super.getPiece();
+		PieceType type = piece.getType();
+		super.setColor("Border", Color.WHITE);
+		
+		if(type == PieceType.EDGE) {
+			super.setColor("Bottom", piece.getColor(0));
+			super.setColor("Front", piece.getColor(1));
+		} else if(type == PieceType.CORNER) {
+			super.setColor("Front", piece.getColor(0));
+			super.setColor("Right", piece.getColor(1));
+			super.setColor("Bottom", piece.getColor(2));
+		} else if(type == PieceType.CENTER) {
+			super.setColor("Front", piece.getColor(0));
+		}
+	}
+	
+	@Override
+	protected Matrix3D getWorldPosition() {
 		Piece piece = super.getPiece();
 		pieceSize = CUBE_DRAW_SIZE / piece.getPuzzleSize();
 		Matrix3D transformation = new Matrix3D();
 		transformation.scale(pieceSize / 2);
 		
-		PieceType type = piece.getType();
-		
-		super.setColor("Border", Color.WHITE);
+		PieceType type = piece.getType();		
 		if(type == PieceType.EDGE) {
-			super.setColor("Bottom", piece.getColor(0));
-			super.setColor("Front", piece.getColor(1));
 			transformation.multiply(getEdgeOrigin(piece));
 		} else if(type == PieceType.CORNER) {
-			super.setColor("Front", piece.getColor(0));
-			super.setColor("Right", piece.getColor(1));
-			super.setColor("Bottom", piece.getColor(2));
 			transformation.multiply(getCornerOrigin());
 		} else if(type == PieceType.CENTER) {
-			super.setColor("Front", piece.getColor(0));
 			transformation.multiply(getCenterOrigin(piece));
 		}
 		
 		transformation.multiply(getPieceRotation(piece));
-		
-		super.setTransformationMat(transformation);
+		return transformation;
 	}
 	
 	@Override

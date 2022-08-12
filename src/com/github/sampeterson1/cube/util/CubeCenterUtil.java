@@ -66,7 +66,6 @@ public class CubeCenterUtil {
 	}
 
 	public static int getLayer(Piece piece, Axis moveFace, int size) {
-
 		Axis face = CubeUtil.getFace(piece.getPosition());
 		int index = piece.getIndex();
 

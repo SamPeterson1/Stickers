@@ -14,8 +14,8 @@ import com.github.sampeterson1.renderEngine.loaders.Loader;
 
 public class PieceBatch {
 
+	public static final int MAX_COLORS = 4;
 	private static final int INSTANCE_FLOAT_DATA_LENGTH = 16;
-	private static final int INSTANCE_INT_DATA_LENGTH = 4;
 	
 	private ColorPalette palette;
 	private ColoredMesh mesh;
@@ -37,13 +37,13 @@ public class PieceBatch {
 	
 	public void create() {
 		int floatBytes = INSTANCE_FLOAT_DATA_LENGTH * pieces.size() * 4;	
-		int intBytes = INSTANCE_INT_DATA_LENGTH * pieces.size() * 4;
+		int intBytes = MAX_COLORS * pieces.size() * 4;
 		
 		this.positionVboID = Loader.createDynamicVBO(floatBytes);
 		this.colorVboID = Loader.createDynamicVBO(intBytes);
 		
 		this.positionData = BufferUtils.createFloatBuffer(pieces.size() * INSTANCE_FLOAT_DATA_LENGTH);
-		this.colorData = BufferUtils.createIntBuffer(pieces.size() * INSTANCE_INT_DATA_LENGTH);
+		this.colorData = BufferUtils.createIntBuffer(pieces.size() * MAX_COLORS);
 
 		int vaoID = mesh.getData().getVaoID();
 		Loader.addInstancedAttribute(positionVboID, vaoID, 3, 4, INSTANCE_FLOAT_DATA_LENGTH, 0);
@@ -51,7 +51,7 @@ public class PieceBatch {
 		Loader.addInstancedAttribute(positionVboID, vaoID, 5, 4, INSTANCE_FLOAT_DATA_LENGTH, 8);
 		Loader.addInstancedAttribute(positionVboID, vaoID, 6, 4, INSTANCE_FLOAT_DATA_LENGTH, 12);
 		
-		Loader.addInstancedAttributeI(colorVboID, vaoID, 7, 4, INSTANCE_INT_DATA_LENGTH, 0);
+		Loader.addInstancedAttributeI(colorVboID, vaoID, 7, 4, MAX_COLORS, 0);
 		
 		created = true;
 	}

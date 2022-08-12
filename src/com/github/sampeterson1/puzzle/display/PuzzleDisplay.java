@@ -40,21 +40,26 @@ import com.github.sampeterson1.renderEngine.rendering.Scene;
 
 public class PuzzleDisplay {
 	
-	private float currentRotation = 0;
+	private static final float DEFAULT_ANIMATION_SPEED = 20f;
+	
 	private Move animatingMove;
-	private long lastTime;
-	private float animationSpeed = Mathf.PI;
+	private float animationSpeed = DEFAULT_ANIMATION_SPEED;
 	private boolean animate = true;
-	private int direction = 0;
+	
+	private float currentRotation;
+	private float targetRotation;
+	private int direction;
+	
 	private int puzzleSize;
 	private float drawSize;
-	private float targetRotation;
+	
+	private long lastTime;
 
 	private Puzzle puzzle;
 
 	private Map<Mesh, PieceBatch> pieceBatches;
 	private Map<Piece, DisplayPiece> pieceMap;
-	private List<Piece> movedPieces;
+	private List<DisplayPiece> affectedPieces;
 	private List<DisplayPiece> allDisplayPieces;
 	
 	private ColorPalette palette;
@@ -62,25 +67,20 @@ public class PuzzleDisplay {
 	public PuzzleDisplay(Puzzle puzzle, float drawSize) {
 		this.puzzle = puzzle;
 		this.drawSize = drawSize;
-		this.palette = new ColorPalette();
-		palette.addColor(Color.GREEN);
-		palette.addColor(Color.RED);
-		palette.addColor(Color.BLUE);
-		palette.addColor(Color.LIME_GREEN);
-		palette.addColor(Color.WHITE);
-		palette.addColor(Color.YELLOW);
-		createPieces();
+		this.palette = puzzle.createDefaultColorPalette();
 		
+		createPieces();
 		this.lastTime = System.currentTimeMillis();
 	}
 	
+	//populate all PieceBatches with DisplayPieces that are linked to our puzzle's pieces
 	private void createPieces() {
 		this.pieceBatches = new HashMap<Mesh, PieceBatch>();		
 		this.pieceMap = new HashMap<Piece, DisplayPiece>();
 		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
 		for(Piece piece : puzzle.getAllPieces()) {
-			DisplayPiece displayPiece = new CubeDisplayPiece(piece);
+			DisplayPiece displayPiece = puzzle.createDisplayPiece(piece);
 			ColoredMesh mesh = displayPiece.getMesh();
 			
 			if(pieceBatches.containsKey(mesh)) {
@@ -136,26 +136,26 @@ public class PuzzleDisplay {
 	}
 
 	public void makeMove(Move move) {
-		if(!move.isCubeRotation()) {
-			this.animatingMove = move;
-			this.movedPieces = getAffectedPieces();
-			this.targetRotation = move.getFace().getRotationAmount();
-			direction = animatingMove.isCW() ? 1 : -1;
-			if(!animate) {
-				finishAnimation();
-			}
+		this.animatingMove = move;
+		this.affectedPieces = getAffectedPieces();
+		this.targetRotation = move.getFace().getRotationAmount();
+		direction = animatingMove.isCW() ? 1 : -1;
+		if(!animate) {
+			finishAnimation();
 		}
 	}
 
-	private List<Piece> getAffectedPieces() {
+	//Return a list of DisplayPieces that are affected by the current animating move
+	private List<DisplayPiece> getAffectedPieces() {
 		Map<PieceType, List<PieceGroup>> allGroups = puzzle.getAllGroups();
-		List<Piece> allAffectedPieces = new ArrayList<Piece>();
+		List<DisplayPiece> allAffectedPieces = new ArrayList<DisplayPiece>();
 		
 		for(List<PieceGroup> groups : allGroups.values()) {
 			for(PieceGroup group : groups) {
 				List<Piece> groupAffectedPieces = group.getAffectedPieces(animatingMove);
 				for(Piece piece : groupAffectedPieces) {
-					allAffectedPieces.add(piece);
+					DisplayPiece displayPiece = pieceMap.get(piece);
+					allAffectedPieces.add(displayPiece);
 				}
 			}
 		}
@@ -163,18 +163,17 @@ public class PuzzleDisplay {
 		return allAffectedPieces;
 	}
 	
+	//Update the animation
 	public void update() {
 		float deltaTime = (System.currentTimeMillis() - lastTime)/1000.0f;
 		lastTime = System.currentTimeMillis();
 
 		if(animate && animatingMove != null) {
 			currentRotation += deltaTime * animationSpeed * direction;
-
-			Matrix3D rotationMat = getMoveRotationMatrix();
+			Matrix3D rotationMat = getMoveRotationMatrix(animatingMove, currentRotation);
 			
-			for(Piece position : movedPieces) {
-				DisplayPiece displayPiece = pieceMap.get(position);
-				displayPiece.setRotationMat(rotationMat);
+			for(DisplayPiece piece : affectedPieces) {
+				piece.setRotationMat(rotationMat);
 			}
 			
 			if(Mathf.abs(currentRotation) >= targetRotation) {
@@ -183,20 +182,21 @@ public class PuzzleDisplay {
 		}
 	}
 	
-	private Matrix3D getMoveRotationMatrix() {
-		Vector3f axis = animatingMove.getFace().getRotationAxis();
+	//Return a rotation matrix that rotates pieces around the current move axis by a specified amount
+	private Matrix3D getMoveRotationMatrix(Move move, float rotation) {
+		Vector3f axis = move.getFace().getRotationAxis();
 		Matrix3D rotationMat = new Matrix3D();
-		rotationMat.rotateAroundAxis(axis, currentRotation);
+		rotationMat.rotateAroundAxis(axis, rotation);
 		
 		return rotationMat;
 	}
 	
+	//Finish the current animation by applying the current rotation to the piece's internal transformation matrix
 	public final void finishAnimation() {
 		currentRotation = direction * targetRotation;
 
-		Matrix3D rotationMat = getMoveRotationMatrix();	
-		for(Piece position : movedPieces) {
-			DisplayPiece piece = pieceMap.get(position);
+		Matrix3D rotationMat = getMoveRotationMatrix(animatingMove, currentRotation);	
+		for(DisplayPiece piece : affectedPieces) {
 			piece.applyRotation(rotationMat);
 		}
 	

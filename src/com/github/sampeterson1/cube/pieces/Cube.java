@@ -18,14 +18,18 @@
 
 package com.github.sampeterson1.cube.pieces;
 
+import com.github.sampeterson1.cube.display.CubeDisplayPiece;
 import com.github.sampeterson1.cube.solvers.MasterCubeSolver;
 import com.github.sampeterson1.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.cube.util.CubeMoveUtil;
 import com.github.sampeterson1.cube.util.CubeUtil;
+import com.github.sampeterson1.puzzle.display.ColorPalette;
+import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
+import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
@@ -103,5 +107,25 @@ public class Cube extends Puzzle {
 		executeAlgorithm(scramble);
 		
 		return scramble;
+	}
+
+	@Override
+	public ColorPalette createDefaultColorPalette() {
+		ColorPalette palette = new ColorPalette();
+		
+		palette.putColor(Color.BORDER);
+		palette.putColor(Color.WHITE);
+		palette.putColor(Color.YELLOW);
+		palette.putColor(Color.ORANGE);
+		palette.putColor(Color.BLUE);
+		palette.putColor(Color.GREEN);
+		palette.putColor(Color.RED);
+		
+		return palette;
+	}
+
+	@Override
+	public DisplayPiece createDisplayPiece(Piece piece) {
+		return new CubeDisplayPiece(piece);
 	}
 }

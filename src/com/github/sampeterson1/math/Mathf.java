@@ -18,6 +18,7 @@
 
 package com.github.sampeterson1.math;
 
+//Utilities for doing math with floats
 public class Mathf {
 
 	public static final float PI = (float) Math.PI;

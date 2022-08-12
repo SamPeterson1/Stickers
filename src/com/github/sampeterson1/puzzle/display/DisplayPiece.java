@@ -24,28 +24,43 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 
+//A visible piece on a puzzle
 public abstract class DisplayPiece {
 	
 	private PieceBatch pieceBatch;
 	
+	//Keeps track of where we are on the puzzle
 	private Piece piece;
-	private Matrix3D transformationMat;
-	private Matrix3D rotationMat;
-	private int[] colorIDs;
 	
+	//The base position of the piece
+	private Matrix3D transformationMat;
+	
+	//Rotation of the piece; used for animating moves
+	private Matrix3D rotationMat;
+	
+	//Indices into the current color palette that determine the colors of the piece
+	private int[] colorIDs;
+	 
+	//Return the mesh to be used for this piece 
 	protected abstract ColoredMesh getMesh();
-	protected abstract void setWorldPosition();
+	
+	//Set the colors of this piece
+	protected abstract void setColors();
+	
+	//Return a matrix representing the world position of this piece
+	protected abstract Matrix3D getWorldPosition();
 	
 	public DisplayPiece(Piece piece) {
 		this.transformationMat = new Matrix3D();
 		this.rotationMat = new Matrix3D();
-		this.colorIDs = new int[4];
 		this.piece = piece;		
+		this.colorIDs = new int[PieceBatch.MAX_COLORS];
+		this.transformationMat = getWorldPosition();
 	}
 	
 	public void setPieceBatch(PieceBatch pieceBatch) {
 		this.pieceBatch = pieceBatch;
-		setWorldPosition();
+		setColors();
 	}
 	
 	public int[] getColorIDs() {
@@ -71,10 +86,6 @@ public abstract class DisplayPiece {
 	public void applyRotation(Matrix3D rotation) {
 		transformationMat.multiply(rotation);
 		rotationMat = new Matrix3D();
-	}
-	
-	protected void setTransformationMat(Matrix3D transformationMat) {
-		this.transformationMat = transformationMat;
 	}
 	
 	protected void setColor(String groupName, Color color) {

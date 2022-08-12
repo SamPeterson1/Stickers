@@ -38,4 +38,8 @@ public class ColoredMesh extends Mesh {
 	public int getColorGroupID(String name) {
 		return this.colorGroupIDs.get(name);
 	}
+	
+	public int getNumColorGroups() {
+		return this.currentID;
+	}
 }

@@ -18,11 +18,25 @@
 
 package com.github.sampeterson1.puzzle.lib;
 
+import com.github.sampeterson1.math.Vector3f;
+
 public enum Color {
 	
-	RED, GREEN, BLUE,
-	YELLOW, ORANGE, WHITE,
-	PURPLE, LIME_GREEN, PINK,
-	PALE_YELLOW, LIGHT_BLUE, GRAY;
+	BORDER(1f, 1f, 1f),
+	
+	RED(1f, 0f, 0f), GREEN(0f, 1f, 0f), BLUE(0f, 0f, 1f),
+	YELLOW(1f, 1f, 0f), ORANGE(1f, 0.5f, 0f), WHITE(1f, 1f, 1f),
+	PURPLE(0.5f, 0f, 1f), LIME_GREEN(0.5f, 1f, 0.4f), PINK(1f, 0f, 1f),
+	PALE_YELLOW(1, 1f, 0.5f), LIGHT_BLUE(0f, 0.75f, 1f), GRAY(0.6f, 0.6f, 0.6f);
 
+	private Vector3f rgb;
+	
+	private Color(float r, float g, float b) {
+		this.rgb = new Vector3f(r, g, b);
+	}
+	
+	public Vector3f getRGB() {
+		return this.rgb;
+	}
+	
 }

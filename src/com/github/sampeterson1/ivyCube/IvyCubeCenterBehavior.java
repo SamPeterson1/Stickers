@@ -28,22 +28,18 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
 
+//Defines how the center pieces on an ivy cube move
 public class IvyCubeCenterBehavior extends SimplePieceBehavior {
 	
 	private static final PieceType type = PieceType.CENTER;
 	
-	private static final int RED = 0;
-	private static final int WHITE = 1;
-	private static final int GREEN = 2;
-	private static final int ORANGE = 3;
-	private static final int YELLOW = 4;
-	private static final int BLUE = 5;
+	//key-value pairs to be put into the position maps below
+	private static final int[][] rPositionArr = { {IvyCube.GREEN_CENTER, IvyCube.RED_CENTER}, {IvyCube.RED_CENTER, IvyCube.YELLOW_CENTER}, {IvyCube.YELLOW_CENTER, IvyCube.GREEN_CENTER} };
+	private static final int[][] lPositionArr = { {IvyCube.WHITE_CENTER, IvyCube.GREEN_CENTER}, {IvyCube.GREEN_CENTER, IvyCube.ORANGE_CENTER}, {IvyCube.ORANGE_CENTER, IvyCube.WHITE_CENTER} };
+	private static final int[][] dPositionArr = { {IvyCube.BLUE_CENTER, IvyCube.ORANGE_CENTER}, {IvyCube.ORANGE_CENTER, IvyCube.YELLOW_CENTER}, {IvyCube.YELLOW_CENTER, IvyCube.BLUE_CENTER} };
+	private static final int[][] bPositionArr = { {IvyCube.WHITE_CENTER, IvyCube.BLUE_CENTER}, {IvyCube.BLUE_CENTER, IvyCube.RED_CENTER}, {IvyCube.RED_CENTER, IvyCube.WHITE_CENTER} };
 	
-	private static final int[][] rPositionArr = { {GREEN, RED}, {RED, YELLOW}, {YELLOW, GREEN} };
-	private static final int[][] lPositionArr = { {WHITE, GREEN}, {GREEN, ORANGE}, {ORANGE, WHITE} };
-	private static final int[][] dPositionArr = { {BLUE, ORANGE}, {ORANGE, YELLOW}, {YELLOW, BLUE} };
-	private static final int[][] bPositionArr = { {WHITE, BLUE}, {BLUE, RED}, {RED, WHITE} };
-	
+	//Takes a face position and maps it to a new face given a move
 	private static final Map<Integer, Integer> rPositionMap = initPositionMap(rPositionArr);
 	private static final Map<Integer, Integer> lPositionMap = initPositionMap(lPositionArr);
 	private static final Map<Integer, Integer> dPositionMap = initPositionMap(dPositionArr);

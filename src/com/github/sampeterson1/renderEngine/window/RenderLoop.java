@@ -67,10 +67,10 @@ public class RenderLoop implements Runnable {
 		
 		CubeUtil.init();
 		Pyraminx.init();
-		this.display = new PuzzleDisplay(new Cube(size), 450f);
+		this.display = new PuzzleDisplay(new Pyraminx(size), 450f);
 		display.setAnimate(true);
 		display.setAnimationSpeed(30);
-		this.puzzle = new Cube(size);
+		this.puzzle = new Pyraminx(size);
 		
 		this.camera = new OrbitalCamera(50f);
 		renderer = new Renderer(camera);

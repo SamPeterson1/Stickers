@@ -103,7 +103,7 @@ public class OLLSolver {
 		System.out.println("Solving OLL...");
 		cube.pushRotations();
 
-		//If we cannot find a solution ,we must have parity. Execute the parity algorithm and try again
+		//If we cannot find a solution, we must have parity. Execute the parity algorithm and try again
 		if(!solveOLL()){
 			OLLParity();
 			solve();

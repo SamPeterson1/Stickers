@@ -21,13 +21,17 @@ package com.github.sampeterson1.pyraminx.pieces;
 import java.util.ArrayList;
 
 import com.github.sampeterson1.math.Mathf;
+import com.github.sampeterson1.puzzle.display.ColorPalette;
+import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
+import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.pyraminx.display.PyraminxDisplayPiece;
 import com.github.sampeterson1.pyraminx.solvers.PyraminxCenterSolver;
 import com.github.sampeterson1.pyraminx.util.PyraminxCenterUtil;
 import com.github.sampeterson1.pyraminx.util.PyraminxMoveUtil;
@@ -114,5 +118,22 @@ public class Pyraminx extends Puzzle {
 		return scramble;
 	}
 
-	
+	@Override
+	public ColorPalette createDefaultColorPalette() {
+		ColorPalette palette = new ColorPalette();
+		
+		palette.putColor(Color.BORDER);
+		palette.putColor(Color.GREEN);
+		palette.putColor(Color.BLUE);
+		palette.putColor(Color.RED);
+		palette.putColor(Color.YELLOW);
+		
+		return palette;
+	}
+
+	@Override
+	public DisplayPiece createDisplayPiece(Piece piece) {
+		return new PyraminxDisplayPiece(piece);
+	}
+
 }

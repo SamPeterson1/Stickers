@@ -21,6 +21,7 @@ package com.github.sampeterson1.ivyCube;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
+import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
@@ -42,65 +43,85 @@ public class IvyCubeDisplayPiece extends DisplayPiece {
 			loadMeshes();
 	}
 	
+	private Matrix3D getCornerWorldPosition(int position) {
+		Matrix3D transform = new Matrix3D();
+		
+		if(position == IvyCube.R_CORNER) {
+			transform.rotateZ(Mathf.PI);
+		} else if(position == IvyCube.B_CORNER) {
+			transform.rotateY(Mathf.PI);
+		} else if(position == IvyCube.D_CORNER) {
+			transform.rotateY(Mathf.PI);
+			transform.rotateZ(Mathf.PI);
+		}
+		
+		return transform;
+	}
+	
+	private Matrix3D getCenterWorldPosition(int position) {
+		Matrix3D transform = new Matrix3D();
+		
+		if(position == IvyCube.RED_CENTER) {
+			transform.rotateY(Mathf.PI);
+		} else if(position == IvyCube.WHITE_CENTER) {
+			transform.rotateX(Mathf.PI/2);
+			transform.rotateZ(Mathf.PI/2);
+		} else if(position == IvyCube.GREEN_CENTER) {
+			transform.rotateX(Mathf.PI/2);
+			transform.rotateY(-Mathf.PI/2);
+		} else if(position == IvyCube.ORANGE_CENTER) {
+			//this center is positioned correctly by default
+		} else if(position == IvyCube.YELLOW_CENTER) {
+			transform.rotateX(Mathf.PI/2);
+			transform.rotateZ(-Mathf.PI/2);
+		} else if(position == IvyCube.BLUE_CENTER) {
+			transform.rotateX(Mathf.PI/2);
+			transform.rotateY(Mathf.PI/2);
+		}
+		
+		return transform;
+	}
+	
 	@Override
-	protected ColoredMesh getMesh() {
+	protected Matrix3D getWorldPosition() {
 		Piece piece = super.getPiece();
 		PieceType type = piece.getType();
+		int position = piece.getPosition();
+
+		if(type == PieceType.CORNER) { 
+			return getCornerWorldPosition(position);
+		} else if(type == PieceType.CENTER) {
+			return getCenterWorldPosition(position);
+		}
+		
+		return null;
+	}
+	
+	@Override
+	protected void setColors() {
+		Piece piece = super.getPiece();
+		PieceType type = piece.getType();
+		
+		super.setColor("Border", Color.BORDER);
 		if(type == PieceType.CENTER) {
-			return petalPieceMesh;
-			//mesh.setColor("Front", Colors.convertColor(piece.getColor()));
-			//mesh.setColor("Border", Colors.WHITE);
+			super.setColor("Front", piece.getColor());
 		} else {
-			return cornerPieceMesh;
-			//mesh.setColor("Border", Colors.WHITE);
-			//mesh.setColor("Top", Colors.convertColor(piece.getColor(0)));
-			//mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
-			//mesh.setColor("Left", Colors.convertColor(piece.getColor(2)));
+			super.setColor("Top", piece.getColor(0));
+			super.setColor("Front", piece.getColor(1));
+			super.setColor("Left", piece.getColor(2));
 		}
 	}
 	
 	@Override
-	public void setWorldPosition() {
+	protected ColoredMesh getMesh() {
 		Piece piece = super.getPiece();
 		PieceType type = piece.getType();
-		int position = piece.getPosition();
 		
-		Matrix3D transform = new Matrix3D();
-		if(type == PieceType.CORNER) { 
-			if(position == IvyCube.R_CORNER) {
-				transform.rotateZ(Mathf.PI);
-			} else if(position == IvyCube.B_CORNER) {
-				transform.rotateY(Mathf.PI);
-			} else if(position == IvyCube.D_CORNER) {
-				transform.rotateY(Mathf.PI);
-				transform.rotateZ(Mathf.PI);
-			}
-		} else if(type == PieceType.CENTER) {
-			if(position == 0) {
-				//red face
-				transform.rotateY(Mathf.PI);
-			} else if(position == 1) {
-				//white face
-				transform.rotateX(Mathf.PI/2);
-				transform.rotateZ(Mathf.PI/2);
-			} else if(position == 2) {
-				//green face
-				transform.rotateX(Mathf.PI/2);
-				transform.rotateY(-Mathf.PI/2);
-			} else if(position == 3) {
-				//orange face
-			} else if(position == 4) {
-				//yellow face
-				transform.rotateX(Mathf.PI/2);
-				transform.rotateZ(-Mathf.PI/2);
-			} else if(position == 5) {
-				//blue face
-				transform.rotateX(Mathf.PI/2);
-				transform.rotateY(Mathf.PI/2);
-			}
+		if(type == PieceType.CENTER) {
+			return petalPieceMesh;
+		} else {
+			return cornerPieceMesh;
 		}
-		
-		super.setTransformationMat(transform);
 	}
 
 }

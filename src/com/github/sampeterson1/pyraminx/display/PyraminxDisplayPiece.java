@@ -20,9 +20,9 @@ package com.github.sampeterson1.pyraminx.display;
 
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
-import com.github.sampeterson1.puzzle.display.Colors;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
+import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.pyraminx.util.PyraminxAlgorithmUtil;
@@ -43,8 +43,12 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	private static final Algorithm[] edgeRotationAlgs = initEdgeRotationAlgs();
 	private static final Algorithm[] centerRotationAlgs = initCenterRotationAlgs();
 	
-	private static ColoredMesh upPieceMesh;
-	private static ColoredMesh downPieceMesh;
+	private static ColoredMesh upCornerPieceMesh;
+	private static ColoredMesh downCornerPieceMesh;
+	private static ColoredMesh upEdgePieceMesh;
+	private static ColoredMesh downEdgePieceMesh;
+	private static ColoredMesh upCenterPieceMesh;
+	private static ColoredMesh downCenterPieceMesh;
 	
 	private static Algorithm[] initCornerRotationAlgs() {
 		Algorithm[] algs = new Algorithm[4];
@@ -83,13 +87,17 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	}
 	
 	private static void loadMeshes() {
-		upPieceMesh = OBJLoader.loadColoredMesh("PyraminxUp.obj");
-		downPieceMesh = OBJLoader.loadColoredMesh("PyraminxDown.obj");
+		upCornerPieceMesh = OBJLoader.loadColoredMesh("pyraminx/UpCorner.obj");
+		downCornerPieceMesh = OBJLoader.loadColoredMesh("pyraminx/DownCorner.obj");
+		upEdgePieceMesh = OBJLoader.loadColoredMesh("pyraminx/UpEdge.obj");
+		downEdgePieceMesh = OBJLoader.loadColoredMesh("pyraminx/DownEdge.obj");
+		upCenterPieceMesh = OBJLoader.loadColoredMesh("pyraminx/UpCenter.obj");
+		downCenterPieceMesh = OBJLoader.loadColoredMesh("pyraminx/DownCenter.obj");
 	}
 	
 	public PyraminxDisplayPiece(Piece position) {
 		super(position);
-		if(upPieceMesh == null)
+		if(upCornerPieceMesh == null)
 			loadMeshes();
 	}
 
@@ -212,7 +220,33 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	}
 	
 	@Override
-	public void setWorldPosition() {
+	public ColoredMesh getMesh() {
+		Piece piece = super.getPiece();
+		PieceType type = piece.getType();
+		
+		if(isUpFacing(piece)) {
+			if(type == PieceType.CENTER) { 
+				return upCenterPieceMesh;
+			} else if(type == PieceType.EDGE) {
+				return upEdgePieceMesh;
+			} else if(type == PieceType.CORNER) {
+				return upCornerPieceMesh;
+			}
+		} else {
+			if(type == PieceType.CENTER) {
+				return downCenterPieceMesh;
+			} else if(type == PieceType.EDGE) {
+				return downEdgePieceMesh;
+			} else if(type == PieceType.CORNER) {
+				return downCornerPieceMesh;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	protected Matrix3D getWorldPosition() {
 		Piece piece = super.getPiece();
 		PieceType type = piece.getType();
 		Matrix3D transform = new Matrix3D();
@@ -226,34 +260,25 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 		}
 		
 		transform.multiply(getPieceRotation(piece));
-		super.setTransformationMat(transform);
+		return transform;
 	}
 	
 	@Override
-	protected ColoredMesh getMesh() {
+	protected void setColors() {
 		Piece piece = super.getPiece();
-		ColoredMesh mesh = null;
-		if(isUpFacing(piece)) {
-			mesh = upPieceMesh;
-		} else {
-			mesh = downPieceMesh;
-		}
-		
-		
-		mesh.setColor("Border", Colors.WHITE);
 		PieceType type = piece.getType();
-		if(type == PieceType.CENTER) {
-			mesh.setColor("Front", Colors.convertColor(piece.getColor()));
-		} else if(type == PieceType.EDGE) {
-			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
-			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(1)));
-		} else if(type == PieceType.CORNER) {
-			mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
-			mesh.setColor("Bottom", Colors.convertColor(piece.getColor(1)));
-			mesh.setColor("BackRight", Colors.convertColor(piece.getColor(2)));
-		}
 		
-		return mesh;
+		super.setColor("Border", Color.BORDER);
+		if(type == PieceType.CENTER) { 
+			super.setColor("Front", piece.getColor());
+		} else if(type == PieceType.EDGE) {
+			super.setColor("Front", piece.getColor(0));
+			super.setColor("Bottom", piece.getColor(1));
+		} else if(type == PieceType.CORNER) {
+			super.setColor("Front", piece.getColor(0));
+			super.setColor("Bottom", piece.getColor(1));
+			super.setColor("BackRight", piece.getColor(2));
+		}
 	}
 	
 }

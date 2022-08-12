@@ -18,9 +18,6 @@
 
 package com.github.sampeterson1.cube.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
@@ -28,24 +25,10 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 
 public class CubeEdgeUtil {
-
 	
-
-	private static int[][] edgeMapArr_R = { { 4, 8 }, { 8, 12 }, { 12, -5 }, { 5, -4 }, { 1, -3 }, { 3, -11 },
-			{ 11, -9 }, { 9, -1 }, { 2, -7 }, { 7, -10 }, { 10, 6 }, { 6, 2 } };
-
-	private static int[][] edgeMapArr_U = { { 1, 4 }, { 4, 3 }, { 3, 2 }, { 2, 1 }, { 5, 8 }, { 8, 7 }, { 7, 6 },
-			{ 6, 5 }, { 9, 12 }, { 12, 11 }, { 11, 10 }, { 10, 9 } };
-
-	private static int[][] edgeMapArr_F = {
-			{ 3, 7 }, { 7, 11 }, { 11, -8 }, { 8, -3 },
-			{ 2, -10 }, { 10, -12 }, { 12, -4 }, { 4, -2 }, 
-			{ 1, -6 }, { 6, -9 }, { 9, 5 }, { 5, 1 }
-	};
-	
-	private static Map<Integer, Integer> edgeMap_R = initEdgeMap(edgeMapArr_R);
-	private static Map<Integer, Integer> edgeMap_U = initEdgeMap(edgeMapArr_U);
-	private static Map<Integer, Integer> edgeMap_F = initEdgeMap(edgeMapArr_F);
+	private static final int[] edgeMapArr_R = {-3, -7, -11, 8, -4, 2, -10, 12, -1, 6, -9, -5};
+	private static final int[] edgeMapArr_U = {4, 1, 2, 3, 8, 5, 6, 7, 12, 9, 10, 11};
+	private static final int[] edgeMapArr_F = {-6, -10, 7, -2, 1, -9, 11, -3, 5, -12, -8, -4};
 
 	private static final Color[][] colors = { 
 			{ Color.WHITE, Color.GREEN }, 
@@ -95,28 +78,6 @@ public class CubeEdgeUtil {
 
 		return null;
 	}
-	
-	private static Map<Integer, Integer> initEdgeMap(int[][] edgeMapArr) {
-		Map<Integer, Integer> edgeMap = new HashMap<Integer, Integer>();
-		
-		for(int i = 0; i < 12; i ++) {
-			edgeMap.put(edgeMapArr[i][0], edgeMapArr[i][1]);
-		}
-		
-		return edgeMap;
-	}
-
-	public static void init() {
-		edgeMap_R = new HashMap<Integer, Integer>();
-		edgeMap_U = new HashMap<Integer, Integer>();
-		edgeMap_F = new HashMap<Integer, Integer>();
-
-		for (int i = 0; i < 12; i++) {
-			edgeMap_R.put(edgeMapArr_R[i][0], edgeMapArr_R[i][1]);
-			edgeMap_U.put(edgeMapArr_U[i][0], edgeMapArr_U[i][1]);
-			edgeMap_F.put(edgeMapArr_F[i][0], edgeMapArr_F[i][1]);
-		}
-	}
 
 	public static Piece mapEdge(Move move, Piece piece) {
 		move = CubeMoveUtil.faceNormalize(move);
@@ -126,11 +87,11 @@ public class CubeEdgeUtil {
 		Color c1 = piece.getColor(0);
 		Color c2 = piece.getColor(1);
 
-		Map<Integer, Integer> map = CubeEdgeUtil.getEdgeMap(move.getFace());
+		int[] mapArr = getEdgeMapArr(move.getFace());
 		int n = move.isCW() ? 1 : 3;
 
 		for (int i = 0; i < n; i++) {
-			int mapVal = map.get(position + 1);
+			int mapVal = mapArr[position];
 			if (mapVal < 0) {
 				mapVal = -mapVal;
 				index = puzzleSize - index - 3;
@@ -148,13 +109,13 @@ public class CubeEdgeUtil {
 		return retVal;
 	}
 
-	private static Map<Integer, Integer> getEdgeMap(Axis face) {
+	private static int[] getEdgeMapArr(Axis face) {
 		if (face == Axis.R) {
-			return edgeMap_R;
+			return edgeMapArr_R;
 		} else if (face == Axis.U) {
-			return edgeMap_U;
+			return edgeMapArr_U;
 		} else if (face == Axis.F) {
-			return edgeMap_F;
+			return edgeMapArr_F;
 		}
 
 		return null;

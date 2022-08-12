@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.github.sampeterson1.puzzle.display.ColorPalette;
+import com.github.sampeterson1.puzzle.display.DisplayPiece;
+
 public abstract class Puzzle {
 	
 	private List<Piece> allPieces;
@@ -44,9 +47,16 @@ public abstract class Puzzle {
 	}
 
 	public abstract Axis transposeAxis(Axis face);
+	
 	public abstract Algorithm simplify(Algorithm alg);
+	
 	public abstract Algorithm scramble(int length);
+	
 	public abstract Algorithm solve();
+	
+	public abstract ColorPalette createDefaultColorPalette();
+	
+	public abstract DisplayPiece createDisplayPiece(Piece piece);
 	
 	private void addAllPieces(List<PieceGroup> groups) {
 		for(PieceGroup group : groups) {

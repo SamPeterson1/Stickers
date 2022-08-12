@@ -25,6 +25,7 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
 
+//Defines how a corner piece moves on an Ivy Cube
 public class IvyCubeCornerBehavior extends SimplePieceBehavior {
 	
 	private static final PieceType type = PieceType.CORNER;
@@ -48,14 +49,15 @@ public class IvyCubeCornerBehavior extends SimplePieceBehavior {
 	protected boolean affectedByMove(Move move, Piece piece) {
 		Axis axis = move.getFace();
 		int affectedPosition = 0;
+		
 		if(axis == Axis.IR) {
-			affectedPosition = 2;
+			affectedPosition = IvyCube.R_CORNER;
 		} else if(axis == Axis.IL) {
-			affectedPosition = 0;
+			affectedPosition = IvyCube.L_CORNER;
 		} else if(axis == Axis.ID) {
-			affectedPosition = 3;
+			affectedPosition = IvyCube.D_CORNER;
 		} else if(axis == Axis.IB) {
-			affectedPosition = 1;
+			affectedPosition = IvyCube.B_CORNER;
 		}
 		
 		return (piece.getPosition() == affectedPosition);
@@ -66,10 +68,12 @@ public class IvyCubeCornerBehavior extends SimplePieceBehavior {
 		Color[] copy = new Color[] {piece.getColor(0), piece.getColor(1), piece.getColor(2)};
 		
 		if(move.isCW()) {
+			//rotate the colors on the piece clockwise
 			piece.setColor(0, copy[2]);
 			piece.setColor(1, copy[0]);
 			piece.setColor(2, copy[1]);
 		} else {
+			//rotate the colors on the piece counterclockwise
 			piece.setColor(0, copy[1]);
 			piece.setColor(1, copy[2]);
 			piece.setColor(2, copy[0]);	

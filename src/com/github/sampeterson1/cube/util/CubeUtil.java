@@ -89,8 +89,6 @@ public class CubeUtil {
 	}
 	
 	public static void init() {
-		CubeEdgeUtil.init();
-		CubeCornerUtil.init();
 		CubeMoveUtil.init();
 	}
 
