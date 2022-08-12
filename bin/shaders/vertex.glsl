@@ -11,7 +11,7 @@
  
  uniform mat4 projectionMatrix;
  uniform mat4 viewMatrix;
- uniform vec3[6] colorPalette;
+ uniform vec3[8] colorPalette;
  
  void main(void) {
  
