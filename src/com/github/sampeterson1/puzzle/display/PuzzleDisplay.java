@@ -23,15 +23,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.sampeterson1.cube.display.CubeDisplayPiece;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
+import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
-import com.github.sampeterson1.pyraminx.display.PyraminxDisplayPiece;
+import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.rendering.Scene;
@@ -55,10 +57,18 @@ public class PuzzleDisplay {
 	private List<Piece> movedPieces;
 	private List<DisplayPiece> allDisplayPieces;
 	
+	private ColorPalette palette;
+	
 	public PuzzleDisplay(Puzzle puzzle, float drawSize) {
 		this.puzzle = puzzle;
 		this.drawSize = drawSize;
-		
+		this.palette = new ColorPalette();
+		palette.addColor(Color.GREEN);
+		palette.addColor(Color.RED);
+		palette.addColor(Color.BLUE);
+		palette.addColor(Color.LIME_GREEN);
+		palette.addColor(Color.WHITE);
+		palette.addColor(Color.YELLOW);
 		createPieces();
 		
 		this.lastTime = System.currentTimeMillis();
@@ -70,18 +80,18 @@ public class PuzzleDisplay {
 		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
 		for(Piece piece : puzzle.getAllPieces()) {
-			DisplayPiece displayPiece = new PyraminxDisplayPiece(piece);
-			Mesh mesh = displayPiece.getMesh();
+			DisplayPiece displayPiece = new CubeDisplayPiece(piece);
+			ColoredMesh mesh = displayPiece.getMesh();
 			
 			if(pieceBatches.containsKey(mesh)) {
 				PieceBatch pieceBatch = pieceBatches.get(mesh);
 				pieceBatch.addPiece(displayPiece);
 			} else {
-				PieceBatch pieceBatch = new PieceBatch(mesh);
+				PieceBatch pieceBatch = new PieceBatch(mesh, palette);
 				pieceBatch.addPiece(displayPiece);
 				
 				pieceBatches.put(mesh, pieceBatch);
-				Scene.addInstancedMesh(pieceBatch);
+				Scene.addPieceBatch(pieceBatch);
 			}
 			
 			pieceMap.put(piece, displayPiece);	

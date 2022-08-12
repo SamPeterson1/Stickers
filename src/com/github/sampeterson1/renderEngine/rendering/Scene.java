@@ -23,9 +23,7 @@ import java.util.List;
 
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
-import com.github.sampeterson1.puzzle.display.DisplayPiece;
-import com.github.sampeterson1.renderEngine.models.InstancedMeshBatch;
-import com.github.sampeterson1.renderEngine.models.MeshData;
+import com.github.sampeterson1.renderEngine.models.PieceBatch;
 
 public class Scene {
 
@@ -33,7 +31,7 @@ public class Scene {
 	private static CameraSettings cameraSettings;
 	private static Matrix3D sceneTransformationMat;
 	
-	private static List<InstancedMeshBatch> instancedMeshes = new ArrayList<InstancedMeshBatch>();
+	private static List<PieceBatch> pieceBatches = new ArrayList<PieceBatch>();
 
 	public static void setSceneTransformationMat(Matrix3D mat) {
 		sceneTransformationMat = mat;
@@ -47,12 +45,12 @@ public class Scene {
 		cameraSettings = settings;
 	}
 	
-	public static void addInstancedMesh(InstancedMeshBatch instanced) {
-		instancedMeshes.add(instanced);
+	public static void addPieceBatch(PieceBatch pieceBatch) {
+		pieceBatches.add(pieceBatch);
 	}
 
-	public static List<InstancedMeshBatch> getInstancedMeshes() {
-		return instancedMeshes;
+	public static List<PieceBatch> getPieceBatches() {
+		return pieceBatches;
 	}
 	
 	public static CameraSettings getSettings() {

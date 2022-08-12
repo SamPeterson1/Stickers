@@ -20,13 +20,14 @@ package com.github.sampeterson1.cube.display;
 
 import com.github.sampeterson1.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.math.Matrix3D;
-import com.github.sampeterson1.puzzle.display.Colors;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
+import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
+import com.github.sampeterson1.renderEngine.models.PieceBatch;
 
 //An implementation of DisplayPiece that represents a piece on a cube
 public class CubeDisplayPiece extends DisplayPiece {
@@ -197,11 +198,18 @@ public class CubeDisplayPiece extends DisplayPiece {
 		
 		PieceType type = piece.getType();
 		
+		super.setColor("Border", Color.WHITE);
 		if(type == PieceType.EDGE) {
+			super.setColor("Bottom", piece.getColor(0));
+			super.setColor("Front", piece.getColor(1));
 			transformation.multiply(getEdgeOrigin(piece));
 		} else if(type == PieceType.CORNER) {
+			super.setColor("Front", piece.getColor(0));
+			super.setColor("Right", piece.getColor(1));
+			super.setColor("Bottom", piece.getColor(2));
 			transformation.multiply(getCornerOrigin());
 		} else if(type == PieceType.CENTER) {
+			super.setColor("Front", piece.getColor(0));
 			transformation.multiply(getCenterOrigin(piece));
 		}
 		
@@ -217,16 +225,10 @@ public class CubeDisplayPiece extends DisplayPiece {
 		
 		if(piece.getType() == PieceType.CORNER) {
 			return cornerPieceMesh;
-			//mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
-			//mesh.setColor("Right", Colors.convertColor(piece.getColor(1)));
-			//mesh.setColor("Bottom", Colors.convertColor(piece.getColor(2)));
 		} else if(piece.getType() == PieceType.EDGE) {
 			return edgePieceMesh;
-			//mesh.setColor("Bottom", Colors.convertColor(piece.getColor(0)));
-			//mesh.setColor("Front", Colors.convertColor(piece.getColor(1)));
 		} else if(piece.getType() == PieceType.CENTER) {
 			return centerPieceMesh;
-			//mesh.setColor("Front", Colors.convertColor(piece.getColor(0)));
 		}
 
 		return mesh;

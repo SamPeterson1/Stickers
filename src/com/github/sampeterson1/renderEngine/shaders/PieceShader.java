@@ -20,6 +20,7 @@ package com.github.sampeterson1.renderEngine.shaders;
 
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
+import com.github.sampeterson1.puzzle.display.ColorPalette;
 
 public class PieceShader extends Shader {
 	
@@ -39,8 +40,9 @@ public class PieceShader extends Shader {
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
 		super.bindAttribute(1, "normal");
-		super.bindAttribute(2, "colorIndex");
+		super.bindAttribute(2, "colorGroupID");
 		super.bindAttribute(3, "transformationMatrix");
+		super.bindAttribute(7, "colorIDs");
 	}
 
 	@Override
@@ -51,14 +53,13 @@ public class PieceShader extends Shader {
 		location_colorPalette = super.getUniformLocation("colorPalette");
 	}
 	
-	public void setColorPalette(Vector3f[] colorPalette) {
-		super.loadVector3fArr(location_colorPalette, colorPalette);
+	public void setColorPalette(ColorPalette palette) {
+		super.loadVector3fList(location_colorPalette, palette.getColors());
 	}
 	
 	public void setLightDirection(Vector3f direction) {
 		super.loadVector3f(location_lightDirection, direction);
 	}
-	
 	
 	public void setProjectionMatrix(Matrix3D matrix) {
 		super.loadMatrix(location_projectionMatrix, matrix);

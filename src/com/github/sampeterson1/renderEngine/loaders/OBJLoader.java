@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
+import com.github.sampeterson1.renderEngine.models.MeshData;
 
 public class OBJLoader {
 	
@@ -181,15 +182,22 @@ public class OBJLoader {
 			for(int i = 0; i < numVerts; i ++) {
 				colorIndices.add(currentColorIndex);
 			}
+			
+			currentColorIndex ++;
 		}
 		
 		float[] positionsArr = listToFloatArr(positions);
 		float[] normalsArr = listToFloatArr(normals);
 		int[] indicesArr = listToIntArr(indices);
 		int[] colorIndicesArr = listToIntArr(colorIndices);
-		String[] objectNamesArr = listToStringArr(objectNames);
 		
-		return Loader.loadColoredMesh(positionsArr, normalsArr, colorIndicesArr, indicesArr, objectNamesArr);
+		MeshData meshData = Loader.loadColoredMesh(positionsArr, normalsArr, colorIndicesArr, indicesArr);
+		ColoredMesh mesh = new ColoredMesh(meshData);
+		for(String groupName : objectNames) {
+			mesh.addColorGroup(groupName);
+		}
+		
+		return mesh;
 	}
 	
 	private static void addArr(List<Integer> list, int[] arr) {

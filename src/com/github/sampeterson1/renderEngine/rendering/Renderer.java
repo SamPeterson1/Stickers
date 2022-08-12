@@ -24,14 +24,13 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
 
 import com.github.sampeterson1.math.Matrix3D;
-import com.github.sampeterson1.renderEngine.models.InstancedMeshBatch;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.shaders.PieceShader;
 
 public class Renderer {
 	
-	private static final int NUM_ATTRIBS = 7;
+	private static final int NUM_ATTRIBS = 8;
 	
 	private PieceShader shader = new PieceShader();
 	private OrbitalCamera camera;
@@ -51,16 +50,16 @@ public class Renderer {
 		shader.setViewMatrix(camera.getViewMatrix());
 		shader.setLightDirection(Scene.getLightDirection());
 		
-		for(InstancedMeshBatch batch : Scene.getInstancedMeshes()) {
-			PieceBatch pieceBatch = (PieceBatch) batch;
+		for(PieceBatch pieceBatch : Scene.getPieceBatches()) {
+			shader.setColorPalette(pieceBatch.getPalette());
 			pieceBatch.prepare();
-			MeshData data = batch.getMesh().getData();
+			MeshData data = pieceBatch.getMesh().getData();
 			
 			GL30.glBindVertexArray(data.getVaoID());
 			for(int i = 0; i < NUM_ATTRIBS; i ++)
 				GL20.glEnableVertexAttribArray(i);
 			
-			GL31.glDrawElementsInstanced(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0, batch.getNumInstances());
+			GL31.glDrawElementsInstanced(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0, pieceBatch.getNumInstances());
 			
 			for(int i = 0; i < NUM_ATTRIBS; i ++)
 				GL20.glDisableVertexAttribArray(i);

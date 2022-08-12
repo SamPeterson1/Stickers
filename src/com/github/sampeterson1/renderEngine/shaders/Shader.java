@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -61,10 +62,10 @@ public abstract class Shader {
 		GL20.glUniform1f(location, value);
 	}
 	
-	protected void loadVector3fArr(int location, Vector3f[] value) {
-		float[] arr = new float[value.length * 3];
+	protected void loadVector3fList(int location, List<Vector3f> values) {
+		float[] arr = new float[values.size() * 3];
 		for(int i = 0; i < arr.length; i += 3) {
-			Vector3f v = value[i/3];
+			Vector3f v = values.get(i/3);
 			arr[i] = v.x;
 			arr[i + 1] = v.y;
 			arr[i + 2] = v.z;

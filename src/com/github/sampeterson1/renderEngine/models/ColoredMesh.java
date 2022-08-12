@@ -21,46 +21,21 @@ package com.github.sampeterson1.renderEngine.models;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.math.Vector3f;
-
 public class ColoredMesh extends Mesh {
-
-	private Map<String, ColoredVertexGroup> colorGroups;
+	
+	private int currentID = 0;
+	private Map<String, Integer> colorGroupIDs;
 	
 	public ColoredMesh(MeshData meshData) {
 		super(meshData);
-		this.colorGroups = new HashMap<String, ColoredVertexGroup>();
+		this.colorGroupIDs = new HashMap<String, Integer>();
 	}
 	
-	public void addColorGroup(ColoredVertexGroup group) {
-		colorGroups.put(group.getName(), group);
-	}
-	
-	public void prepareColors() {
-		MeshData meshData = super.getData();
-		int[] colorIDs = new int[meshData.getNumVertices()];
-		
-		for(ColoredVertexGroup group : colorGroups.values()) {
-			int colorID = group.getColorID();
-			for(int index : group.getIndices()) {
-				colorIDs[index] = colorID;
-			}
-		}
-
-		Loader.updateAttributeData(meshData, 1, vertexColors);
-	}
-	
-	public void setColor(Vector3f color) {
-		for(ColoredVertexGroup colorGroup : colorGroups.values()) {
-			colorGroup.setColor(color);
-		}
+	public void addColorGroup(String name) {
+		colorGroupIDs.put(name, currentID++);
 	}
 
-	public void setColor(String groupName, Vector3f color) {
-		colorGroups.get(groupName).setColor(color);
-	}
-	
-	public ModelData getData() {
-		return this.modelData;
+	public int getColorGroupID(String name) {
+		return this.colorGroupIDs.get(name);
 	}
 }

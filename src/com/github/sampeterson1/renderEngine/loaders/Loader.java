@@ -30,6 +30,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.GL40;
 
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 import com.github.sampeterson1.renderEngine.models.MeshData;
@@ -41,20 +42,20 @@ public class Loader {
 	private static List<Integer> vbos = new ArrayList<Integer>();
 	private static List<Integer> textures = new ArrayList<Integer>();
 	
-	public static ColoredMesh loadColoredMesh(float[] positions, float[] normals, int[] colorIndices, 
-			int[] indices, String[] groupNames) {
+	public static MeshData loadColoredMesh(float[] positions, float[] normals, int[] colorIndices, 
+			int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);
 		
 		int[] vboIDs = new int[3];
 		vboIDs[0] = storeAttributeData(0, 3, positions, GL15.GL_STATIC_DRAW);
 		vboIDs[1] = storeAttributeData(1, 3, normals, GL15.GL_STATIC_DRAW);
-		vboIDs[2] = storeAttributeData(2, 1, colorIndices, GL15.GL_DYNAMIC_DRAW);
+		//for(int i = 0; i < colorIndices.length; i ++) colorIndices[i] = 1;
+		vboIDs[2] = storeAttributeDataI(2, 1, colorIndices, GL15.GL_STATIC_DRAW);
 		
 		GL30.glBindVertexArray(0);
 		
-		MeshData meshData = new MeshData(vaoID, vboIDs, indices.length);
-		return new ColoredMesh(meshData, groupNames);
+		return new MeshData(vaoID, vboIDs, indices.length, positions.length/3);
 	}
 	
 	public static Texture loadTexture(String fileName) {
@@ -93,11 +94,29 @@ public class Loader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
+	public static void addInstancedAttributeI(int vboID, int vaoID, int attributeID, 
+			int coordinateSize, int dataLength, int offset) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		GL30.glBindVertexArray(vaoID);
+		
+		GL30.glVertexAttribIPointer(attributeID, coordinateSize, GL11.GL_INT, dataLength * 4, offset * 4);
+		GL33.glVertexAttribDivisor(attributeID, 1);	
+		
+		GL30.glBindVertexArray(0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
 	public static void updateAttribVBO(MeshData meshData, int attributeID, int[] data) {
 		int vboID = meshData.getVboID(attributeID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		IntBuffer buffer = storeDataInIntBuffer(data);
 		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, vboID, buffer);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	public static void updateVBO(int vboID, IntBuffer data) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, data);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
@@ -107,12 +126,12 @@ public class Loader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
-	public static int createInstancedVBO(int numFloats) {
+	public static int createDynamicVBO(int bytes) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, numFloats * 4, GL15.GL_DYNAMIC_DRAW);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, bytes, GL15.GL_DYNAMIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
 		return vboID;
@@ -135,14 +154,14 @@ public class Loader {
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	}
 	
-	private static int storeAttributeData(int attributeID, int coordinateSize, int[] data, int drawMode) {
+	private static int storeAttributeDataI(int attributeID, int coordinateSize, int[] data, int drawMode) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		
 		IntBuffer buffer = storeDataInIntBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, drawMode);
-		GL20.glVertexAttribPointer(attributeID, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
+		GL30.glVertexAttribIPointer(attributeID, coordinateSize, GL11.GL_INT, 0, 0);
 	
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
