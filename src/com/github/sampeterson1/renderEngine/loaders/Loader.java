@@ -38,6 +38,25 @@ import com.github.sampeterson1.renderEngine.models.Texture;
 
 public class Loader {
 	
+	private static final float[] quadVertices = {
+			-1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
+			-1.0f, 1.0f, 0.0f
+	};
+	
+	private static final float[] quadTexCoords = {
+			0.0f, 0.0f, 0.0f,
+			1.0f, 0.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
+			0.0f, 1.0f, 0.0f
+	};
+	
+	private static final int[] quadIndices = {
+			0, 1, 2, 
+			2, 3, 0
+	};
+	
 	private static List<Integer> vaos = new ArrayList<Integer>();
 	private static List<Integer> vbos = new ArrayList<Integer>();
 	private static List<Integer> textures = new ArrayList<Integer>();
@@ -50,12 +69,37 @@ public class Loader {
 		int[] vboIDs = new int[3];
 		vboIDs[0] = storeAttributeData(0, 3, positions, GL15.GL_STATIC_DRAW);
 		vboIDs[1] = storeAttributeData(1, 3, normals, GL15.GL_STATIC_DRAW);
-		//for(int i = 0; i < colorIndices.length; i ++) colorIndices[i] = 1;
 		vboIDs[2] = storeAttributeDataI(2, 1, colorIndices, GL15.GL_STATIC_DRAW);
 		
 		GL30.glBindVertexArray(0);
 		
-		return new MeshData(vaoID, vboIDs, indices.length, positions.length/3);
+		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 3);
+	}
+	
+	public static MeshData load2DTexturedMesh(float[] positions, float[] texCoords, int[] indices) {
+		int vaoID = createVAO();
+		storeIndicesBuffer(indices);
+		
+		int[] vboIDs = new int[2];
+		vboIDs[0] = storeAttributeData(0, 3, positions, GL15.GL_STATIC_DRAW);
+		vboIDs[1] = storeAttributeData(1, 2, texCoords, GL15.GL_STATIC_DRAW);
+		
+		GL30.glBindVertexArray(0);
+		
+		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 3);
+	}
+	
+	public static MeshData loadTexturedQuad() {
+		int vaoID = createVAO();
+		storeIndicesBuffer(quadIndices);
+		
+		int[] vboIDs = new int[2];
+		vboIDs[0] = storeAttributeData(0, 3, quadVertices, GL15.GL_STATIC_DRAW);
+		vboIDs[1] = storeAttributeData(1, 3, quadTexCoords, GL15.GL_STATIC_DRAW);
+		
+		GL30.glBindVertexArray(0);
+		
+		return new MeshData(vaoID, vboIDs, quadIndices.length, quadVertices.length / 3);
 	}
 	
 	public static Texture loadTexture(String fileName) {
@@ -73,7 +117,7 @@ public class Loader {
 		return texture;
 	}
 	
-	public static void cleanUp() {
+	public static void free() {
 		for(int vao : vaos)
 			GL30.glDeleteVertexArrays(vao);
 		for(int vbo : vbos)

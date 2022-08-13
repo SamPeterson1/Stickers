@@ -100,7 +100,7 @@ public abstract class Shader {
 		GL20.glUseProgram(0);
 	}
 	
-	public void cleanUp() {
+	public void dispose() {
 		stop();
 		GL20.glDetachShader(programID, vertexShaderID);
 		GL20.glDetachShader(programID, fragmentShaderID);
@@ -127,7 +127,7 @@ public abstract class Shader {
 	private static String readTextFile(String file) {
 		StringBuilder content = new StringBuilder();		
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceLoader.getResourceStream(file)));
+			BufferedReader reader = ResourceLoader.openFile(file);
 			
 			String line;
 			while((line = reader.readLine()) != null) {

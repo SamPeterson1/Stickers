@@ -46,19 +46,6 @@ public class OBJLoader {
 		public int[] indices;
 	}
 	
-	private static BufferedReader openFile(String filePath) {
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(ResourceLoader.getResourceStream(OBJ_PATH + filePath)));
-		} catch (FileNotFoundException e) {
-			System.err.println("Could not load OBJ file " + "\"" + filePath + "\"");
-			e.printStackTrace();
-			System.exit(-1);
-		}
-		
-		return reader;
-	}
-	
 	private static int safeParseInt(String str) {
 		if(str.equals("")) return 0;
 		return Integer.parseInt(str);
@@ -163,7 +150,7 @@ public class OBJLoader {
 		List<Integer> indices = new ArrayList<Integer>();
 		List<String> objectNames = new ArrayList<String>();
 		
-		BufferedReader reader = openFile(filePath);
+		BufferedReader reader = ResourceLoader.openFile(OBJ_PATH + filePath);
 		
 		totalPositionsRead = 0;
 		totalNormalsRead = 0;

@@ -18,11 +18,8 @@
 
 package com.github.sampeterson1.renderEngine.window;
 
-import org.lwjgl.opengl.GL11;
-
 import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeUtil;
-import com.github.sampeterson1.ivyCube.IvyCube;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
@@ -33,16 +30,17 @@ import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
 import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.rendering.CameraSettings;
+import com.github.sampeterson1.renderEngine.rendering.MasterRenderer;
 import com.github.sampeterson1.renderEngine.rendering.OrbitalCamera;
-import com.github.sampeterson1.renderEngine.rendering.Renderer;
 import com.github.sampeterson1.renderEngine.rendering.Scene;
+import com.github.sampeterson1.renderEngine.text.Font;
+import com.github.sampeterson1.renderEngine.text.Text;
 
 public class RenderLoop implements Runnable {
-	
 
 	private PuzzleDisplay display;
 	private OrbitalCamera camera;
-	private Renderer renderer;
+	private MasterRenderer renderer;
 	
 	private float lastX = 0;
 	private float lastY = 0;
@@ -52,7 +50,7 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 100;
+	private int size = 30;
 	private int movePointer = 0;
 	private int movesPerFrame = 50;
 	
@@ -62,10 +60,30 @@ public class RenderLoop implements Runnable {
 	@Override
 	public void run() {
 		Window.initGLContext();
-		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 		CameraSettings settings = new CameraSettings();
 		Scene.setCameraSettings(settings);
 		Scene.setLightDirection(new Vector3f(0f, 0f, 1f));
+		
+		float fontSize = 0.35f;
+		Font arial = new Font("arial.fnt", "arial.png", fontSize);
+		Font calibri = new Font("calibri.fnt", "calibri.png", fontSize);
+		Font harrington = new Font("harrington.fnt", "harrington.png", fontSize);
+		Font sans = new Font("sans.fnt", "sans.png", fontSize);
+		Font segoe = new Font("segoe.fnt", "segoe.png", fontSize);
+		Font segoeUI = new Font("segoeUI.fnt", "segoeUI.png", fontSize);
+		Font tahoma = new Font("tahoma.fnt", "tahoma.png", fontSize);
+		String text = "Lorem ipsum dolor sit amet";
+		
+		float xOff = -0.95f;
+		float yOff = 0.75f;
+		
+		new Text("arial", xOff, -0.21f + yOff, text, arial);
+		new Text("calibri", xOff, -0.14f + yOff, text, calibri);
+		new Text("harrington", xOff, -0.07f + yOff, text, harrington);
+		new Text("sans", xOff, yOff, text, sans);
+		new Text("segoe", xOff, 0.07f + yOff, text, segoe);
+		new Text("segoeUI", xOff, 0.14f + yOff, text, segoeUI);
+		new Text("tahoma", xOff, 0.21f + yOff, text, tahoma);
 		
 		CubeUtil.init();
 		Pyraminx.init();
@@ -75,7 +93,7 @@ public class RenderLoop implements Runnable {
 		this.puzzle = new Cube(size);
 		
 		this.camera = new OrbitalCamera(50f);
-		renderer = new Renderer(camera);
+		renderer = new MasterRenderer(camera);
 
         while(Window.isOpen()) { 	
 			Window.clear();		
@@ -84,8 +102,8 @@ public class RenderLoop implements Runnable {
 			Window.update();		
         }
         
-        renderer.cleanUp();
-		Loader.cleanUp();
+        renderer.dispose();
+		Loader.free();
 	}
 	
 	private void makeMove(Move move) {

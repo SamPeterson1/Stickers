@@ -18,8 +18,10 @@
 
 package com.github.sampeterson1.renderEngine.loaders;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class ResourceLoader {
 	
@@ -29,6 +31,19 @@ public class ResourceLoader {
 			throw new FileNotFoundException();
 		
 		return resource;
+	}
+	
+	public static BufferedReader openFile(String filePath) {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(ResourceLoader.getResourceStream(filePath)));
+		} catch (FileNotFoundException e) {
+			System.err.println("Could not load OBJ file " + "\"" + filePath + "\"");
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		
+		return reader;
 	}
 	
 }

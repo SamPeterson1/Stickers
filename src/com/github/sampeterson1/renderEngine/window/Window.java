@@ -18,34 +18,14 @@
 
 package com.github.sampeterson1.renderEngine.window;
 
-import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
-import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
-import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.nio.IntBuffer;
-
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
+import org.lwjgl.opengl.GL11;
 
 public class Window {
 	
@@ -56,29 +36,35 @@ public class Window {
 	private static float bgBlue;
 	
 	private static EventQueue eventQueue;
-		
-	public static void init(int width, int height, String title) {
-		if (!glfwInit())
+	
+	public static void init(String title, float aspect) {
+		if (!GLFW.glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
-		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		long primaryMonitor = GLFW.glfwGetPrimaryMonitor();
+		GLFWVidMode vidMode = GLFW.glfwGetVideoMode(primaryMonitor);
+		int height = vidMode.height();
+		int width = (int) (height * aspect);
+		
+		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_TRUE);
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
 
-		windowID = glfwCreateWindow(width, height, title, NULL, NULL);
-		if (windowID == NULL)
+		windowID = GLFW.glfwCreateWindow(width, height, title, 0, 0);
+		if (windowID == 0)
 			throw new RuntimeException("Failed to create the GLFW window");
 
-		glfwMakeContextCurrent(windowID);
-		glfwSwapInterval(1);
-		glfwShowWindow(windowID);
+		GLFW.glfwMakeContextCurrent(windowID);
+		GLFW.glfwSwapInterval(1);
+		GLFW.glfwShowWindow(windowID);
 		setEventCallbacks();
 		
         GL.createCapabilities();
 	}
 	
 	public static void initGLContext() {
-		glfwMakeContextCurrent(windowID);
+		GLFW.glfwMakeContextCurrent(windowID);
 		GL.createCapabilities();
+		System.out.println(GL11.glGetString(GL11.GL_VERSION));
 	}
 	
 	private static void setEventCallbacks() {
@@ -135,32 +121,17 @@ public class Window {
 		bgGreen = g;
 		bgBlue = b;
 	}
-	
-	public static float getAspectRatio() {
-		int[] size = getSize();
-		return (float) size[0] / size[1];
-	}
-	
-	public static int[] getSize() {
-		try (MemoryStack stack = stackPush()) {
-			IntBuffer width = stack.mallocInt(1);
-			IntBuffer height = stack.mallocInt(1);
-			
-			glfwGetWindowSize(windowID, width, height);
-			return new int[] { width.get(0), height.get(0) };
-		}
-	}
-	
+
 	public static boolean isOpen() {
-		return !glfwWindowShouldClose(windowID);
+		return !GLFW.glfwWindowShouldClose(windowID);
 	}
 	
 	public static void clear() {
-		glClearColor(bgRed, bgGreen, bgBlue, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GL11.glClearColor(bgRed, bgGreen, bgBlue, 0.0f);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	
 	public static void update() {
-		glfwSwapBuffers(windowID);
+		GLFW.glfwSwapBuffers(windowID);
 	}
 }

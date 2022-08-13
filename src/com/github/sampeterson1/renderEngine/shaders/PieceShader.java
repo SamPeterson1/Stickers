@@ -24,8 +24,8 @@ import com.github.sampeterson1.puzzle.display.ColorPalette;
 
 public class PieceShader extends Shader {
 	
-	private static final String VERTEX_FILE = "vertex.glsl";
-	private static final String FRAGMENT_FILE = "frag.glsl";
+	private static final String VERTEX_FILE = "PieceVert.glsl";
+	private static final String FRAGMENT_FILE = "PieceFrag.glsl";
 	
 	private int location_projectionMatrix;
 	private int location_viewMatrix;

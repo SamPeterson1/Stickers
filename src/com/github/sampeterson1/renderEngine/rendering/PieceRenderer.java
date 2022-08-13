@@ -1,21 +1,3 @@
-/*
- *	Stickers Twisty Puzzle Simulator and Solver
- *	Copyright (C) 2022 Sam Peterson <sam.peterson1@icloud.com>
- *	
- *	This program is free software: you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation, either version 3 of the License, or
- *	(at your option) any later version.
- *	
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *	GNU General Public License for more details.
- *	
- *	You should have received a copy of the GNU General Public License
- *	along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 package com.github.sampeterson1.renderEngine.rendering;
 
 import org.lwjgl.opengl.GL11;
@@ -28,18 +10,16 @@ import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.shaders.PieceShader;
 
-public class Renderer {
+public class PieceRenderer {
+
+private static final int NUM_ATTRIBS = 8;
 	
-	private static final int NUM_ATTRIBS = 8;
-	
-	private PieceShader shader = new PieceShader();
+	private PieceShader shader;
 	private OrbitalCamera camera;
 	
-	public Renderer(OrbitalCamera camera) {
+	public PieceRenderer(OrbitalCamera camera) {
+		this.shader = new PieceShader();
 		this.camera = camera;
-		GL11.glEnable(GL11.GL_DEPTH_TEST);  
-		GL11.glEnable(GL11.GL_CULL_FACE);  
-		GL11.glCullFace(GL11.GL_BACK);
 	}
 	
 	public void render() {
@@ -69,7 +49,8 @@ public class Renderer {
 		shader.stop();
 	}
 	
-	public void cleanUp() {
-		shader.cleanUp();
+	public void dispose() {
+		shader.dispose();
 	}
+	
 }

@@ -19,10 +19,13 @@
 package com.github.sampeterson1.renderEngine.rendering;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
+import com.github.sampeterson1.renderEngine.models.Entity;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 
 public class Scene {
@@ -32,7 +35,19 @@ public class Scene {
 	private static Matrix3D sceneTransformationMat;
 	
 	private static List<PieceBatch> pieceBatches = new ArrayList<PieceBatch>();
+	private static Map<MeshType, List<Entity>> entities = new EnumMap<MeshType, List<Entity>>(MeshType.class);
 
+	public static void addEntity(Entity entity) {
+		MeshType type = entity.getMesh().getType();
+		if(entities.containsKey(type)) {
+			entities.get(type).add(entity);
+		} else {
+			List<Entity> list = new ArrayList<Entity>();
+			list.add(entity);
+			entities.put(type, list);
+		}
+	}
+	
 	public static void setSceneTransformationMat(Matrix3D mat) {
 		sceneTransformationMat = mat;
 	}
@@ -51,6 +66,10 @@ public class Scene {
 
 	public static List<PieceBatch> getPieceBatches() {
 		return pieceBatches;
+	}
+	
+	public static List<Entity> getEntities(MeshType type) {
+		return entities.get(type);
 	}
 	
 	public static CameraSettings getSettings() {

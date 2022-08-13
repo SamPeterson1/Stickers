@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;

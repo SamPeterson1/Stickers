@@ -1,5 +1,6 @@
 package com.github.sampeterson1.renderEngine.gui;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,10 @@ public class GUIMaster {
 	public static void addComponent(GUIComponent component) {
 		String name = component.getName();
 		componentsByName.put(name, component);
+	}
+	
+	public static Collection<GUIComponent> getComponents() {
+		return componentsByName.values();
 	}
 	
 	public static GUIComponent getComponent(String name) {

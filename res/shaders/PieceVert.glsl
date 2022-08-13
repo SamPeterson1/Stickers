@@ -14,9 +14,7 @@
  uniform vec3[8] colorPalette;
  
  void main(void) {
- 
  	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
  	passNormal = (viewMatrix * transformationMatrix * vec4(normal, 0.0)).xyz;
- 	//vertColor = vec3(colorGroupID);
  	vertColor = colorPalette[colorIDs[colorGroupID]];
  }
