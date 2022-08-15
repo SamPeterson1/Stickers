@@ -38,25 +38,6 @@ import com.github.sampeterson1.renderEngine.models.Texture;
 
 public class Loader {
 	
-	private static final float[] quadVertices = {
-			-1.0f, -1.0f, 0.0f,
-			1.0f, -1.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-			-1.0f, 1.0f, 0.0f
-	};
-	
-	private static final float[] quadTexCoords = {
-			0.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f
-	};
-	
-	private static final int[] quadIndices = {
-			0, 1, 2, 
-			2, 3, 0
-	};
-	
 	private static List<Integer> vaos = new ArrayList<Integer>();
 	private static List<Integer> vbos = new ArrayList<Integer>();
 	private static List<Integer> textures = new ArrayList<Integer>();
@@ -76,30 +57,29 @@ public class Loader {
 		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 3);
 	}
 	
+	public static MeshData load2DMesh(float[] positions, int[] indices) {
+		int vaoID = createVAO();
+		storeIndicesBuffer(indices);
+		
+		int[] vboIDs = new int[2];
+		vboIDs[0] = storeAttributeData(0, 2, positions, GL15.GL_STATIC_DRAW);
+		
+		GL30.glBindVertexArray(0);
+		
+		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 2);
+	}
+	
 	public static MeshData load2DTexturedMesh(float[] positions, float[] texCoords, int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);
 		
 		int[] vboIDs = new int[2];
-		vboIDs[0] = storeAttributeData(0, 3, positions, GL15.GL_STATIC_DRAW);
+		vboIDs[0] = storeAttributeData(0, 2, positions, GL15.GL_STATIC_DRAW);
 		vboIDs[1] = storeAttributeData(1, 2, texCoords, GL15.GL_STATIC_DRAW);
 		
 		GL30.glBindVertexArray(0);
 		
-		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 3);
-	}
-	
-	public static MeshData loadTexturedQuad() {
-		int vaoID = createVAO();
-		storeIndicesBuffer(quadIndices);
-		
-		int[] vboIDs = new int[2];
-		vboIDs[0] = storeAttributeData(0, 3, quadVertices, GL15.GL_STATIC_DRAW);
-		vboIDs[1] = storeAttributeData(1, 3, quadTexCoords, GL15.GL_STATIC_DRAW);
-		
-		GL30.glBindVertexArray(0);
-		
-		return new MeshData(vaoID, vboIDs, quadIndices.length, quadVertices.length / 3);
+		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 2);
 	}
 	
 	public static Texture loadTexture(String fileName) {

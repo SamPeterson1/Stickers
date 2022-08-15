@@ -35,6 +35,9 @@ public class Window {
 	private static float bgGreen;
 	private static float bgBlue;
 	
+	private static int width;
+	private static int height;
+	
 	private static EventQueue eventQueue;
 	
 	public static void init(String title, float aspect) {
@@ -43,8 +46,8 @@ public class Window {
 
 		long primaryMonitor = GLFW.glfwGetPrimaryMonitor();
 		GLFWVidMode vidMode = GLFW.glfwGetVideoMode(primaryMonitor);
-		int height = vidMode.height();
-		int width = (int) (height * aspect);
+		height = vidMode.height() - 60;
+		width = (int) (height * aspect);
 		
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
@@ -94,6 +97,14 @@ public class Window {
 				eventQueue.handleScrollCallback(xOffset, yOffset);
 			}
 		});
+	}
+	
+	public static int getWidth() {
+		return width;
+	}
+	
+	public static int getHeight() {
+		return height;
 	}
 	
 	public static void lockEvents() {

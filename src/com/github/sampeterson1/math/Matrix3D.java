@@ -21,6 +21,7 @@ package com.github.sampeterson1.math;
 import java.nio.FloatBuffer;
 
 import com.github.sampeterson1.renderEngine.rendering.CameraSettings;
+import com.github.sampeterson1.renderEngine.window.Window;
 
 //A square matrix with 4 rows and columns used for linear transformations
 public class Matrix3D {
@@ -34,6 +35,18 @@ public class Matrix3D {
 		setIdentity();
 	}
 	
+	public static Matrix3D createOrthoProjectionMatrix(float left, float right, float bottom, float top, float near, float far) {
+		Matrix3D mat = new Matrix3D();
+		mat.m00 = 2 / (right - left);
+		mat.m11 = 2 / (top - bottom);
+		mat.m22 = 2 / (near - far);
+		mat.m02 = (left + right) / (left - right);
+		mat.m12 = (bottom + top) / (bottom - top);
+		mat.m22 = (near + far) / (near - far);
+		
+		return mat;
+	}
+	
 	//returns a 3D perspective projection matrix given some camera settings
 	public static Matrix3D createProjectionMatrix(CameraSettings settings) {
 		Matrix3D mat = new Matrix3D();
@@ -42,7 +55,7 @@ public class Matrix3D {
 		float zNear = settings.getZNear();
 		float zm = zFar - zNear;
 		float zp = zFar + zNear;
-		float a = 1;
+		float a = (float) Window.getWidth() / Window.getHeight();
 		float fov = Mathf.DEG_TO_RAD * settings.getFov();
 		
 		mat.m00 = 1 / Mathf.tan(fov / 2) / a;

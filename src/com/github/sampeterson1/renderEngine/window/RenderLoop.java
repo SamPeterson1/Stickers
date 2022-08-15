@@ -18,9 +18,10 @@
 
 package com.github.sampeterson1.renderEngine.window;
 
-import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.cube.util.CubeUtil;
+import com.github.sampeterson1.ivyCube.IvyCube;
 import com.github.sampeterson1.math.Mathf;
+import com.github.sampeterson1.math.Vector2f;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
@@ -28,15 +29,21 @@ import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
+import com.github.sampeterson1.renderEngine.gui.GUIButton;
+import com.github.sampeterson1.renderEngine.gui.GUIEvent;
+import com.github.sampeterson1.renderEngine.gui.GUIEventListener;
+import com.github.sampeterson1.renderEngine.gui.GUIEventType;
+import com.github.sampeterson1.renderEngine.gui.GUIMaster;
 import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.rendering.CameraSettings;
 import com.github.sampeterson1.renderEngine.rendering.MasterRenderer;
 import com.github.sampeterson1.renderEngine.rendering.OrbitalCamera;
 import com.github.sampeterson1.renderEngine.rendering.Scene;
 import com.github.sampeterson1.renderEngine.text.Font;
+import com.github.sampeterson1.renderEngine.text.FontUtil;
 import com.github.sampeterson1.renderEngine.text.Text;
 
-public class RenderLoop implements Runnable {
+public class RenderLoop implements Runnable, GUIEventListener {
 
 	private PuzzleDisplay display;
 	private OrbitalCamera camera;
@@ -50,9 +57,12 @@ public class RenderLoop implements Runnable {
 	
 	private float cameraDist = 50f;
 	
-	private int size = 30;
+	private int size = 10;
 	private int movePointer = 0;
 	private int movesPerFrame = 50;
+	
+	private float intensity = 0;
+	private String lastName;
 	
 	private Algorithm alg;
 	private Puzzle puzzle;
@@ -63,38 +73,51 @@ public class RenderLoop implements Runnable {
 		CameraSettings settings = new CameraSettings();
 		Scene.setCameraSettings(settings);
 		Scene.setLightDirection(new Vector3f(0f, 0f, 1f));
+
+		Font arial = new Font("arial.fnt", "arial.png", 0.3f);
 		
-		float fontSize = 0.35f;
-		Font arial = new Font("arial.fnt", "arial.png", fontSize);
-		Font calibri = new Font("calibri.fnt", "calibri.png", fontSize);
-		Font harrington = new Font("harrington.fnt", "harrington.png", fontSize);
-		Font sans = new Font("sans.fnt", "sans.png", fontSize);
-		Font segoe = new Font("segoe.fnt", "segoe.png", fontSize);
-		Font segoeUI = new Font("segoeUI.fnt", "segoeUI.png", fontSize);
-		Font tahoma = new Font("tahoma.fnt", "tahoma.png", fontSize);
-		String text = "Lorem ipsum dolor sit amet";
+		GUIButton button1 = new GUIButton("Red!", 0.1f, 0.5f, 0.2f, 0.05f);
+		float xOff1 = FontUtil.getWidth(arial, "Red!") / 2.0f;
+		Text text1 = new Text("button1Text", "Red!", arial, 0.5f - xOff1 / button1.getWidth(), 0.9f);
+		text1.offsetColor = new Vector3f(0.8f, 0, 0);
+		text1.offset = new Vector2f(0.006f, 0.006f);
+		text1.setParent(button1);
+		button1.baseColor = new Vector3f(1, 0, 0);
+		button1.highlightColor = new Vector3f(1, 0.3f, 0.3f);
+		button1.shadowColor = new Vector3f(0.8f, 0, 0);
 		
-		float xOff = -0.95f;
-		float yOff = 0.75f;
+		GUIButton button2 = new GUIButton("Green!", 0.4f, 0.5f, 0.2f, 0.05f);
+		float xOff2 = FontUtil.getWidth(arial, "Green!") / 2.0f;
+		Text text2 = new Text("button2Text", "Green!", arial, 0.5f - xOff2 / button2.getWidth(), 0.9f);
+		text2.offsetColor = new Vector3f(0, 0.8f, 0);
+		text2.offset = new Vector2f(0.006f, 0.006f);
+		text2.setParent(button2);
+		button2.baseColor = new Vector3f(0, 1, 0);
+		button2.highlightColor = new Vector3f(0.3f, 1, 0.3f);
+		button2.shadowColor = new Vector3f(0, 0.8f, 0);
 		
-		new Text("arial", xOff, -0.21f + yOff, text, arial);
-		new Text("calibri", xOff, -0.14f + yOff, text, calibri);
-		new Text("harrington", xOff, -0.07f + yOff, text, harrington);
-		new Text("sans", xOff, yOff, text, sans);
-		new Text("segoe", xOff, 0.07f + yOff, text, segoe);
-		new Text("segoeUI", xOff, 0.14f + yOff, text, segoeUI);
-		new Text("tahoma", xOff, 0.21f + yOff, text, tahoma);
+		GUIButton button3 = new GUIButton("Blue!", 0.7f, 0.5f, 0.2f, 0.05f);
+		float xOff3 = FontUtil.getWidth(arial, "Blue!") / 2.0f;
+		Text text3 = new Text("button3Text", "Blue!", arial, 0.5f - xOff3 / button3.getWidth(), 0.9f);
+		text3.offsetColor = new Vector3f(0, 0, 0.8f);
+		text3.offset = new Vector2f(0.006f, 0.006f);
+		text3.setParent(button3);
+		button3.baseColor = new Vector3f(0, 0, 1);
+		button3.highlightColor = new Vector3f(0.3f, 0.3f, 1f);
+		button3.shadowColor = new Vector3f(0, 0, 0.8f);
+		
 		
 		CubeUtil.init();
 		Pyraminx.init();
-		this.display = new PuzzleDisplay(new Cube(size), 450f);
-		display.setAnimate(false);
-		display.setAnimationSpeed(30);
-		this.puzzle = new Cube(size);
+		this.display = new PuzzleDisplay(new IvyCube(size), 450f);
+		display.setAnimate(true);
+		display.setAnimationSpeed(20);
+		this.puzzle = new IvyCube(size);
 		
 		this.camera = new OrbitalCamera(50f);
 		renderer = new MasterRenderer(camera);
-
+		
+		GUIMaster.addEventListener(this);
         while(Window.isOpen()) { 	
 			Window.clear();		
 			handleEvents();
@@ -133,6 +156,7 @@ public class RenderLoop implements Runnable {
 		while(Window.hasEventToProcess()) {
 			Event e = Window.getEvent();
 			if(e != null) {
+				GUIMaster.handleEvent(e);
 				if(e.getType() == Event.EVENT_MOUSE_DRAG) {
 					mouseDragged(e);
 				} else if(e.getType() == Event.EVENT_MOUSE_BUTTON_PRESS) {
@@ -174,7 +198,7 @@ public class RenderLoop implements Runnable {
 		char key = e.getKeyChar();
 		
 		if(key == 'Q') {
-			alg = puzzle.scramble(1000);
+			alg = puzzle.scramble(100);
 		} else if(key == 'S') {
 			alg = puzzle.solve();
 		}
@@ -182,19 +206,38 @@ public class RenderLoop implements Runnable {
 		Move move = null;
 
 		if (key == 'L')
-			move = new Move(Axis.PL, 1, true);
+			move = new Move(Axis.IL, 1, true);
 		if (key == 'R')
-			move = new Move(Axis.PR, 1, true);
+			move = new Move(Axis.IR, 1, true);
 		if (key == 'D')
-			move = new Move(Axis.PD, 1, true);
-		if (key == 'F')
-			move = new Move(Axis.PF, 1, true);
+			move = new Move(Axis.ID, 1, true);
+		if (key == 'B')
+			move = new Move(Axis.IB, 1, true);
 
 		if (key == 'P')
 			puzzle.print();
 		
 		if(move != null && !display.isAnimating()) {
 			makeMove(move);
+		}
+	}
+
+	@Override
+	public void handleEvent(GUIEvent e) {
+		if(e.getType() == GUIEventType.BUTTON_RELEASE) {
+			String name = e.getComponent().getName();
+			if(!name.equals(lastName)) {
+				lastName = name;
+				intensity = 0;
+			}
+			intensity += 0.1f;
+			if(name.equals("Red!")) {
+				Window.setBackgroundColor(intensity, 0, 0);
+			} else if(name.equals("Green!")) {
+				Window.setBackgroundColor(0, intensity, 0);
+			} else if(name.equals("Blue!")) {
+				Window.setBackgroundColor(0, 0, intensity);
+			}
 		}
 	}
 	

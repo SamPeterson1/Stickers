@@ -40,11 +40,14 @@ public class MasterRenderer {
 		this.guiRenderer = new GUIRenderer();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
 		GL11.glCullFace(GL11.GL_BACK);
 	}
 	
 	public void render() {
-		pieceRenderer.render();
+		//pieceRenderer.render();
 		guiRenderer.render();
 		textRenderer.render();
 	}

@@ -11,7 +11,7 @@ public class Glyph {
 	private int yOffset;
 	private int advance;
 	
-	public Glyph(String[] tokens) {
+	public Glyph(String[] tokens, int padTop, int padLeft, int padBottom, int padRight, int desiredPadding) {
 		for(int i = 1; i < tokens.length; i ++) {
 			String[] splitToken = tokens[i].split("=");
 			String key = splitToken[0];
@@ -20,19 +20,19 @@ public class Glyph {
 			if(key.equals("id")) {
 				charCode = (char) value;
 			} else if(key.equals("x")) {
-				texCoordX = value;
+				texCoordX = value + padLeft - desiredPadding;
 			} else if(key.equals("y")) {
-				texCoordY = value;
+				texCoordY = value + padTop - desiredPadding;
 			} else if(key.equals("width")) {
-				width = value;
+				width = value + padLeft + padRight - 2 * desiredPadding;
 			} else if(key.equals("height")) {
-				height = value;
+				height = value + padTop + padBottom - 2 * desiredPadding;
 			} else if(key.equals("xoffset")) {
 				xOffset = value;
 			} else if(key.equals("yoffset")) {
 				yOffset = value;
 			} else if(key.equals("xadvance")) {
-				advance = value;
+				advance = value - padLeft - padRight;
 			}
 		}
 	}

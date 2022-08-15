@@ -19,9 +19,7 @@
 package com.github.sampeterson1.renderEngine.loaders;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,7 +168,6 @@ public class OBJLoader {
 				colorIndices.add(currentColorIndex);
 			}
 			
-			System.out.println("Object: " + object.objectName + " ID: " + currentColorIndex);
 			currentColorIndex ++;
 		}
 		
@@ -198,15 +195,6 @@ public class OBJLoader {
 		for(float f : arr) {
 			list.add(f);
 		}
-	}
-	
-	private static String[] listToStringArr(List<String> list) {
-		String[] arr = new String[list.size()];
-		for(int i = 0; i < arr.length; i ++) {
-			arr[i] = list.get(i);
-		}
-		
-		return arr;
 	}
 	
 	private static float[] listToFloatArr(List<Float> list) {

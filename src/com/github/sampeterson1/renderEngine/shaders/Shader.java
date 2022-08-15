@@ -20,7 +20,6 @@ package com.github.sampeterson1.renderEngine.shaders;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.util.List;
 
@@ -29,6 +28,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import com.github.sampeterson1.math.Matrix3D;
+import com.github.sampeterson1.math.Vector2f;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.renderEngine.loaders.ResourceLoader;
 
@@ -72,6 +72,14 @@ public abstract class Shader {
 		}
 		
 		GL20.glUniform3fv(location, arr);
+	}
+	
+	protected void loadBoolean(int location, boolean value) {
+		GL20.glUniform1i(location, value ? 1 : 0);
+	}
+	
+	protected void loadVector2f(int location, Vector2f value) {
+		GL20.glUniform2f(location, value.x, value.y);
 	}
 	
 	protected void loadVector3f(int location, Vector3f value) {

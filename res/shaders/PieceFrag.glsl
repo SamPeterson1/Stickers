@@ -14,5 +14,5 @@ void main(void) {
 	float diffuse = dot(unitNormal, unitLightDirection);
 	diffuse = max(diffuse, 0.3);
 	
-	outColor = diffuse * vec4(vertColor, 1.0);
+	outColor = vec4(diffuse * vertColor, 1.0);
 }

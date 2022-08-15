@@ -1,13 +1,18 @@
 package com.github.sampeterson1.renderEngine.rendering;
 
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+import com.github.sampeterson1.renderEngine.gui.GUIComponent;
+import com.github.sampeterson1.renderEngine.gui.GUIMaster;
 import com.github.sampeterson1.renderEngine.models.Entity;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.shaders.TextShader;
+import com.github.sampeterson1.renderEngine.text.Text;
 import com.github.sampeterson1.renderEngine.text.TextMesh;
 
 public class TextRenderer {
@@ -21,31 +26,33 @@ public class TextRenderer {
 	}
 	
 	public void render() {
-		shader.start();
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		shader.start();
 		
-		for(Entity entity : Scene.getEntities(MeshType.TEXT)) {
-			TextMesh textMesh = (TextMesh) entity.getMesh();
-			shader.setTransformationMatrix(entity.getTransform());
-			MeshData data = entity.getMesh().getData();
-			GL30.glBindVertexArray(data.getVaoID());
-			enableAttribs();
-			
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL15.GL_TEXTURE_2D, textMesh.getTexture().getID());
-			
-			GL11.glDrawElements(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0);
-			
-			disableAttribs();
-			GL30.glBindVertexArray(0);
+		List<GUIComponent> allText = GUIMaster.getComponentsByType(MeshType.TEXT);
+		if(allText != null) {
+			for(GUIComponent textComponent : allText) {
+				Text text = (Text) textComponent;
+				TextMesh textMesh = (TextMesh) text.getMesh();
+				shader.loadText(text);
+				MeshData data = text.getMesh().getData();
+				GL30.glBindVertexArray(data.getVaoID());
+				enableAttribs();
+				
+				GL13.glActiveTexture(GL13.GL_TEXTURE0);
+				GL11.glBindTexture(GL15.GL_TEXTURE_2D, textMesh.getTexture().getID());
+				
+				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0);
+				
+				disableAttribs();
+				GL30.glBindVertexArray(0);
+			}
 		}
 		
 		shader.stop();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-
 		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
 	private void disableAttribs() {

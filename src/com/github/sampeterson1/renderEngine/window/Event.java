@@ -104,6 +104,9 @@ public class Event {
 			}
 		}
 		
+		event.mouseX = currentMouseX;
+		event.mouseY = currentMouseY;
+		
 		return event;
 	}
 	
@@ -113,7 +116,7 @@ public class Event {
 		event.type = currentMouseDown ? EVENT_MOUSE_DRAG : EVENT_MOUSE_MOVE;
 		
 		currentMouseX = (int) xPos;
-		currentMouseY = (int) yPos;
+		currentMouseY = (int) (Window.getHeight() - yPos);
 		event.mouseX = currentMouseX;
 		event.mouseY = currentMouseY;
 		

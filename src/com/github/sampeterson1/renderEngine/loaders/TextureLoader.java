@@ -33,7 +33,6 @@ public class TextureLoader {
 	private static final String TEXTURE_PATH = "textures/";
 	
 	public static Texture loadTexture(String fileName) throws IOException {
-		System.out.println(TEXTURE_PATH + fileName);
 	    PNGDecoder decoder = new PNGDecoder(ResourceLoader.getResourceStream(TEXTURE_PATH + fileName));
 	    
 	    ByteBuffer buffer = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
