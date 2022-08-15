@@ -27,10 +27,10 @@ public class PieceShader extends Shader {
 	private static final String VERTEX_FILE = "PieceVert.glsl";
 	private static final String FRAGMENT_FILE = "PieceFrag.glsl";
 	
-	private int location_projectionMatrix;
-	private int location_viewMatrix;
-	private int location_lightDirection;
-	private int location_colorPalette;
+	private static final String[] UNIFORM_NAMES = {
+			"projectionMatrix", "viewMatrix",
+			"lightDirection", "colorPalette"
+	};
 	
 	public PieceShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -46,26 +46,23 @@ public class PieceShader extends Shader {
 	}
 
 	@Override
-	protected void getAllUniformLocations() {
-		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
-		location_lightDirection = super.getUniformLocation("lightDirection");
-		location_colorPalette = super.getUniformLocation("colorPalette");
+	protected String[] getAllUniformNames() {
+		return UNIFORM_NAMES;
 	}
 	
 	public void setColorPalette(ColorPalette palette) {
-		super.loadVector3fList(location_colorPalette, palette.getColors());
+		super.loadVector3fList("colorPalette", palette.getColors());
 	}
 	
 	public void setLightDirection(Vector3f direction) {
-		super.loadVector3f(location_lightDirection, direction);
+		super.loadVector3f("lightDirection", direction);
 	}
 	
 	public void setProjectionMatrix(Matrix3D matrix) {
-		super.loadMatrix(location_projectionMatrix, matrix);
+		super.loadMatrix("projectionMatrix", matrix);
 	}
 	
 	public void setViewMatrix(Matrix3D matrix) {
-		super.loadMatrix(location_viewMatrix, matrix);
+		super.loadMatrix("viewMatrix", matrix);
 	}
 }

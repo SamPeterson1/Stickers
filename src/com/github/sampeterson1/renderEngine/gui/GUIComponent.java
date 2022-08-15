@@ -1,8 +1,5 @@
 package com.github.sampeterson1.renderEngine.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.window.Event;
@@ -10,9 +7,6 @@ import com.github.sampeterson1.renderEngine.window.Event;
 public class GUIComponent {
 
 	private String name;
-	
-	private List<GUIComponent> children;
-	private GUIComponent parent;
 	
 	private float x;
 	private float y;
@@ -31,8 +25,6 @@ public class GUIComponent {
 		this.width = width;
 		this.height = height;
 		this.name = name;
-		this.children = new ArrayList<GUIComponent>();
-		this.parent = GUIMaster.getRoot();
 	}
 	
 	protected void handleEvent(Event e) {}
@@ -47,37 +39,12 @@ public class GUIComponent {
 	}
 	
 	public Matrix3D getTransform() {
-		if(parent == GUIMaster.getRoot()) {
-			Matrix3D transform = new Matrix3D();
-			float xTransform = 2 * x - 1;
-			float yTransform = 2 * y - 1;
-			transform.scale(2);
-			transform.translate(xTransform, yTransform, 0);
-			return transform;
-		} else {
-			Matrix3D transform = new Matrix3D();
-			float parentX = 2 * parent.getX() - 1;
-			float parentY = 2 * parent.getY() - 1;
-			float xTransform = parentX + 2 * parent.getWidth() * x;
-			float yTransform = parentY + 2 * parent.getHeight() * y;
-			transform.scale(2);
-			transform.translate(xTransform, yTransform, 0);
-			return transform;
-		}
-	}
-	
-	public void addChild(GUIComponent child) {
-		children.add(child);
-	}
-
-	public GUIComponent getParent() {
-		return this.parent;
-	}
-	
-	public void setParent(GUIComponent newParent) {
-		parent.children.remove(this);
-		newParent.addChild(this);
-		this.parent = newParent;
+		Matrix3D transform = new Matrix3D();
+		float xTransform = 2 * x - 1;
+		float yTransform = 2 * y - 1;
+		transform.scale(2);
+		transform.translate(xTransform, yTransform, 0);
+		return transform;
 	}
 	
 	public String getName() {
@@ -88,7 +55,7 @@ public class GUIComponent {
 		return x;
 	}
 
-	public void setX(float x) {
+	protected void setX(float x) {
 		this.x = x;
 	}
 
@@ -96,7 +63,7 @@ public class GUIComponent {
 		return y;
 	}
 
-	public void setY(float y) {
+	protected void setY(float y) {
 		this.y = y;
 	}
 
@@ -104,7 +71,7 @@ public class GUIComponent {
 		return width;
 	}
 
-	public void setWidth(float width) {
+	protected void setWidth(float width) {
 		this.width = width;
 	}
 
@@ -112,7 +79,7 @@ public class GUIComponent {
 		return height;
 	}
 
-	public void setHeight(float height) {
+	protected void setHeight(float height) {
 		this.height = height;
 	}
 	

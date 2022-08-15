@@ -21,7 +21,6 @@ package com.github.sampeterson1.renderEngine.window;
 import com.github.sampeterson1.cube.util.CubeUtil;
 import com.github.sampeterson1.ivyCube.IvyCube;
 import com.github.sampeterson1.math.Mathf;
-import com.github.sampeterson1.math.Vector2f;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
@@ -30,18 +29,18 @@ import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
 import com.github.sampeterson1.renderEngine.gui.GUIButton;
+import com.github.sampeterson1.renderEngine.gui.GUICheckbox;
 import com.github.sampeterson1.renderEngine.gui.GUIEvent;
 import com.github.sampeterson1.renderEngine.gui.GUIEventListener;
 import com.github.sampeterson1.renderEngine.gui.GUIEventType;
 import com.github.sampeterson1.renderEngine.gui.GUIMaster;
+import com.github.sampeterson1.renderEngine.gui.GUISlider;
 import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.rendering.CameraSettings;
 import com.github.sampeterson1.renderEngine.rendering.MasterRenderer;
 import com.github.sampeterson1.renderEngine.rendering.OrbitalCamera;
 import com.github.sampeterson1.renderEngine.rendering.Scene;
 import com.github.sampeterson1.renderEngine.text.Font;
-import com.github.sampeterson1.renderEngine.text.FontUtil;
-import com.github.sampeterson1.renderEngine.text.Text;
 
 public class RenderLoop implements Runnable, GUIEventListener {
 
@@ -61,9 +60,8 @@ public class RenderLoop implements Runnable, GUIEventListener {
 	private int movePointer = 0;
 	private int movesPerFrame = 50;
 	
-	private float intensity = 0;
-	private String lastName;
-	
+	private float r, g, b;
+
 	private Algorithm alg;
 	private Puzzle puzzle;
 
@@ -76,36 +74,37 @@ public class RenderLoop implements Runnable, GUIEventListener {
 
 		Font arial = new Font("arial.fnt", "arial.png", 0.3f);
 		
-		GUIButton button1 = new GUIButton("Red!", 0.1f, 0.5f, 0.2f, 0.05f);
-		float xOff1 = FontUtil.getWidth(arial, "Red!") / 2.0f;
-		Text text1 = new Text("button1Text", "Red!", arial, 0.5f - xOff1 / button1.getWidth(), 0.9f);
-		text1.offsetColor = new Vector3f(0.8f, 0, 0);
-		text1.offset = new Vector2f(0.006f, 0.006f);
-		text1.setParent(button1);
-		button1.baseColor = new Vector3f(1, 0, 0);
-		button1.highlightColor = new Vector3f(1, 0.3f, 0.3f);
-		button1.shadowColor = new Vector3f(0.8f, 0, 0);
+		GUIButton redButton = new GUIButton("redButton", 0.1f, 0.5f, 0.2f, 0.05f);
+		redButton.createLabel("Red!", arial);
+		redButton.setBaseColor(new Vector3f(1, 0, 0));
+		redButton.setHighlightColor(new Vector3f(1, 0.3f, 0.3f));
+		redButton.setShadowColor(new Vector3f(0.8f, 0, 0));
 		
-		GUIButton button2 = new GUIButton("Green!", 0.4f, 0.5f, 0.2f, 0.05f);
-		float xOff2 = FontUtil.getWidth(arial, "Green!") / 2.0f;
-		Text text2 = new Text("button2Text", "Green!", arial, 0.5f - xOff2 / button2.getWidth(), 0.9f);
-		text2.offsetColor = new Vector3f(0, 0.8f, 0);
-		text2.offset = new Vector2f(0.006f, 0.006f);
-		text2.setParent(button2);
-		button2.baseColor = new Vector3f(0, 1, 0);
-		button2.highlightColor = new Vector3f(0.3f, 1, 0.3f);
-		button2.shadowColor = new Vector3f(0, 0.8f, 0);
+		GUIButton greenButton = new GUIButton("greenButton", 0.4f, 0.5f, 0.2f, 0.05f);
+		greenButton.createLabel("Green!", arial);
+		greenButton.setBaseColor(new Vector3f(0, 1, 0));
+		greenButton.setHighlightColor(new Vector3f(0.3f, 1.0f, 0.3f));
+		greenButton.setShadowColor(new Vector3f(0, 0.8f, 0));
 		
-		GUIButton button3 = new GUIButton("Blue!", 0.7f, 0.5f, 0.2f, 0.05f);
-		float xOff3 = FontUtil.getWidth(arial, "Blue!") / 2.0f;
-		Text text3 = new Text("button3Text", "Blue!", arial, 0.5f - xOff3 / button3.getWidth(), 0.9f);
-		text3.offsetColor = new Vector3f(0, 0, 0.8f);
-		text3.offset = new Vector2f(0.006f, 0.006f);
-		text3.setParent(button3);
-		button3.baseColor = new Vector3f(0, 0, 1);
-		button3.highlightColor = new Vector3f(0.3f, 0.3f, 1f);
-		button3.shadowColor = new Vector3f(0, 0, 0.8f);
+		GUIButton blueButton = new GUIButton("blueButton", 0.7f, 0.5f, 0.2f, 0.05f);
+		blueButton.createLabel("Blue!", arial);
+		blueButton.setBaseColor(new Vector3f(0, 0, 1));
+		blueButton.setHighlightColor(new Vector3f(0.3f, 0.3f, 1.0f));
+		blueButton.setShadowColor(new Vector3f(0, 0, 0.8f));
 		
+		GUISlider redSlider = new GUISlider("redSlider", 0.2f - 0.125f, 0.4f, 0.25f);
+		redSlider.setHandleBaseColor(new Vector3f(1, 0, 0));
+		redSlider.setHandleHighlightColor(new Vector3f(1, 0.3f, 0.3f));
+		
+		GUISlider greenSlider = new GUISlider("greenSlider", 0.5f - 0.125f, 0.4f, 0.25f);
+		greenSlider.setHandleBaseColor(new Vector3f(0, 1, 0));
+		greenSlider.setHandleHighlightColor(new Vector3f(0.3f, 1.0f, 0.3f));
+		
+		GUISlider blueSlider = new GUISlider("blueSlider", 0.8f - 0.125f, 0.4f, 0.25f);
+		blueSlider.setHandleBaseColor(new Vector3f(0, 0, 1));
+		blueSlider.setHandleHighlightColor(new Vector3f(0.3f, 0.3f, 1.0f));
+		
+		GUICheckbox checkbox = new GUICheckbox("checkbox", 0, 0, 0.2f);
 		
 		CubeUtil.init();
 		Pyraminx.init();
@@ -224,21 +223,35 @@ public class RenderLoop implements Runnable, GUIEventListener {
 
 	@Override
 	public void handleEvent(GUIEvent e) {
+		String name = e.getComponent().getName();
 		if(e.getType() == GUIEventType.BUTTON_RELEASE) {
-			String name = e.getComponent().getName();
-			if(!name.equals(lastName)) {
-				lastName = name;
-				intensity = 0;
+			if(name.equals("redButton")) {
+				r += 0.1f;
+				r = Mathf.min(r, 1);
+				GUISlider slider = (GUISlider) GUIMaster.getComponent("redSlider");
+				slider.setValue(r);
+			} else if(name.equals("greenButton")) {
+				g += 0.1f;
+				g = Mathf.min(g, 1);
+				GUISlider slider = (GUISlider) GUIMaster.getComponent("greenSlider");
+				slider.setValue(g);
+			} else if(name.equals("blueButton")) {
+				b += 0.1f;
+				b = Mathf.min(b, 1);
+				GUISlider slider = (GUISlider) GUIMaster.getComponent("blueSlider");
+				slider.setValue(b);
 			}
-			intensity += 0.1f;
-			if(name.equals("Red!")) {
-				Window.setBackgroundColor(intensity, 0, 0);
-			} else if(name.equals("Green!")) {
-				Window.setBackgroundColor(0, intensity, 0);
-			} else if(name.equals("Blue!")) {
-				Window.setBackgroundColor(0, 0, intensity);
+		} else if(e.getType() == GUIEventType.SLIDER_MOVED) {
+			GUISlider slider = (GUISlider) e.getComponent();
+			if(name.equals("redSlider")) {
+				r = slider.getValue();
+			} else if(name.equals("greenSlider")) {
+				g = slider.getValue();
+			} else if(name.equals("blueSlider")) {
+				b = slider.getValue();
 			}
 		}
+		Window.setBackgroundColor(r, g, b);
 	}
 	
 }

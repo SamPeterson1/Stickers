@@ -6,29 +6,26 @@ import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.rendering.MeshType;
+import com.github.sampeterson1.renderEngine.text.Font;
+import com.github.sampeterson1.renderEngine.text.FontUtil;
 import com.github.sampeterson1.renderEngine.text.Text;
 import com.github.sampeterson1.renderEngine.window.Event;
 import com.github.sampeterson1.renderEngine.window.Window;
 
 public class GUIButton extends GUIComponent {
-
-	private static final float[] quadVertices = {
-			-1.0f, -1.0f,
-			1.0f, -1.0f,
-			1.0f, 1.0f,
-			-1.0f, 1.0f
-	};
 	
 	private static final int[] quadIndices = {
 			0, 1, 2, 
 			2, 3, 0
 	};
+	
+	private static final float MESH_PADDING = 0.005f;
+	private static final float BUTTON_SHADOW_OFFSET = 0.006f;
+	private static final float TEXT_SHADOW_OFFSET = 0.0075f;
 
-	public float shadowOffset = 0.006f;
-	public Vector3f shadowColor = new Vector3f(0);
-	public Vector3f baseColor;
-	public Vector3f highlightColor;
-	private Vector2f centerPos;
+	private Vector3f highlightColor = new Vector3f(0.3f, 1.0f, 0.3f);
+	private Vector3f shadowColor = new Vector3f(0);
+	private Vector3f baseColor = new Vector3f(0, 1, 0);
 	private Vector2f dim;
 	
 	private boolean pressed;
@@ -38,18 +35,54 @@ public class GUIButton extends GUIComponent {
 	
 	public GUIButton(String name, float x, float y, float width, float height) {
 		super(name, x, y, width, height);
-		MeshData meshData = Loader.load2DMesh(quadVertices, quadIndices);
+		float[] vertices = createVertices(width, height);
+		MeshData meshData = Loader.load2DMesh(vertices, quadIndices);
 		super.setMesh(new Mesh(meshData, MeshType.BUTTON));
 		this.dim = new Vector2f(width / 2, height / 2);
-		this.centerPos = new Vector2f(x + dim.x, y + dim.y);
 	}
 	
-	public void createLabel(String label) {
+	private float[] createVertices(float width, float height) {
+		float offset = MESH_PADDING + BUTTON_SHADOW_OFFSET;
+		return new float[] {
+				-offset, -offset,
+				width + offset, -offset,
+				width + offset, height + offset,
+				-offset, height + offset
+		};
+	}
+	
+	public void createLabel(String label, Font font) {
 		if(labelText == null) {
-			
+			float xOff = FontUtil.getWidth(font, label) / 2.0f;
+			float x = super.getX() + super.getWidth() * 0.5f - xOff;
+			float y = super.getY() + super.getHeight() * 0.9f;
+			labelText = new Text(super.getName() + "_label", label, font, x, y);
+			labelText.offsetColor = shadowColor;
+			labelText.offset = new Vector2f(TEXT_SHADOW_OFFSET);
 		} else {
 			System.err.println("Label already exists!");
 		}
+	}
+	
+	public void setLabelShadowColor(Vector3f shadowColor) {
+		this.labelText.offsetColor = shadowColor;
+	}
+	
+	public void setLabelColor(Vector3f textColor) {
+		this.labelText.color = textColor;
+	}
+	
+	public void setHighlightColor(Vector3f highlightColor) {
+		this.highlightColor = highlightColor;
+	}
+	
+	public void setBaseColor(Vector3f baseColor) {
+		this.baseColor = baseColor;
+	}
+	
+	public void setShadowColor(Vector3f shadowColor) {
+		this.shadowColor = shadowColor;
+		labelText.offsetColor = shadowColor;
 	}
 	
 	public boolean isPressed() {
@@ -57,11 +90,23 @@ public class GUIButton extends GUIComponent {
 	}
 	
 	private boolean inBounds(float mouseX, float mouseY) {
-		float minX = centerPos.x - dim.x;
-		float minY = centerPos.y - dim.y;
-		float maxX = centerPos.x + dim.x;
-		float maxY = centerPos.y + dim.y;
+		float minX = super.getX();
+		float minY = super.getY();
+		float maxX = minX + 2 * dim.x;
+		float maxY = minY + 2 * dim.y;
 		return (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY);
+	}
+	
+	public float getShadowOffset() {
+		return BUTTON_SHADOW_OFFSET;
+	}
+	
+	public Vector3f getHighlightColor() {
+		return this.highlightColor;
+	}
+	
+	public Vector3f getShadowColor() {
+		return this.shadowColor;
 	}
 	
 	public Vector3f getColor() {
@@ -71,11 +116,7 @@ public class GUIButton extends GUIComponent {
 	public Vector2f getDim() {
 		return this.dim;
 	}
-	
-	public Vector2f getCenterPos() {
-		return this.centerPos;
-	}
-	
+
 	@Override
 	public void handleEvent(Event e) {
 		float mouseX = (float) e.getMouseX() / Window.getWidth();
@@ -84,18 +125,20 @@ public class GUIButton extends GUIComponent {
 		int eventType = e.getType();
 		if(eventType == Event.EVENT_MOUSE_BUTTON_PRESS && e.getMouseButton() == Event.MOUSE_LEFT_BUTTON) {
 			if(inBounds(mouseX, mouseY)) {
-				float x = super.getX() - shadowOffset / aspect;
-				float y = super.getY() + shadowOffset;
-				super.setX(x);
-				super.setY(y);
+				labelText.setX(labelText.getX() - BUTTON_SHADOW_OFFSET / aspect);
+				labelText.setY(labelText.getY() + BUTTON_SHADOW_OFFSET);
+				super.setX(super.getX() - BUTTON_SHADOW_OFFSET / aspect);
+				super.setY(super.getY() + BUTTON_SHADOW_OFFSET);
+				
 				pressed = true;
 				GUIMaster.createEvent(new GUIEvent(GUIEventType.BUTTON_PRESS, this));
 			}
 		} else if(eventType == Event.EVENT_MOUSE_BUTTON_RELEASE && pressed) {
-			float x = super.getX() + shadowOffset / aspect;
-			float y = super.getY() - shadowOffset;
-			super.setX(x);
-			super.setY(y);
+			labelText.setX(labelText.getX() + BUTTON_SHADOW_OFFSET / aspect);
+			labelText.setY(labelText.getY() - BUTTON_SHADOW_OFFSET);
+			super.setX(super.getX() + BUTTON_SHADOW_OFFSET / aspect);
+			super.setY(super.getY() - BUTTON_SHADOW_OFFSET);
+			
 			highlighted = inBounds(mouseX, mouseY);
 			pressed = false;
 			GUIMaster.createEvent(new GUIEvent(GUIEventType.BUTTON_RELEASE, this));

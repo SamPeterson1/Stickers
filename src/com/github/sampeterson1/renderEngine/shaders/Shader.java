@@ -21,7 +21,9 @@ package com.github.sampeterson1.renderEngine.shaders;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -41,9 +43,12 @@ public abstract class Shader {
 	private int vertexShaderID;
 	private int fragmentShaderID;
 	
+	private Map<String, Integer> uniformLocations;
+	
 	public Shader(String vertexShader, String fragShader) {
 		vertexShaderID = loadShader(vertexShader, GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragShader, GL20.GL_FRAGMENT_SHADER);
+		uniformLocations = new HashMap<String, Integer>();
 		
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
@@ -51,18 +56,26 @@ public abstract class Shader {
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
-		getAllUniformLocations();
+		locateUniforms(getAllUniformNames());
+	}
+	
+	private void locateUniforms(String[] uniformNames) {
+		for(String name : uniformNames) {
+			int location = GL20.glGetUniformLocation(programID, name);
+			uniformLocations.put(name, location);
+		}
 	}
 	
 	protected abstract void bindAttributes();
 	
-	protected abstract void getAllUniformLocations();
+	protected abstract String[] getAllUniformNames();
 	
-	protected void loadFloat(int location, float value) {
+	protected void loadFloat(String uniformName, float value) {
+		int location = uniformLocations.get(uniformName);
 		GL20.glUniform1f(location, value);
 	}
 	
-	protected void loadVector3fList(int location, List<Vector3f> values) {
+	protected void loadVector3fList(String uniformName, List<Vector3f> values) {
 		float[] arr = new float[values.size() * 3];
 		for(int i = 0; i < arr.length; i += 3) {
 			Vector3f v = values.get(i/3);
@@ -71,29 +84,30 @@ public abstract class Shader {
 			arr[i + 2] = v.z;
 		}
 		
+		int location = uniformLocations.get(uniformName);
 		GL20.glUniform3fv(location, arr);
 	}
 	
-	protected void loadBoolean(int location, boolean value) {
+	protected void loadBoolean(String uniformName, boolean value) {
+		int location = uniformLocations.get(uniformName);
 		GL20.glUniform1i(location, value ? 1 : 0);
 	}
 	
-	protected void loadVector2f(int location, Vector2f value) {
+	protected void loadVector2f(String uniformName, Vector2f value) {
+		int location = uniformLocations.get(uniformName);
 		GL20.glUniform2f(location, value.x, value.y);
 	}
 	
-	protected void loadVector3f(int location, Vector3f value) {
+	protected void loadVector3f(String uniformName, Vector3f value) {
+		int location = uniformLocations.get(uniformName);
 		GL20.glUniform3f(location, value.x, value.y, value.z);
 	}
 	
-	protected void loadMatrix(int location, Matrix3D matrix) {
+	protected void loadMatrix(String uniformName, Matrix3D matrix) {
+		int location = uniformLocations.get(uniformName);
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
 		GL20.glUniformMatrix4fv(location, false, matrixBuffer);
-	}
-	
-	protected int getUniformLocation(String uniformName) {
-		return GL20.glGetUniformLocation(programID, uniformName);
 	}
 	
 	protected void bindAttribute(int attribute, String name) {

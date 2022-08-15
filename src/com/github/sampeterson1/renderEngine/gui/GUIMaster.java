@@ -15,9 +15,7 @@ public class GUIMaster {
 	private static Map<MeshType, List<GUIComponent>> componentsByType = new EnumMap<MeshType, List<GUIComponent>>(MeshType.class);
 	private static Map<String, GUIComponent> componentsByName = new HashMap<String, GUIComponent>();
 	private static List<GUIEventListener> listeners = new ArrayList<GUIEventListener>();
-	
-	private static GUIComponent root = new GUIComponent("root", 0, 0, 1, 1);
-	
+		
 	private static final float Z_FAR = 10;
 	private static final float Z_NEAR = 0;
 	public static final Matrix3D orthoProjection = Matrix3D.createOrthoProjectionMatrix(-1, 1, -1, 1, Z_NEAR, Z_FAR);
@@ -61,7 +59,4 @@ public class GUIMaster {
 		}
 	}
 	
-	public static GUIComponent getRoot() {
-		return root;
-	}
 }
