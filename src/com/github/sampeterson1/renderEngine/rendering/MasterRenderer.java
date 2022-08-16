@@ -47,7 +47,7 @@ public class MasterRenderer {
 	}
 	
 	public void render() {
-		//pieceRenderer.render();
+		pieceRenderer.render();
 		guiRenderer.render();
 		textRenderer.render();
 	}

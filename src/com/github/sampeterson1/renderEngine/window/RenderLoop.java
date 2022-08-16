@@ -30,6 +30,7 @@ import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
 import com.github.sampeterson1.renderEngine.gui.GUIButton;
 import com.github.sampeterson1.renderEngine.gui.GUICheckbox;
+import com.github.sampeterson1.renderEngine.gui.GUIDropdownBox;
 import com.github.sampeterson1.renderEngine.gui.GUIEvent;
 import com.github.sampeterson1.renderEngine.gui.GUIEventListener;
 import com.github.sampeterson1.renderEngine.gui.GUIEventType;
@@ -61,6 +62,7 @@ public class RenderLoop implements Runnable, GUIEventListener {
 	private int movesPerFrame = 50;
 	
 	private float r, g, b;
+	private float maxR=1, maxG=1, maxB=1;
 
 	private Algorithm alg;
 	private Puzzle puzzle;
@@ -74,37 +76,52 @@ public class RenderLoop implements Runnable, GUIEventListener {
 
 		Font arial = new Font("arial.fnt", "arial.png", 0.3f);
 		
-		GUIButton redButton = new GUIButton("redButton", 0.1f, 0.5f, 0.2f, 0.05f);
+		GUIButton redButton = new GUIButton("redButton", 0.13f, 0.5f, 0.2f, 0.05f);
 		redButton.createLabel("Red!", arial);
 		redButton.setBaseColor(new Vector3f(1, 0, 0));
 		redButton.setHighlightColor(new Vector3f(1, 0.3f, 0.3f));
 		redButton.setShadowColor(new Vector3f(0.8f, 0, 0));
 		
-		GUIButton greenButton = new GUIButton("greenButton", 0.4f, 0.5f, 0.2f, 0.05f);
+		GUIButton greenButton = new GUIButton("greenButton", 0.43f, 0.5f, 0.2f, 0.05f);
 		greenButton.createLabel("Green!", arial);
 		greenButton.setBaseColor(new Vector3f(0, 1, 0));
 		greenButton.setHighlightColor(new Vector3f(0.3f, 1.0f, 0.3f));
 		greenButton.setShadowColor(new Vector3f(0, 0.8f, 0));
 		
-		GUIButton blueButton = new GUIButton("blueButton", 0.7f, 0.5f, 0.2f, 0.05f);
+		GUIButton blueButton = new GUIButton("blueButton", 0.73f, 0.5f, 0.2f, 0.05f);
 		blueButton.createLabel("Blue!", arial);
 		blueButton.setBaseColor(new Vector3f(0, 0, 1));
 		blueButton.setHighlightColor(new Vector3f(0.3f, 0.3f, 1.0f));
 		blueButton.setShadowColor(new Vector3f(0, 0, 0.8f));
 		
-		GUISlider redSlider = new GUISlider("redSlider", 0.2f - 0.125f, 0.4f, 0.25f);
+		GUISlider redSlider = new GUISlider("redSlider", 0.2f - 0.125f, 0.43f, 0.25f);
 		redSlider.setHandleBaseColor(new Vector3f(1, 0, 0));
 		redSlider.setHandleHighlightColor(new Vector3f(1, 0.3f, 0.3f));
 		
-		GUISlider greenSlider = new GUISlider("greenSlider", 0.5f - 0.125f, 0.4f, 0.25f);
+		GUISlider greenSlider = new GUISlider("greenSlider", 0.5f - 0.125f, 0.43f, 0.25f);
 		greenSlider.setHandleBaseColor(new Vector3f(0, 1, 0));
 		greenSlider.setHandleHighlightColor(new Vector3f(0.3f, 1.0f, 0.3f));
 		
-		GUISlider blueSlider = new GUISlider("blueSlider", 0.8f - 0.125f, 0.4f, 0.25f);
+		GUISlider blueSlider = new GUISlider("blueSlider", 0.8f - 0.125f, 0.43f, 0.25f);
 		blueSlider.setHandleBaseColor(new Vector3f(0, 0, 1));
 		blueSlider.setHandleHighlightColor(new Vector3f(0.3f, 0.3f, 1.0f));
 		
-		GUICheckbox checkbox = new GUICheckbox("checkbox", 0, 0, 0.2f);
+		GUICheckbox redBox = new GUICheckbox("redBox", 0.065f, 0.5f, 0.05f);
+		redBox.setChecked(true);
+		redBox.setCheckedColor(new Vector3f(1, 0, 0));
+		redBox.setCheckedHighlightColor(new Vector3f(1.0f, 0.3f, 0.3f));
+		
+		GUICheckbox greenBox = new GUICheckbox("greenBox", 0.365f, 0.5f, 0.05f);
+		greenBox.setChecked(true);
+		greenBox.setCheckedColor(new Vector3f(0, 1, 0));
+		greenBox.setCheckedHighlightColor(new Vector3f(0.3f, 1.0f, 0.3f));
+		
+		GUICheckbox blueBox = new GUICheckbox("blueBox", 0.665f, 0.5f, 0.05f);
+		blueBox.setChecked(true);
+		blueBox.setCheckedColor(new Vector3f(0, 0, 1));
+		blueBox.setCheckedHighlightColor(new Vector3f(0.3f, 0.3f, 1.0f));
+		
+		GUIDropdownBox dropdownBox = new GUIDropdownBox("dropdown", 0.4f, 0.9f, 0.2f, 0.05f);
 		
 		CubeUtil.init();
 		Pyraminx.init();
@@ -223,8 +240,11 @@ public class RenderLoop implements Runnable, GUIEventListener {
 
 	@Override
 	public void handleEvent(GUIEvent e) {
+		
 		String name = e.getComponent().getName();
-		if(e.getType() == GUIEventType.BUTTON_RELEASE) {
+		GUIEventType eventType = e.getType();
+
+		if(eventType == GUIEventType.BUTTON_RELEASE) {
 			if(name.equals("redButton")) {
 				r += 0.1f;
 				r = Mathf.min(r, 1);
@@ -240,8 +260,9 @@ public class RenderLoop implements Runnable, GUIEventListener {
 				b = Mathf.min(b, 1);
 				GUISlider slider = (GUISlider) GUIMaster.getComponent("blueSlider");
 				slider.setValue(b);
-			}
-		} else if(e.getType() == GUIEventType.SLIDER_MOVED) {
+			}		System.out.println(name);
+
+		} else if(eventType == GUIEventType.SLIDER_MOVED) {
 			GUISlider slider = (GUISlider) e.getComponent();
 			if(name.equals("redSlider")) {
 				r = slider.getValue();
@@ -250,8 +271,22 @@ public class RenderLoop implements Runnable, GUIEventListener {
 			} else if(name.equals("blueSlider")) {
 				b = slider.getValue();
 			}
+		} else if(eventType == GUIEventType.CHECKBOX_TOGGLE) {
+			GUICheckbox checkbox = (GUICheckbox) e.getComponent();
+			int val = checkbox.isChecked() ? 1 : 0;
+			if(name.equals("redBox")) {
+				maxR = val;
+			} else if(name.equals("greenBox")) {
+				maxG = val;
+			} else if(name.equals("blueBox")) {
+				maxB = val;
+			}
+		} else if(eventType == GUIEventType.DROPDOWN_SELECTED) {
+			GUIDropdownBox dropdownBox = (GUIDropdownBox) e.getComponent();
+			System.out.println(dropdownBox.getSelectionID());
 		}
-		Window.setBackgroundColor(r, g, b);
+
+		Window.setBackgroundColor(Mathf.min(r, maxR), Mathf.min(g, maxG), Mathf.min(b, maxB));
 	}
 	
 }

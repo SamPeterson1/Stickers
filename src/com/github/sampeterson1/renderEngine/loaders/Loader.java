@@ -69,6 +69,20 @@ public class Loader {
 		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 2);
 	}
 	
+	public static MeshData loadDropdownMesh(float[] positions, float[] texCoords, int[] indices, int[] optionIDs) {
+		int vaoID = createVAO();
+		storeIndicesBuffer(indices);
+		
+		int[] vboIDs = new int[3];
+		vboIDs[0] = storeAttributeData(0, 2, positions, GL15.GL_STATIC_DRAW);
+		vboIDs[1] = storeAttributeData(1, 2, texCoords, GL15.GL_STATIC_DRAW);
+		vboIDs[2] = storeAttributeDataI(2, 1, optionIDs, GL15.GL_STATIC_DRAW);
+		
+		GL30.glBindVertexArray(0);
+		
+		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 2);
+	}
+	
 	public static MeshData load2DTexturedMesh(float[] positions, float[] texCoords, int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);

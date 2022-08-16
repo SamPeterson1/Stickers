@@ -88,6 +88,11 @@ public abstract class Shader {
 		GL20.glUniform3fv(location, arr);
 	}
 	
+	protected void loadInt(String uniformName, int value) {
+		int location = uniformLocations.get(uniformName);
+		GL20.glUniform1i(location, value);
+	}
+	
 	protected void loadBoolean(String uniformName, boolean value) {
 		int location = uniformLocations.get(uniformName);
 		GL20.glUniform1i(location, value ? 1 : 0);

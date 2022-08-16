@@ -1,5 +1,6 @@
 package com.github.sampeterson1.renderEngine.shaders;
 
+import com.github.sampeterson1.renderEngine.gui.GUICheckbox;
 import com.github.sampeterson1.renderEngine.gui.GUIComponent;
 
 public class CheckboxShader extends GUIColorShader {
@@ -8,7 +9,7 @@ public class CheckboxShader extends GUIColorShader {
 	private static final String FRAGMENT_FILE = "CheckboxFrag.glsl";
 	
 	private static final String[] UNIFORM_NAMES = {
-			"transformationMatrix"
+			"transformationMatrix", "fillColor", "borderColor", "hasFill", "size"
 	};
 
 	public CheckboxShader() {
@@ -22,7 +23,12 @@ public class CheckboxShader extends GUIColorShader {
 	
 	@Override
 	public void loadGUIComponent(GUIComponent component) {
+		GUICheckbox checkbox = (GUICheckbox) component;
 		super.loadMatrix("transformationMatrix", component.getTransform());
+		super.loadFloat("size", checkbox.getWidth());
+		super.loadVector3f("fillColor", checkbox.getFillColor());
+		super.loadVector3f("borderColor", checkbox.getBorderColor());
+		super.loadBoolean("hasFill", checkbox.hasFill());
 	}
 	
 }
