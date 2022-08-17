@@ -33,6 +33,8 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
+import com.github.sampeterson1.puzzle.lib.PuzzleType;
 
 //An implementation of Puzzle that represents the pieces of an n by n Rubk's Cube
 public class Cube extends Puzzle {
@@ -40,6 +42,8 @@ public class Cube extends Puzzle {
 	private static final int NUM_CENTERS = 6;
 	private static final int NUM_EDGES = 12;
 	private static final int NUM_CORNERS = 8;
+	
+	private static final PuzzleSizeController sizeInfo = new PuzzleSizeController(2, 3, 100);
 	
 	private MasterCubeSolver solver;
 	
@@ -128,4 +132,10 @@ public class Cube extends Puzzle {
 	public DisplayPiece createDisplayPiece(Piece piece) {
 		return new CubeDisplayPiece(piece);
 	}
+
+	@Override
+	public PuzzleType getType() {
+		return PuzzleType.CUBE;
+	}
+
 }

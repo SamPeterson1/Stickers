@@ -14,6 +14,9 @@ public class GUIComponent {
 	private float height;
 	
 	private Mesh mesh;
+	private boolean visible;
+	
+	
 	
 	public GUIComponent(String name, float x, float y) {
 		this(name, x, y, 1f, 1f);
@@ -25,10 +28,19 @@ public class GUIComponent {
 		this.width = width;
 		this.height = height;
 		this.name = name;
+		this.visible = true;
 	}
 	
 	protected void handleEvent(Event e) {}
 	
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	protected void setMesh(Mesh mesh) {
 		this.mesh = mesh;
 		GUIMaster.addComponent(this);

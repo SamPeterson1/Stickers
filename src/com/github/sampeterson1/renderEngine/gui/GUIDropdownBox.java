@@ -2,6 +2,7 @@ package com.github.sampeterson1.renderEngine.gui;
 
 import java.io.IOException;
 
+import com.github.sampeterson1.math.Vector2f;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.loaders.TextureLoader;
@@ -9,10 +10,15 @@ import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.Texture;
 import com.github.sampeterson1.renderEngine.rendering.MeshType;
+import com.github.sampeterson1.renderEngine.text.Font;
+import com.github.sampeterson1.renderEngine.text.FontUtil;
+import com.github.sampeterson1.renderEngine.text.Text;
 import com.github.sampeterson1.renderEngine.window.Event;
 import com.github.sampeterson1.renderEngine.window.Window;
 
 public class GUIDropdownBox extends GUIComponent {
+	
+	private static final float LEFT_JUSTIFY_PADDING = 0.01f;
 	
 	private Vector3f selectionColor = new Vector3f(0, 1, 0);
 	private Vector3f arrowBaseColor = new Vector3f(0, 1, 0);
@@ -24,7 +30,8 @@ public class GUIDropdownBox extends GUIComponent {
 	private boolean arrowHighlighted;
 	private int hoverSelectionID = -1;
 	private int selectionID = -1;
-	private String[] selections;
+	private Text[] options;
+	private Text selected;
 	
 	public GUIDropdownBox(String name, float x, float y, float width, float height) {
 		super(name, x, y, width, height);
@@ -34,9 +41,7 @@ public class GUIDropdownBox extends GUIComponent {
 			e.printStackTrace();
 		}
 		
-		selections = new String[5];
-		MeshData meshData = createMesh(5);
-		super.setMesh(new Mesh(meshData, MeshType.DROPDOWN_BOX));
+		
 	}
 	
 	private boolean mouseOverArrow(float mouseX, float mouseY) {
@@ -54,11 +59,37 @@ public class GUIDropdownBox extends GUIComponent {
 		float y = super.getY() - cellHeight;
 		float x = super.getX();
 		
-		if(mouseX >= x && mouseX <= x + cellWidth && mouseY <= y && mouseY >= y - selections.length * cellHeight) {
+		if(mouseX >= x && mouseX <= x + cellWidth && mouseY <= y && mouseY >= y - options.length * cellHeight) {
 			return (int) ((y - mouseY) / cellHeight);
 		}
 		
 		return -1;
+	}
+	
+	public void createOptions(String[] optionNames, Font font) {
+		
+		options = new Text[optionNames.length];
+		float x = super.getX() + LEFT_JUSTIFY_PADDING;
+
+		for(int i = 0; i < optionNames.length; i ++) {
+			String name = optionNames[i];
+			float y = super.getY() - (i + 1.5f) * super.getHeight() + FontUtil.getScaledLineHeight(font)/2;
+			Text optionText = new Text(super.getName() + "_" + name, name, font, x, y);
+			optionText.setVisible(false);
+			optionText.color = new Vector3f(0);
+			optionText.offsetColor = new Vector3f(0.7f, 0.7f, 0.7f);
+			optionText.offset = new Vector2f(0.005f, 0.005f);
+			options[i] = optionText;
+		}
+		
+		float y = super.getY() - super.getHeight()/2 + FontUtil.getScaledLineHeight(font)/2;
+		selected = new Text(super.getName() + "_selection", optionNames[0], font, x, y);
+		selected.color = new Vector3f(0);
+		selected.offsetColor = new Vector3f(0.7f, 0.7f, 0.7f);
+		selected.offset = new Vector2f(0.005f, 0.005f);
+		
+		MeshData meshData = createMesh(options.length);
+		super.setMesh(new Mesh(meshData, MeshType.DROPDOWN_BOX));
 	}
 	
 	@Override
@@ -71,13 +102,29 @@ public class GUIDropdownBox extends GUIComponent {
 			arrowHighlighted = mouseOverArrow(mouseX, mouseY);
 		} else if(eventType == Event.EVENT_MOUSE_BUTTON_PRESS) {
 			if(arrowHighlighted) {
-				expanded = !expanded;
+				if(expanded) contract();
+				else expand();
 			} else if(expanded && hoverSelectionID >= 0) {
 				selectionID = hoverSelectionID;
+				selected.updateText(options[selectionID].getText());
 				hoverSelectionID = -1;
-				expanded = false;
+				contract();
 				GUIMaster.createEvent(new GUIEvent(GUIEventType.DROPDOWN_SELECTED, this));
 			}
+		}
+	}
+	
+	private void contract() {
+		expanded = false;
+		for(Text optionText : options) {
+			optionText.setVisible(false);
+		}
+	}
+	
+	private void expand() {
+		expanded = true;
+		for(Text optionText : options) {
+			optionText.setVisible(true);
 		}
 	}
 
@@ -159,6 +206,14 @@ public class GUIDropdownBox extends GUIComponent {
 		System.out.println();
 		
 		return Loader.loadDropdownMesh(vertices, texCoords, indices, optionIDs);
+	}
+	
+	public String getSelection() {
+		if(selectionID >= 0) {
+			return options[selectionID].getText();
+		} else {
+			return null;
+		}
 	}
 	
 	public Texture getTexture() {

@@ -9,7 +9,8 @@ public class TextShader extends Shader {
 	
 	private static final String[] UNIFORM_NAMES = {
 			"transformationMatrix", "thickness", "blending",
-			"offsetThickness", "offset", "color", "offsetColor"
+			"offsetThickness", "offset", "color", "offsetColor",
+			"minPosition", "maxPosition"
 	};
 	
 	public TextShader() {
@@ -35,6 +36,8 @@ public class TextShader extends Shader {
 		super.loadVector2f("offset", text.offset);
 		super.loadVector3f("color", text.color);
 		super.loadVector3f("offsetColor", text.offsetColor);
+		super.loadVector2f("minPosition", text.minPosition);
+		super.loadVector2f("maxPosition", text.maxPosition);
 	}
 	
 }

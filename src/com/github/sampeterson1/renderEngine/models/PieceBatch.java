@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL15;
 
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
@@ -80,6 +81,12 @@ public class PieceBatch {
 		colorData.flip();
 		
 		Loader.updateVBO(colorVboID, colorData);
+	}
+	
+	public void delete() {
+		GL15.glDeleteBuffers(positionVboID);
+		GL15.glDeleteBuffers(colorVboID);
+		mesh.getData().delete();
 	}
 	
 	public ColorPalette getPalette() {

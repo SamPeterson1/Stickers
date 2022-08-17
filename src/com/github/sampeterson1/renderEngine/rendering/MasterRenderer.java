@@ -27,17 +27,22 @@ import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.shaders.PieceShader;
+import com.github.sampeterson1.renderEngine.window.Window;
 
 public class MasterRenderer {
 	
-	private PieceRenderer pieceRenderer;
+	private PuzzleRenderer puzzleRenderer;
 	private GUIRenderer guiRenderer;
 	private TextRenderer textRenderer;
 	
 	public MasterRenderer(OrbitalCamera camera) {
-		this.pieceRenderer = new PieceRenderer(camera);
+		this.puzzleRenderer = new PuzzleRenderer(camera);
 		this.textRenderer = new TextRenderer();
 		this.guiRenderer = new GUIRenderer();
+		initSettings();
+	}
+	
+	private void initSettings() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -47,13 +52,14 @@ public class MasterRenderer {
 	}
 	
 	public void render() {
-		pieceRenderer.render();
+		puzzleRenderer.render();
 		guiRenderer.render();
 		textRenderer.render();
 	}
 	
 	public void dispose() {
-		pieceRenderer.dispose();
+		puzzleRenderer.dispose();
+		textRenderer.dispose();
 		guiRenderer.dispose();
 	}
 }

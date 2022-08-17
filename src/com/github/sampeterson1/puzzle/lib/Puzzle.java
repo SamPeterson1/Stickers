@@ -58,6 +58,8 @@ public abstract class Puzzle {
 	
 	public abstract DisplayPiece createDisplayPiece(Piece piece);
 	
+	public abstract PuzzleType getType();
+	
 	private void addAllPieces(List<PieceGroup> groups) {
 		for(PieceGroup group : groups) {
 			for(Piece piece : group.getPieces()) {

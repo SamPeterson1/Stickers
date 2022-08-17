@@ -9,11 +9,9 @@ import org.lwjgl.opengl.GL30;
 
 import com.github.sampeterson1.renderEngine.gui.GUIComponent;
 import com.github.sampeterson1.renderEngine.gui.GUIMaster;
-import com.github.sampeterson1.renderEngine.models.Entity;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.shaders.TextShader;
 import com.github.sampeterson1.renderEngine.text.Text;
-import com.github.sampeterson1.renderEngine.text.TextMesh;
 
 public class TextRenderer {
 	
@@ -33,20 +31,21 @@ public class TextRenderer {
 		List<GUIComponent> allText = GUIMaster.getComponentsByType(MeshType.TEXT);
 		if(allText != null) {
 			for(GUIComponent textComponent : allText) {
-				Text text = (Text) textComponent;
-				TextMesh textMesh = (TextMesh) text.getMesh();
-				shader.loadText(text);
-				MeshData data = text.getMesh().getData();
-				GL30.glBindVertexArray(data.getVaoID());
-				enableAttribs();
-				
-				GL13.glActiveTexture(GL13.GL_TEXTURE0);
-				GL11.glBindTexture(GL15.GL_TEXTURE_2D, textMesh.getTexture().getID());
-				
-				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0);
-				
-				disableAttribs();
-				GL30.glBindVertexArray(0);
+				if(textComponent.isVisible()) {
+					Text text = (Text) textComponent;
+					shader.loadText(text);
+					MeshData data = text.getMesh().getData();
+					GL30.glBindVertexArray(data.getVaoID());
+					enableAttribs();
+					
+					GL13.glActiveTexture(GL13.GL_TEXTURE0);
+					GL11.glBindTexture(GL15.GL_TEXTURE_2D, text.getAtlasTexture().getID());
+					
+					GL11.glDrawElements(GL11.GL_TRIANGLES, data.getNumIndices(), GL11.GL_UNSIGNED_INT, 0);
+					
+					disableAttribs();
+					GL30.glBindVertexArray(0);
+				}
 			}
 		}
 		

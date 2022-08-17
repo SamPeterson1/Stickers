@@ -51,7 +51,6 @@ public class PuzzleDisplay {
 	private int direction;
 	
 	private int puzzleSize;
-	private float drawSize;
 	
 	private long lastTime;
 
@@ -64,13 +63,20 @@ public class PuzzleDisplay {
 	
 	private ColorPalette palette;
 	
-	public PuzzleDisplay(Puzzle puzzle, float drawSize) {
+	public PuzzleDisplay(Puzzle puzzle) {
 		this.puzzle = puzzle;
-		this.drawSize = drawSize;
 		this.palette = puzzle.createDefaultColorPalette();
 		
 		createPieces();
 		this.lastTime = System.currentTimeMillis();
+	}
+	
+	//Delete all pieces
+	public void delete() {
+		for(PieceBatch pieceBatch : pieceBatches.values()) {
+			pieceBatch.delete();
+		}
+		Scene.clearPieceBatches();
 	}
 	
 	//populate all PieceBatches with DisplayPieces that are linked to our puzzle's pieces
@@ -117,10 +123,6 @@ public class PuzzleDisplay {
 
 	public int getPuzzleSize() {
 		return puzzleSize;
-	}
-
-	public float getDrawSize() {
-		return drawSize;
 	}
 
 	public boolean isAnimating() {

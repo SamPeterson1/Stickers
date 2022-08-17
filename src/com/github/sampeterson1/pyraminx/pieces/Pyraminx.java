@@ -31,6 +31,8 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
+import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.pyraminx.display.PyraminxDisplayPiece;
 import com.github.sampeterson1.pyraminx.solvers.PyraminxCenterSolver;
 import com.github.sampeterson1.pyraminx.util.PyraminxCenterUtil;
@@ -39,10 +41,10 @@ import com.github.sampeterson1.pyraminx.util.PyraminxMoveUtil;
 public class Pyraminx extends Puzzle {
 	
 	public static Axis[] faces = {Axis.PF, Axis.PR, Axis.PL, Axis.PD};
-	
-	public static final int NUM_CENTERS = 4;
-	public static final int NUM_EDGES = 6;
-	public static final int NUM_CORNERS = 4;
+		
+	private static final int NUM_CENTERS = 4;
+	private static final int NUM_EDGES = 6;
+	private static final int NUM_CORNERS = 4;
 	
 	public static void init() {
 		PyraminxCenterUtil.init();
@@ -134,6 +136,11 @@ public class Pyraminx extends Puzzle {
 	@Override
 	public DisplayPiece createDisplayPiece(Piece piece) {
 		return new PyraminxDisplayPiece(piece);
+	}
+
+	@Override
+	public PuzzleType getType() {
+		return PuzzleType.PYRAMINX;
 	}
 
 }

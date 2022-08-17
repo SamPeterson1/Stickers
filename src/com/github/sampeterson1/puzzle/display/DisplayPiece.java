@@ -40,7 +40,7 @@ public abstract class DisplayPiece {
 	
 	//Indices into the current color palette that determine the colors of the piece
 	private int[] colorIDs;
-	 
+	
 	//Return the mesh to be used for this piece 
 	protected abstract ColoredMesh getMesh();
 	

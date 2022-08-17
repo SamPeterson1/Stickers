@@ -13,6 +13,7 @@ void main(void) {
 	if(alpha > 0) {
 		outColor = vec4(arrowColor * alpha, 1.0);
 	} else {
+		if(color.a == 0) discard;
 		outColor = vec4(color);
 	}
 }

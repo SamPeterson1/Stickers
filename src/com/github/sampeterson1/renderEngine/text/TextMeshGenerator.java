@@ -29,14 +29,9 @@ public class TextMeshGenerator {
 		return wrapped.toString();
 	}
 	
-	public static TextMesh generateMesh(String text, Font font) {
-		text = wrapText(text, font, 1.5f);
+	public static void createMeshData(Font font, String text, float[] vertices, float[] texCoords, int[] indices) {
 		int cursorX = 0;
 		int cursorY = 0;
-		
-		float[] vertices = new float[text.length() * 12];
-		float[] texCoords = new float[text.length() * 8];
-		int[] indices = new int[text.length() * 6]; 
 		
 		int vertexPtr = 0;
 		int texCoordPtr = 0;
@@ -101,9 +96,18 @@ public class TextMeshGenerator {
 				cursorX += glyph.getAdvance() + font.getSpacing();
 			}
 		}
+	}
+	
+	public static MeshData generateMesh(String text, Font font) {
+		text = wrapText(text, font, 1.5f);
 		
-		MeshData data = Loader.load2DTexturedMesh(vertices, texCoords, indices);
-		return new TextMesh(data, font.getTexture());
+		float[] vertices = new float[text.length() * 12];
+		float[] texCoords = new float[text.length() * 8];
+		int[] indices = new int[text.length() * 6]; 
+		
+		createMeshData(font, text, vertices, texCoords, indices);
+		
+		return Loader.loadTextMesh(vertices, texCoords, indices);
 	}
 	
 }

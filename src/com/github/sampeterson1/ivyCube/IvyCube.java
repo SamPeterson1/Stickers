@@ -25,6 +25,8 @@ import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
+import com.github.sampeterson1.puzzle.lib.PuzzleType;
 
 //An implementation of Puzzle that represents an Ivy Cube
 public class IvyCube extends Puzzle {
@@ -46,8 +48,8 @@ public class IvyCube extends Puzzle {
 	private static final int NUM_CORNERS = 4;
 	private static final int NUM_CENTERS = 6;
 	
-	public IvyCube(int size) {
-		super(size);
+	public IvyCube() {
+		super(1);
 		
 		super.createPieces(new IvyCubeCornerBehavior(), NUM_CORNERS);
 		super.createPieces(new IvyCubeCenterBehavior(), NUM_CENTERS);
@@ -91,6 +93,11 @@ public class IvyCube extends Puzzle {
 	@Override
 	public DisplayPiece createDisplayPiece(Piece piece) {
 		return new IvyCubeDisplayPiece(piece);
+	}
+
+	@Override
+	public PuzzleType getType() {
+		return PuzzleType.IVY_CUBE;
 	}
 
 }

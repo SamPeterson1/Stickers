@@ -60,6 +60,10 @@ public class Scene {
 		cameraSettings = settings;
 	}
 	
+	public static void clearPieceBatches() {
+		pieceBatches = new ArrayList<PieceBatch>();
+	}
+	
 	public static void addPieceBatch(PieceBatch pieceBatch) {
 		pieceBatches.add(pieceBatch);
 	}

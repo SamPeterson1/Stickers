@@ -97,7 +97,7 @@ public class CubeDisplayPiece extends DisplayPiece {
 	
 	public CubeDisplayPiece(Piece position) {
 		super(position);
-		if(cornerPieceMesh == null)
+		if(cornerPieceMesh == null || cornerPieceMesh.getData().isDeleted())
 			loadMeshes();
 	}
 	

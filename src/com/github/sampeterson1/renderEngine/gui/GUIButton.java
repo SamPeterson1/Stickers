@@ -55,7 +55,7 @@ public class GUIButton extends GUIComponent {
 		if(labelText == null) {
 			float xOff = FontUtil.getWidth(font, label) / 2.0f;
 			float x = super.getX() + super.getWidth() * 0.5f - xOff;
-			float y = super.getY() + super.getHeight() * 0.9f;
+			float y = super.getY() + super.getHeight() * 0.5f + FontUtil.getScaledLineHeight(font) / 2;
 			labelText = new Text(super.getName() + "_label", label, font, x, y);
 			labelText.offsetColor = shadowColor;
 			labelText.offset = new Vector2f(TEXT_SHADOW_OFFSET);

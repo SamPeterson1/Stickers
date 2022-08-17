@@ -97,7 +97,7 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	
 	public PyraminxDisplayPiece(Piece position) {
 		super(position);
-		if(upCornerPieceMesh == null)
+		if(upCornerPieceMesh == null || upCornerPieceMesh.getData().isDeleted())
 			loadMeshes();
 	}
 

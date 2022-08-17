@@ -39,7 +39,7 @@ public class IvyCubeDisplayPiece extends DisplayPiece {
 	
 	public IvyCubeDisplayPiece(Piece position) {
 		super(position);
-		if(petalPieceMesh == null)
+		if(petalPieceMesh == null || petalPieceMesh.getData().isDeleted())
 			loadMeshes();
 	}
 	

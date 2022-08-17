@@ -18,6 +18,9 @@
 
 package com.github.sampeterson1.renderEngine.window;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.lwjgl.glfw.GLFW;
 
 public class Event {
@@ -45,6 +48,8 @@ public class Event {
 	
 	private static final int LSD_BITMASK = 0x1;
 	
+	private static final Map<Character, Character> shiftMap = initShiftMap();
+	
 	private static int currentMouseX;
 	private static int currentMouseY;
 	private static boolean currentMouseDown;
@@ -63,13 +68,27 @@ public class Event {
 	
 	private Event() {}
 	
+	private static Map<Character, Character> initShiftMap() {
+		Map<Character, Character> map = new HashMap<Character, Character>();
+		
+		map.put('`', '~'); map.put('1', '!'); map.put('2', '@');
+		map.put('3', '#'); map.put('4', '$'); map.put('5', '%');
+		map.put('6', '^'); map.put('7', '&'); map.put('8', '*'); 
+		map.put('9', '('); map.put('0', ')'); map.put('-', '_');
+		map.put('=', '+'); map.put('[', '{'); map.put(']', '}');
+		map.put('\\', '|'); map.put(';', ':'); map.put('\'', '\"');
+		map.put(',', '<'); map.put('.', '>'); map.put('/', '?');
+		
+		return map;
+	}
+	
 	public static Event fromKeyCallback(int key, int scancode, int action, int mods) {
 		Event event = null;
 		if(key != GLFW.GLFW_KEY_UNKNOWN) {
 			event = new Event();
 			
 			event.keyCode = key;
-			event.keyChar = (char) key;
+			event.keyChar = getKeyChar(key, mods);
 			event.mods = mods;
 			
 			if(action == GLFW.GLFW_PRESS) {
@@ -82,6 +101,29 @@ public class Event {
 		}
 		
 		return event;
+	}
+	
+	private static char getKeyChar(int key, int mods) {
+		boolean shift = hasMod(Event.SHIFT, mods);
+		char keyChar = (char) key;
+		
+		if(key >= 'A' && key <= 'Z') {
+			if(shift) {
+				return keyChar;
+			} else {
+				return Character.toLowerCase(keyChar);
+			}
+		} else if(key >= 32 && key <= 126) {
+			if(shift) {
+				if(shiftMap.containsKey(keyChar)) {
+					return shiftMap.get(keyChar);
+				}
+			} else {
+				return keyChar;
+			}
+		}
+		
+		return (char) 0;
 	}
 	
 	public static Event fromMouseButtonCallback(int button, int action, int mods) {
@@ -160,9 +202,13 @@ public class Event {
 		return this.type;
 	}
 
-	public boolean hasMod(int mod) {
-		int modBit = (this.mods >> mod) & LSD_BITMASK;
+	private static boolean hasMod(int mod, int mods) {
+		int modBit = (mods >> mod) & LSD_BITMASK;
 		return (modBit == 1);
+	}
+	
+	public boolean hasMod(int mod) {
+		return hasMod(mod, mods);
 	}
 
 }

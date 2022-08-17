@@ -18,8 +18,14 @@
 
 package com.github.sampeterson1.renderEngine.models;
 
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
+
+import com.github.sampeterson1.renderEngine.loaders.Loader;
+
 public class MeshData {
 	
+	private boolean deleted;
 	private int[] vboIDs;
 	private int vaoID;
 	private int numVertices;
@@ -30,6 +36,23 @@ public class MeshData {
 		this.vboIDs = vboIDs;
 		this.numIndices = numIndices;
 		this.numVertices = numVertices;
+		Loader.addMesh(this);
+	}
+
+	public boolean isDeleted() {
+		return this.deleted;
+	}
+	
+	public void delete() {
+		this.deleted = true;
+		GL30.glDeleteVertexArrays(vaoID);
+		for(int vboID : vboIDs) {
+			GL15.glDeleteBuffers(vboID);
+		}
+	}
+	
+	public int[] getVboIDs() {
+		return this.vboIDs;
 	}
 	
 	public int getNumVertices() {

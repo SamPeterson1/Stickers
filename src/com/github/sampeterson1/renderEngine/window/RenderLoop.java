@@ -19,16 +19,15 @@
 package com.github.sampeterson1.renderEngine.window;
 
 import com.github.sampeterson1.cube.util.CubeUtil;
-import com.github.sampeterson1.ivyCube.IvyCube;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 import com.github.sampeterson1.puzzle.display.PuzzleDisplay;
+import com.github.sampeterson1.puzzle.display.PuzzleMaster;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
-import com.github.sampeterson1.renderEngine.gui.GUIButton;
 import com.github.sampeterson1.renderEngine.gui.GUICheckbox;
 import com.github.sampeterson1.renderEngine.gui.GUIDropdownBox;
 import com.github.sampeterson1.renderEngine.gui.GUIEvent;
@@ -36,6 +35,7 @@ import com.github.sampeterson1.renderEngine.gui.GUIEventListener;
 import com.github.sampeterson1.renderEngine.gui.GUIEventType;
 import com.github.sampeterson1.renderEngine.gui.GUIMaster;
 import com.github.sampeterson1.renderEngine.gui.GUISlider;
+import com.github.sampeterson1.renderEngine.gui.PuzzleControlGUI;
 import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.rendering.CameraSettings;
 import com.github.sampeterson1.renderEngine.rendering.MasterRenderer;
@@ -76,6 +76,7 @@ public class RenderLoop implements Runnable, GUIEventListener {
 
 		Font arial = new Font("arial.fnt", "arial.png", 0.3f);
 		
+		/*
 		GUIButton redButton = new GUIButton("redButton", 0.13f, 0.5f, 0.2f, 0.05f);
 		redButton.createLabel("Red!", arial);
 		redButton.setBaseColor(new Vector3f(1, 0, 0));
@@ -120,27 +121,28 @@ public class RenderLoop implements Runnable, GUIEventListener {
 		blueBox.setChecked(true);
 		blueBox.setCheckedColor(new Vector3f(0, 0, 1));
 		blueBox.setCheckedHighlightColor(new Vector3f(0.3f, 0.3f, 1.0f));
+		*/
 		
-		GUIDropdownBox dropdownBox = new GUIDropdownBox("dropdown", 0.4f, 0.9f, 0.2f, 0.05f);
-		
+		new PuzzleControlGUI();
 		CubeUtil.init();
 		Pyraminx.init();
-		this.display = new PuzzleDisplay(new IvyCube(size), 450f);
-		display.setAnimate(true);
-		display.setAnimationSpeed(20);
-		this.puzzle = new IvyCube(size);
+		//this.display = new PuzzleDisplay(new Cube(size));
+		//display.setAnimate(true);
+		//display.setAnimationSpeed(20);
+		//this.puzzle = new Cube(size);
+		
 		
 		this.camera = new OrbitalCamera(50f);
 		renderer = new MasterRenderer(camera);
 		
 		GUIMaster.addEventListener(this);
-        while(Window.isOpen()) { 	
+        while(Window.isOpen()) {
 			Window.clear();		
 			handleEvents();
 			render();		
-			Window.update();		
+			Window.update();	
         }
-        
+
         renderer.dispose();
 		Loader.free();
 	}
@@ -151,19 +153,7 @@ public class RenderLoop implements Runnable, GUIEventListener {
 	}
 	
 	private void render() {
-		for(int i = 0; i < movesPerFrame; i ++) {
-			if(!display.isAnimating() && alg != null) {
-				if(movePointer < alg.length()) {
-					display.makeMove(alg.getMove(movePointer));
-					movePointer ++;
-				} else {
-					movePointer = 0;
-					alg = null;
-				}
-			}
-		}
-		
-		display.update();
+		PuzzleMaster.update();
 		renderer.render();	
 	}
 	
@@ -177,8 +167,6 @@ public class RenderLoop implements Runnable, GUIEventListener {
 					mouseDragged(e);
 				} else if(e.getType() == Event.EVENT_MOUSE_BUTTON_PRESS) {
 					mousePressed(e);
-				} else if(e.getType() == Event.EVENT_KEY_PRESS) {
-					keyPressed(e);
 				} else if(e.getType() == Event.EVENT_SCROLL) {
 					mouseScrolled(e);
 				}
@@ -189,7 +177,7 @@ public class RenderLoop implements Runnable, GUIEventListener {
 	
 	private void mouseDragged(Event e) {
 		rotY -= Mathf.min(0.01f, (e.getMouseX() - lastX) / 100.0f);
-		rotX -= Mathf.min(0.01f, (e.getMouseY() - lastY) / 100.0f);
+		rotX += Mathf.min(0.01f, (e.getMouseY() - lastY) / 100.0f);
 		lastX = e.getMouseX();
 		lastY = e.getMouseY();
 		
@@ -282,8 +270,7 @@ public class RenderLoop implements Runnable, GUIEventListener {
 				maxB = val;
 			}
 		} else if(eventType == GUIEventType.DROPDOWN_SELECTED) {
-			GUIDropdownBox dropdownBox = (GUIDropdownBox) e.getComponent();
-			System.out.println(dropdownBox.getSelectionID());
+			
 		}
 
 		Window.setBackgroundColor(Mathf.min(r, maxR), Mathf.min(g, maxG), Mathf.min(b, maxB));

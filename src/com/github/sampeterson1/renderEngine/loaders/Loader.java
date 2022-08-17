@@ -30,18 +30,21 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
-import org.lwjgl.opengl.GL40;
 
-import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.Texture;
 
 public class Loader {
 	
+	private static List<MeshData> meshes = new ArrayList<MeshData>();
 	private static List<Integer> vaos = new ArrayList<Integer>();
 	private static List<Integer> vbos = new ArrayList<Integer>();
 	private static List<Integer> textures = new ArrayList<Integer>();
 	
+	public static void addMesh(MeshData mesh) {
+		meshes.add(mesh);
+	}
+
 	public static MeshData loadColoredMesh(float[] positions, float[] normals, int[] colorIndices, 
 			int[] indices) {
 		int vaoID = createVAO();
@@ -83,7 +86,7 @@ public class Loader {
 		return new MeshData(vaoID, vboIDs, indices.length, positions.length / 2);
 	}
 	
-	public static MeshData load2DTexturedMesh(float[] positions, float[] texCoords, int[] indices) {
+	public static MeshData loadTextMesh(float[] positions, float[] texCoords, int[] indices) {
 		int vaoID = createVAO();
 		storeIndicesBuffer(indices);
 		
@@ -112,10 +115,8 @@ public class Loader {
 	}
 	
 	public static void free() {
-		for(int vao : vaos)
-			GL30.glDeleteVertexArrays(vao);
-		for(int vbo : vbos)
-			GL15.glDeleteBuffers(vbo);
+		for(MeshData mesh : meshes)
+			mesh.delete();
 		for(int texture : textures)
 			GL11.glDeleteTextures(texture);
 	}
@@ -141,14 +142,6 @@ public class Loader {
 		GL33.glVertexAttribDivisor(attributeID, 1);	
 		
 		GL30.glBindVertexArray(0);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-	}
-	
-	public static void updateAttribVBO(MeshData meshData, int attributeID, int[] data) {
-		int vboID = meshData.getVboID(attributeID);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-		IntBuffer buffer = storeDataInIntBuffer(data);
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, vboID, buffer);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
