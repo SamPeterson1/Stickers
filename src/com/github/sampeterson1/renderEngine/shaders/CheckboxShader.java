@@ -25,7 +25,7 @@ public class CheckboxShader extends GUIColorShader {
 	public void loadGUIComponent(GUIComponent component) {
 		GUICheckbox checkbox = (GUICheckbox) component;
 		super.loadMatrix("transformationMatrix", component.getTransform());
-		super.loadFloat("size", checkbox.getWidth());
+		super.loadFloat("size", checkbox.getAbsoluteWidth());
 		super.loadVector3f("fillColor", checkbox.getFillColor());
 		super.loadVector3f("borderColor", checkbox.getBorderColor());
 		super.loadBoolean("hasFill", checkbox.hasFill());

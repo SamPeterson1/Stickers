@@ -143,4 +143,9 @@ public class Pyraminx extends Puzzle {
 		return PuzzleType.PYRAMINX;
 	}
 
+	@Override
+	public Algorithm parseAlgorithm(String alg) {
+		return new Algorithm();
+	}
+
 }

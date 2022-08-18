@@ -1,6 +1,6 @@
 package com.github.sampeterson1.renderEngine.shaders;
 
-import com.github.sampeterson1.renderEngine.text.Text;
+import com.github.sampeterson1.renderEngine.text.GUIText;
 
 public class TextShader extends Shader {
 
@@ -28,7 +28,7 @@ public class TextShader extends Shader {
 		return UNIFORM_NAMES;
 	}
 
-	public void loadText(Text text) {
+	public void loadText(GUIText text) {
 		super.loadMatrix("transformationMatrix", text.getTransform());
 		super.loadFloat("thickness", text.thickness);
 		super.loadFloat("blending", text.blending);

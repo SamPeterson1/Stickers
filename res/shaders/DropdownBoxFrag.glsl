@@ -10,7 +10,7 @@ uniform vec3 arrowColor;
 
 void main(void) {
 	float alpha = texture(arrowTex, passTexCoord).a;
-	if(alpha > 0) {
+	if(alpha > 0.1) {
 		outColor = vec4(arrowColor * alpha, 1.0);
 	} else {
 		if(color.a == 0) discard;

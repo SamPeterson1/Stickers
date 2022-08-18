@@ -138,4 +138,9 @@ public class Cube extends Puzzle {
 		return PuzzleType.CUBE;
 	}
 
+	@Override
+	public Algorithm parseAlgorithm(String alg) {
+		return CubeAlgorithmUtil.parseAlgorithm(alg);
+	}
+
 }

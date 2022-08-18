@@ -8,7 +8,7 @@ import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.Texture;
 import com.github.sampeterson1.renderEngine.rendering.MeshType;
 
-public class Text extends GUIComponent {
+public class GUIText extends GUIComponent {
 	
 	public Vector3f color = new Vector3f(1);
 	public Vector3f offsetColor = new Vector3f(0);
@@ -24,16 +24,24 @@ public class Text extends GUIComponent {
 	private String text;
 	private Font font;
 	
-	public Text(String name, String text, Font font, float x, float y) {
-		this(name, text, font, x, y, 2f);
-	}
-	
-	public Text(String name, String text, Font font, float x, float y, float lineWidth) {
-		super(name, x, y);
+	public GUIText(GUIComponent parent, String name, String text, Font font, float x, float y, float lineWidth) {
+		super(parent, name, x, y);
 		this.font = font;
 		this.text = text;
 		MeshData meshData = TextMeshGenerator.generateMesh(text, font);
 		super.setMesh(new Mesh(meshData, MeshType.TEXT));
+	}
+	
+	public GUIText(GUIComponent parent, String name, String text, Font font, float x, float y) {
+		this(parent, name, text, font, x, y, 2f);
+	}
+	
+	public GUIText(String name, String text, Font font, float x, float y) {
+		this(name, text, font, x, y, 2f);
+	}
+	
+	public GUIText(String name, String text, Font font, float x, float y, float lineWidth) {
+		this(null, name, text, font, x, y, lineWidth);
 	}
 	
 	public String getText() {

@@ -11,7 +11,7 @@ import com.github.sampeterson1.renderEngine.gui.GUIComponent;
 import com.github.sampeterson1.renderEngine.gui.GUIMaster;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.shaders.TextShader;
-import com.github.sampeterson1.renderEngine.text.Text;
+import com.github.sampeterson1.renderEngine.text.GUIText;
 
 public class TextRenderer {
 	
@@ -32,7 +32,7 @@ public class TextRenderer {
 		if(allText != null) {
 			for(GUIComponent textComponent : allText) {
 				if(textComponent.isVisible()) {
-					Text text = (Text) textComponent;
+					GUIText text = (GUIText) textComponent;
 					shader.loadText(text);
 					MeshData data = text.getMesh().getData();
 					GL30.glBindVertexArray(data.getVaoID());

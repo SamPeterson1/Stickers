@@ -18,6 +18,7 @@ public class PuzzleMaster {
 	private static int puzzleSize;
 	private static PuzzleType selectedPuzzleType;
 	
+	private static int scrambleLength = 0;
 	private static int movePointer = 0;
 	private static Algorithm animatingAlg;
 	
@@ -47,8 +48,21 @@ public class PuzzleMaster {
 		display.update();
 	}
 	
+	public static void setAnimationSpeed(float speed) {
+		display.setAnimationSpeed(speed);
+	}
+	
+	public static void setScrambleLength(int length) {
+		scrambleLength = length;
+	}
+	
+	public static void executeAlgorithm(String alg) {
+		animatingAlg = puzzleCopy.parseAlgorithm(alg);
+		puzzleCopy.executeAlgorithm(animatingAlg);
+	}
+	
 	public static void scramble() {
-		animatingAlg = puzzleCopy.scramble(100);
+		animatingAlg = puzzleCopy.scramble(scrambleLength);
 	}
 	
 	public static void solve() {
@@ -81,6 +95,7 @@ public class PuzzleMaster {
 		if(size >= sizeController.getMinSize() && size <= sizeController.getMaxSize()) {
 			puzzleSize = size;
 		}
+		refresh();
 	}
 	
 }

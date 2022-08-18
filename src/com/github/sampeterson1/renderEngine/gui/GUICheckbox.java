@@ -26,17 +26,33 @@ public class GUICheckbox extends GUIComponent {
 	private boolean checked;
 	
 	public GUICheckbox(String name, float x, float y, float size) {
-		super(name, x, y, size, size);
-		float[] vertices = createVertices(size);
+		this(null, name, x, y, size);
+	}
+	
+	public GUICheckbox(GUIComponent parent, String name, float x, float y, float size) {
+		super(parent, name, x, y, size, size);
+		createMesh();
+	}
+	
+	private void createMesh() {
+		float size = super.getAbsoluteWidth();
+		float[] vertices = new float[] {
+				-MESH_PADDING, -MESH_PADDING,
+				size + MESH_PADDING, -MESH_PADDING,
+				size + MESH_PADDING, size + MESH_PADDING,
+				-MESH_PADDING, size + MESH_PADDING
+		};
+		
 		MeshData meshData = Loader.load2DMesh(vertices, quadIndices);
 		super.setMesh(new Mesh(meshData, MeshType.CHECKBOX));
 	}
 	
 	private boolean inBounds(float mouseX, float mouseY) {
-		float minX = super.getX();
-		float minY = super.getY();
-		float maxX = minX + super.getWidth();
-		float maxY = minY + super.getHeight();
+		float minX = super.getAbsoluteX();
+		float minY = super.getAbsoluteY();
+		float maxX = minX + super.getAbsoluteWidth();
+		float maxY = minY + super.getAbsoluteWidth();
+		
 		return mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY;
 	}
 	
@@ -45,6 +61,7 @@ public class GUICheckbox extends GUIComponent {
 		float mouseX = (float) e.getMouseX() / Window.getWidth();
 		float mouseY = (float) e.getMouseY() / Window.getHeight();
 		int eventType = e.getType();
+		
 		if(eventType == Event.EVENT_MOUSE_MOVE) {
 			highlighted = inBounds(mouseX, mouseY);
 		} else if(eventType == Event.EVENT_MOUSE_BUTTON_PRESS && e.getMouseButton() == Event.MOUSE_LEFT_BUTTON) {
@@ -53,15 +70,6 @@ public class GUICheckbox extends GUIComponent {
 				GUIMaster.createEvent(new GUIEvent(GUIEventType.CHECKBOX_TOGGLE, this));
 			}
 		}
-	}
-	
-	private float[] createVertices(float size) {
-		return new float[] {
-				-MESH_PADDING, -MESH_PADDING,
-				size + MESH_PADDING, -MESH_PADDING,
-				size + MESH_PADDING, size + MESH_PADDING,
-				-MESH_PADDING, size + MESH_PADDING
-		};
 	}
 	
 	public boolean hasFill() {

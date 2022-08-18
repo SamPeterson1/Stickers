@@ -17,7 +17,7 @@ import com.github.sampeterson1.renderEngine.window.Window;
 
 public class PuzzleRenderer {
 
-	private static final float PUZZLE_VIEWPORT_SIZE = 0.5f;
+	private static final float PUZZLE_VIEWPORT_SIZE = 0.75f;
 
 	private static final int NUM_ATTRIBS = 8;
 	

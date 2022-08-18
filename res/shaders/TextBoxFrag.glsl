@@ -11,7 +11,7 @@ uniform vec2 dimensions;
 
 uniform sampler2D cursor;
 
-const float borderSize = 0.006;
+const float borderSize = 0.004;
 const float borderOverlap = 0.001;
 const float sharpness = 500;
 const float r_outerBorder = 0.01;

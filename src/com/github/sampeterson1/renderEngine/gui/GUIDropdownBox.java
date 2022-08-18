@@ -12,7 +12,7 @@ import com.github.sampeterson1.renderEngine.models.Texture;
 import com.github.sampeterson1.renderEngine.rendering.MeshType;
 import com.github.sampeterson1.renderEngine.text.Font;
 import com.github.sampeterson1.renderEngine.text.FontUtil;
-import com.github.sampeterson1.renderEngine.text.Text;
+import com.github.sampeterson1.renderEngine.text.GUIText;
 import com.github.sampeterson1.renderEngine.window.Event;
 import com.github.sampeterson1.renderEngine.window.Window;
 
@@ -30,34 +30,40 @@ public class GUIDropdownBox extends GUIComponent {
 	private boolean arrowHighlighted;
 	private int hoverSelectionID = -1;
 	private int selectionID = -1;
-	private Text[] options;
-	private Text selected;
+	private GUIText[] options;
+	private GUIText selected;
 	
 	public GUIDropdownBox(String name, float x, float y, float width, float height) {
-		super(name, x, y, width, height);
+		this(null, name, x, y, width, height);
+	}
+	
+	public GUIDropdownBox(GUIComponent parent, String name, float x, float y, float width, float height) {
+		super(parent, name, x, y, width, height);
+		loadTexture();
+	}
+	
+	private void loadTexture() {
 		try {
 			dropdownArrow = TextureLoader.loadTexture("dropdownArrow.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	private boolean mouseOverArrow(float mouseX, float mouseY) {
-		float minX = super.getX() + super.getWidth() - super.getHeight();
-		float minY = super.getY() - super.getHeight();
-		float maxX = minX + super.getHeight();
-		float maxY = super.getY();
+		float minX = super.getAbsoluteX() + super.getAbsoluteWidth() - super.getAbsoluteHeight();
+		float minY = super.getAbsoluteY() - super.getAbsoluteHeight();
+		float maxX = minX + super.getAbsoluteHeight();
+		float maxY = super.getAbsoluteY();
 		
 		return (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY);
 	}
 	
 	private int getSelectionID(float mouseX, float mouseY) {
-		float cellWidth = super.getWidth();
-		float cellHeight = super.getHeight();
-		float y = super.getY() - cellHeight;
-		float x = super.getX();
+		float cellWidth = super.getAbsoluteWidth();
+		float cellHeight = super.getAbsoluteHeight();
+		float y = super.getAbsoluteY() - cellHeight;
+		float x = super.getAbsoluteX();
 		
 		if(mouseX >= x && mouseX <= x + cellWidth && mouseY <= y && mouseY >= y - options.length * cellHeight) {
 			return (int) ((y - mouseY) / cellHeight);
@@ -67,14 +73,13 @@ public class GUIDropdownBox extends GUIComponent {
 	}
 	
 	public void createOptions(String[] optionNames, Font font) {
-		
-		options = new Text[optionNames.length];
-		float x = super.getX() + LEFT_JUSTIFY_PADDING;
+		options = new GUIText[optionNames.length];
+		float x = super.getAbsoluteX() + LEFT_JUSTIFY_PADDING;
 
 		for(int i = 0; i < optionNames.length; i ++) {
 			String name = optionNames[i];
-			float y = super.getY() - (i + 1.5f) * super.getHeight() + FontUtil.getScaledLineHeight(font)/2;
-			Text optionText = new Text(super.getName() + "_" + name, name, font, x, y);
+			float y = -(i + 1.5f) + FontUtil.getScaledLineHeight(font) / 2 / super.getAbsoluteHeight();
+			GUIText optionText = new GUIText(this, super.getName() + "_" + name, name, font, x, y);
 			optionText.setVisible(false);
 			optionText.color = new Vector3f(0);
 			optionText.offsetColor = new Vector3f(0.7f, 0.7f, 0.7f);
@@ -82,8 +87,8 @@ public class GUIDropdownBox extends GUIComponent {
 			options[i] = optionText;
 		}
 		
-		float y = super.getY() - super.getHeight()/2 + FontUtil.getScaledLineHeight(font)/2;
-		selected = new Text(super.getName() + "_selection", optionNames[0], font, x, y);
+		float y = super.getAbsoluteY() - super.getAbsoluteHeight()/2 + FontUtil.getScaledLineHeight(font)/2;
+		selected = new GUIText(super.getName() + "_selection", optionNames[0], font, x, y);
 		selected.color = new Vector3f(0);
 		selected.offsetColor = new Vector3f(0.7f, 0.7f, 0.7f);
 		selected.offset = new Vector2f(0.005f, 0.005f);
@@ -116,14 +121,14 @@ public class GUIDropdownBox extends GUIComponent {
 	
 	private void contract() {
 		expanded = false;
-		for(Text optionText : options) {
+		for(GUIText optionText : options) {
 			optionText.setVisible(false);
 		}
 	}
 	
 	private void expand() {
 		expanded = true;
-		for(Text optionText : options) {
+		for(GUIText optionText : options) {
 			optionText.setVisible(true);
 		}
 	}
@@ -133,8 +138,8 @@ public class GUIDropdownBox extends GUIComponent {
 		float[] texCoords = new float[vertices.length];
 		int[] optionIDs = new int[vertices.length / 2];
 		int[] indices = new int[(numOptions + 2) * 6];
-		float width = super.getWidth();
-		float height = super.getHeight();
+		float width = super.getAbsoluteWidth();
+		float height = super.getAbsoluteHeight();
 		
 		for(int i = 0; i < numOptions + 1; i ++) {
 			float maxX = (i == 0) ? (width - height) : width;

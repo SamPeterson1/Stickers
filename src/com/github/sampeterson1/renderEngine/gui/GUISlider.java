@@ -17,10 +17,10 @@ public class GUISlider extends GUIComponent {
 			2, 3, 0
 	};
 	
-	public static final Vector2f SLIDER_HANDLE_DIMENSIONS = new Vector2f(0.01f, 0.02f);
+	public static final Vector2f SLIDER_HANDLE_DIMENSIONS = new Vector2f(0.007f, 0.02f);
 	public static final float SLIDER_TRACK_PADDING = 0; 
 	private static final float FULL_SLIDER_HEIGHT = 2 * SLIDER_HANDLE_DIMENSIONS.y;
-	private static final float SLIDER_TRACK_HEIGHT = 0.01f;
+	private static final float SLIDER_TRACK_HEIGHT = 0.005f;
 	private static final float MESH_PADDING = 0.005f;
 	
 	private Vector3f sliderColor = new Vector3f(1);
@@ -33,7 +33,11 @@ public class GUISlider extends GUIComponent {
 	private Vector2f dimensions;
 	
 	public GUISlider(String name, float x, float y, float width) {
-		super(name, x, y, width, FULL_SLIDER_HEIGHT);
+		this(null, name, x, y, width);
+	}
+	
+	public GUISlider(GUIComponent parent, String name, float x, float y, float width) {
+		super(parent, name, x, y, width, FULL_SLIDER_HEIGHT);
 		float[] vertices = createVertices(width);
 		MeshData meshData = Loader.load2DMesh(vertices, quadIndices);
 		super.setMesh(new Mesh(meshData, MeshType.SLIDER));
@@ -42,10 +46,10 @@ public class GUISlider extends GUIComponent {
 	}
 	
 	private boolean inBounds(float mouseX, float mouseY) {
-		float handleX = value * super.getWidth();
-		float minX = super.getX() + handleX - SLIDER_HANDLE_DIMENSIONS.x;
+		float handleX = value * super.getAbsoluteWidth();
+		float minX = super.getAbsoluteX() + handleX - SLIDER_HANDLE_DIMENSIONS.x;
 		float maxX = minX + 2*SLIDER_HANDLE_DIMENSIONS.x;
-		float minY = super.getY();
+		float minY = super.getAbsoluteY();
 		float maxY = minY + 2*SLIDER_HANDLE_DIMENSIONS.y;
 		return (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY);
 	}
@@ -58,7 +62,7 @@ public class GUISlider extends GUIComponent {
 		if(eventType == Event.EVENT_MOUSE_BUTTON_PRESS && e.getMouseButton() == Event.MOUSE_LEFT_BUTTON) {
 			dragging = inBounds(mouseX, mouseY);
 		} else if(eventType == Event.EVENT_MOUSE_DRAG && dragging) {
-			float rawValue = (mouseX - super.getX()) / super.getWidth();
+			float rawValue = (mouseX - super.getAbsoluteX()) / super.getAbsoluteWidth();
 			value = Mathf.min(1, Mathf.max(0, rawValue));
 			GUIMaster.createEvent(new GUIEvent(GUIEventType.SLIDER_MOVED, this));
 		} else if(eventType == Event.EVENT_MOUSE_BUTTON_RELEASE && dragging) {

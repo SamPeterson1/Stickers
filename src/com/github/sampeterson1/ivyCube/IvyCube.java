@@ -100,4 +100,9 @@ public class IvyCube extends Puzzle {
 		return PuzzleType.IVY_CUBE;
 	}
 
+	@Override
+	public Algorithm parseAlgorithm(String alg) {
+		return new Algorithm();
+	}
+
 }

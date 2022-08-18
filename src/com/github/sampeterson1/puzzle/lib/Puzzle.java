@@ -48,6 +48,8 @@ public abstract class Puzzle {
 
 	public abstract Axis transposeAxis(Axis face);
 	
+	public abstract Algorithm parseAlgorithm(String alg);
+	
 	public abstract Algorithm simplify(Algorithm alg);
 	
 	public abstract Algorithm scramble(int length);

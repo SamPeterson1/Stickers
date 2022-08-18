@@ -15,7 +15,7 @@ import com.github.sampeterson1.renderEngine.models.Texture;
 import com.github.sampeterson1.renderEngine.rendering.MeshType;
 import com.github.sampeterson1.renderEngine.text.Font;
 import com.github.sampeterson1.renderEngine.text.FontUtil;
-import com.github.sampeterson1.renderEngine.text.Text;
+import com.github.sampeterson1.renderEngine.text.GUIText;
 import com.github.sampeterson1.renderEngine.window.Event;
 import com.github.sampeterson1.renderEngine.window.Window;
 
@@ -27,7 +27,7 @@ public class GUITextBox extends GUIComponent {
 	};
 
 	private static final float MESH_PADDING = 0.005f;
-	private static final float TEXT_PADDING = 0.01f;
+	private static final float TEXT_PADDING = 0.007f;
 	private static final float TEXTBOX_HEIGHT = 0.05f;
 	private static final float CURSOR_OFFSET = 0.003f;
 	private static final int CURSOR_BLINK_INTERVAL = 500;
@@ -45,7 +45,7 @@ public class GUITextBox extends GUIComponent {
 	
 	private Vector2f dimensions;
 	private Vector3f borderColor = new Vector3f(0, 1, 0);
-	private Text text;
+	private GUIText text;
 
 	private int cursorOffset;
 	private float cursorPositionBeforeDelete = Float.MIN_VALUE;
@@ -54,14 +54,21 @@ public class GUITextBox extends GUIComponent {
 	private long startTime;
 	
 	public GUITextBox(String name, Font font, float x, float y, float width) {
-		super(name, x, y, width, TEXTBOX_HEIGHT);
-		this.dimensions = new Vector2f(width / 2, TEXTBOX_HEIGHT / 2);
-		this.text = new Text(name + "_text", "", font, x + TEXT_PADDING, y + TEXTBOX_HEIGHT / 2 + FontUtil.getScaledLineHeight(font) / 2);
+		this(null, name, font, x, y, width);
+	}
+	
+	public GUITextBox(GUIComponent parent, String name, Font font, float x, float y, float width) {
+		super(parent, name, x, y, width, 0);
+		super.setAbsoluteHeight(TEXTBOX_HEIGHT);
+		this.dimensions = new Vector2f(super.getAbsoluteWidth() / 2, TEXTBOX_HEIGHT / 2);
+		float textY = (TEXTBOX_HEIGHT + FontUtil.getScaledLineHeight(font)) / 2 / super.getAbsoluteHeight();
+		float textX = TEXT_PADDING / super.getAbsoluteWidth();
+		this.text = new GUIText(this, name + "_text", "", font, textX, textY);
 		this.text.color = textColor;
 		this.text.blending = 0.3f;
 		this.text.thickness = 0.3f;
-		this.text.minPosition = new Vector2f(x + TEXT_PADDING, y);
-		this.text.maxPosition = new Vector2f(x + width - TEXT_PADDING, y + TEXTBOX_HEIGHT);
+		this.text.minPosition = new Vector2f(super.getAbsoluteX() + TEXT_PADDING, 0);
+		this.text.maxPosition = new Vector2f(super.getAbsoluteX() + super.getAbsoluteWidth() - TEXT_PADDING, 1);
 		this.lastTypeTime = System.currentTimeMillis();
 		this.startTime = System.currentTimeMillis();
 
@@ -78,10 +85,11 @@ public class GUITextBox extends GUIComponent {
 	}
 	
 	private boolean inBounds(float mouseX, float mouseY) {
-		float minX = super.getX();
-		float minY = super.getY();
-		float maxX = minX + super.getWidth();
-		float maxY = minY + super.getHeight();
+		float minX = super.getAbsoluteX();
+		float minY = super.getAbsoluteY();
+		float maxX = minX + super.getAbsoluteWidth();
+		float maxY = minY + super.getAbsoluteHeight();
+		
 		return mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY;
 	}
 
@@ -116,6 +124,7 @@ public class GUITextBox extends GUIComponent {
 				}
 			} else if(keyCode == GLFW.GLFW_KEY_ENTER) {
 				selected = false;
+				GUIMaster.createEvent(new GUIEvent(GUIEventType.TEXT_BOX_UPDATE, this));
 			} else if(keyCode == GLFW.GLFW_KEY_LEFT) {
 				lastTypeTime = System.currentTimeMillis();
 				if(cursorOffset > 0) {
@@ -152,20 +161,20 @@ public class GUITextBox extends GUIComponent {
 	
 	private void clampCursor() {
 		float rawPosition = getRawCursorPosition();
-		float maxPosition = super.getWidth() - TEXT_PADDING;
-		float minPosition = 2 * TEXT_PADDING;
+		float maxPosition = super.getAbsoluteWidth() - TEXT_PADDING;
+		float minPosition = TEXT_PADDING;
 		
 		if(cursorPositionBeforeDelete > Float.MIN_VALUE) {
 			float width = FontUtil.getWidth(text.getFont(), text.getText());
-			if(text.getX() - super.getX() < minPosition && text.getX() + width - super.getX() < maxPosition) {
-				text.setX(text.getX() - rawPosition + cursorPositionBeforeDelete);
+			if(text.getAbsoluteX() - super.getAbsoluteX() < minPosition && text.getAbsoluteX() + width - super.getAbsoluteX() < maxPosition) {
+				text.setAbsoluteX(text.getAbsoluteX() - rawPosition + cursorPositionBeforeDelete);
 			}
 			cursorPositionBeforeDelete = Float.MIN_VALUE;
 		} else {
 			if(rawPosition > maxPosition) {
-				text.setX(text.getX() - rawPosition + maxPosition);
+				text.setAbsoluteX(text.getAbsoluteX() - rawPosition + maxPosition);
 			} else if(rawPosition < minPosition) {
-				text.setX(text.getX() - rawPosition + minPosition);
+				text.setAbsoluteX(text.getAbsoluteX() - rawPosition + minPosition);
 			}
 		}
 	}
@@ -173,7 +182,7 @@ public class GUITextBox extends GUIComponent {
 	private float getRawCursorPosition() {
 		String behindCursorText = text.getText().substring(0, cursorOffset);
 		float behindCursorWidth = FontUtil.getWidth(text.getFont(), behindCursorText);
-		return (behindCursorWidth + text.getX() - super.getX() + CURSOR_OFFSET);
+		return (behindCursorWidth + text.getAbsoluteX() - super.getAbsoluteX() + CURSOR_OFFSET);
 	}
 	
 	private boolean cursorBlink() {
@@ -186,6 +195,10 @@ public class GUITextBox extends GUIComponent {
 		return intervals % 2 == 0;
 	}
 	
+	public String getString() {
+		return this.text.getText();
+	}
+	
 	public float getCursorHeight() {
 		return FontUtil.getScaledLineHeight(text.getFont());
 	}
@@ -193,7 +206,7 @@ public class GUITextBox extends GUIComponent {
 	public float getCursorPosition() {
 		if(selected && cursorBlink()) {
 			clampCursor();
-			return getRawCursorPosition() / (super.getWidth() + 2*MESH_PADDING);
+			return getRawCursorPosition() / (super.getAbsoluteWidth() + 2*MESH_PADDING);
 		}
 		
 		return -1;
