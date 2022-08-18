@@ -34,8 +34,6 @@ public class MasterCubeSolver {
 	private Cube cube;
 	
 	public MasterCubeSolver(Cube cube) {
-		
-		
 		centerSolver = new CenterSolver(cube);
 		edgeSolver = new EdgeSolver(cube);
 		crossSolver = new CrossSolver(cube);
@@ -43,8 +41,6 @@ public class MasterCubeSolver {
 		f2lSolver = new F2LSolver(cube);
 		ollSolver = new OLLSolver(cube);
 		pllSolver = new PLLSolver(cube);
-		
-		
 		
 		this.cube = cube;
 	}

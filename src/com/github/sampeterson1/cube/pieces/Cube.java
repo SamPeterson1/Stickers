@@ -83,7 +83,8 @@ public class Cube extends Puzzle {
 			return CubeUtil.getFaceColor(face);
 		}
 		
-		return getCenter(face).getPiece().getColor();
+		int centerIndex = (super.getSize() - 2) * (super.getSize() - 2) / 2;
+		return getCenter(face).getPiece(centerIndex).getColor();
 	}
 
 	@Override

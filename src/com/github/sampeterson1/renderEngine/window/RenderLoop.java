@@ -136,13 +136,14 @@ public class RenderLoop implements Runnable, GUIEventListener {
 		renderer = new MasterRenderer(camera);
 		
 		GUIMaster.addEventListener(this);
+
         while(Window.isOpen()) {
 			Window.clear();		
 			handleEvents();
 			render();		
-			Window.update();	
+			Window.update();
         }
-
+        
         renderer.dispose();
 		Loader.free();
 	}
