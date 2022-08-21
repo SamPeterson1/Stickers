@@ -38,11 +38,16 @@ public class CubeCornerUtil {
 
 	private static Map<Axis, Integer[]> positions = initPositions();
 
-	private static final Color[][] colors = { { Color.ORANGE, Color.WHITE, Color.GREEN },
-			{ Color.GREEN, Color.WHITE, Color.RED }, { Color.RED, Color.WHITE, Color.BLUE },
-			{ Color.BLUE, Color.WHITE, Color.ORANGE }, { Color.ORANGE, Color.GREEN, Color.YELLOW },
-			{ Color.GREEN, Color.RED, Color.YELLOW }, { Color.RED, Color.BLUE, Color.YELLOW },
-			{ Color.BLUE, Color.ORANGE, Color.YELLOW }, };
+	private static final Color[][] colors = { 
+			{ Color.ORANGE, Color.WHITE, Color.GREEN },
+			{ Color.GREEN, Color.WHITE, Color.RED }, 
+			{ Color.RED, Color.WHITE, Color.BLUE },
+			{ Color.BLUE, Color.WHITE, Color.ORANGE }, 
+			{ Color.ORANGE, Color.GREEN, Color.YELLOW },
+			{ Color.GREEN, Color.RED, Color.YELLOW },
+			{ Color.RED, Color.BLUE, Color.YELLOW },
+			{ Color.BLUE, Color.ORANGE, Color.YELLOW }
+	};
 
 	public static Color[] getColors(int position) {
 		return colors[position];

@@ -36,6 +36,11 @@ import com.github.sampeterson1.renderEngine.models.Texture;
 
 public class Loader {
 	
+	public static final int[] quadIndices = {
+			0, 1, 2, 
+			2, 3, 0
+	};
+	
 	private static List<MeshData> meshes = new ArrayList<MeshData>();
 	private static List<Integer> vaos = new ArrayList<Integer>();
 	private static List<Integer> vbos = new ArrayList<Integer>();

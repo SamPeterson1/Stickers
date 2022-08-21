@@ -149,11 +149,11 @@ public class PuzzleDisplay {
 
 	//Return a list of DisplayPieces that are affected by the current animating move
 	private List<DisplayPiece> getAffectedPieces() {
-		Map<PieceType, List<PieceGroup>> allGroups = puzzle.getAllGroups();
+		Map<PieceType, Map<Integer, PieceGroup>> allGroups = puzzle.getAllGroups();
 		List<DisplayPiece> allAffectedPieces = new ArrayList<DisplayPiece>();
 		
-		for(List<PieceGroup> groups : allGroups.values()) {
-			for(PieceGroup group : groups) {
+		for(Map<Integer, PieceGroup> groups : allGroups.values()) {
+			for(PieceGroup group : groups.values()) {
 				List<Piece> groupAffectedPieces = group.getAffectedPieces(animatingMove);
 				for(Piece piece : groupAffectedPieces) {
 					DisplayPiece displayPiece = pieceMap.get(piece);

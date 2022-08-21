@@ -1,3 +1,21 @@
+/*
+ *	Stickers Twisty Puzzle Simulator and Solver
+ *	Copyright (C) 2022 Sam Peterson <sam.peterson1@icloud.com>
+ *	
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *	
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *	GNU General Public License for more details.
+ *	
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.github.sampeterson1.renderEngine.gui;
 
 import java.util.Collection;
@@ -19,22 +37,21 @@ public class PuzzleControlGUI implements GUIEventListener {
 		
 		GUIComponent container = new GUIComponent("container", 0, 0.6f, 1f, 0.4f);
 		
-		
 		GUIDropdownBox puzzleSelecter = new GUIDropdownBox(container, "Puzzle Selecter", 0.025f, 0.95f, 0.2f, 0.1f);
 		puzzleSelecter.setParent(container);
 		puzzleSelecter.createOptions(dropdownOptions, arial);
 		
 		float yOff = 0.5f * FontUtil.getScaledLineHeight(arial) / container.getAbsoluteHeight();
-		GUIText sizeLabel = new GUIText(container, "Size Label", "Size: ", arial, 0.25f, 0.9f + yOff);
+		new GUIText(container, "Size Label", "Size: ", arial, 0.25f, 0.9f + yOff);
 	
 		GUITextBox sizeTextBox = new GUITextBox(container, "Size Text Box", arial, 0.32f, 0.84f, 0.06f);
 		sizeTextBox.setParent(container);
 		
-		GUIText animSpeedLabel = new GUIText(container, "Animation Speed Label", "Animation Speed: ", arial, 0.4f, 0.9f + yOff);
-		GUISlider animSpeedSlider = new GUISlider(container, "Animation Speed Slider", 0.63f, 0.85f, 0.32f);
+		new GUIText(container, "Animation Speed Label", "Animation Speed: ", arial, 0.4f, 0.9f + yOff);
+		new GUISlider(container, "Animation Speed Slider", 0.63f, 0.85f, 0.32f);
 		
-		GUIText algorithmLabel = new GUIText(container, "Algorithm Label", "Algorithm: ", arial, 0.02f, 0.7f + yOff);
-		GUITextBox algorithmTextBox = new GUITextBox(container, "Algorithm Text Box", arial, 0.15f, 0.65f, 0.4f);
+		new GUIText(container, "Algorithm Label", "Algorithm: ", arial, 0.02f, 0.7f + yOff);
+		new GUITextBox(container, "Algorithm Text Box", arial, 0.15f, 0.65f, 0.4f);
 		
 		GUIButton executeButton = new GUIButton(container, "Execute Button", 0.6f, 0.64f, 0.17f, 3.5f);
 		executeButton.createLabel("Execute", arial);
@@ -42,8 +59,8 @@ public class PuzzleControlGUI implements GUIEventListener {
 		executeButton.setHighlightColor(new Vector3f(0.3f, 0.3f, 1f));
 		executeButton.setShadowColor(new Vector3f(0, 0, 0.8f));
 		
-		GUIText scrambleLengthLabel = new GUIText(container, "Scramble Length Label", "Scramble Length: ", arial, 0.02f, 0.52f + yOff);
-		GUITextBox scrambleLengthTextBox = new GUITextBox(container, "Scramble Length Text Box", arial, 0.23f, 0.47f, 0.1f);
+		new GUIText(container, "Scramble Length Label", "Scramble Length: ", arial, 0.02f, 0.52f + yOff);
+		new GUITextBox(container, "Scramble Length Text Box", arial, 0.23f, 0.47f, 0.1f);
 		
 		GUIButton scrambleButton = new GUIButton(container, "Scramble Button", 0.37f, 0.46f, 0.17f, 3.5f);
 		scrambleButton.setParent(container);

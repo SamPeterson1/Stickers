@@ -1,3 +1,21 @@
+/*
+ *	Stickers Twisty Puzzle Simulator and Solver
+ *	Copyright (C) 2022 Sam Peterson <sam.peterson1@icloud.com>
+ *	
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *	
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *	GNU General Public License for more details.
+ *	
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.github.sampeterson1.renderEngine.gui;
 
 import com.github.sampeterson1.math.Vector2f;
@@ -13,11 +31,6 @@ import com.github.sampeterson1.renderEngine.window.Event;
 import com.github.sampeterson1.renderEngine.window.Window;
 
 public class GUIButton extends GUIComponent {
-	
-	private static final int[] quadIndices = {
-			0, 1, 2, 
-			2, 3, 0
-	};
 	
 	private static final float MESH_PADDING = 0.005f;
 	private static final float BUTTON_SHADOW_OFFSET = 0.006f;
@@ -41,6 +54,51 @@ public class GUIButton extends GUIComponent {
 		createMesh();
 	}
 	
+	@Override
+	public void handleEvent(Event e) {
+		float mouseX = (float) e.getMouseX() / Window.getWidth();
+		float mouseY = (float) e.getMouseY() / Window.getHeight();
+		
+		int eventType = e.getType();
+		if(eventType == Event.EVENT_MOUSE_BUTTON_PRESS && e.getMouseButton() == Event.MOUSE_LEFT_BUTTON) {
+			if(inBounds(mouseX, mouseY)) 
+				pressButton();
+		} else if(eventType == Event.EVENT_MOUSE_BUTTON_RELEASE && pressed) {
+			releaseButton();
+		} else if(eventType == Event.EVENT_MOUSE_MOVE) {
+			highlighted = inBounds(mouseX, mouseY);
+		}
+	}
+	
+	private void releaseButton() {
+		float aspect = (float) Window.getWidth() / Window.getHeight();
+		
+		super.setAbsoluteX(super.getAbsoluteX() + BUTTON_SHADOW_OFFSET / aspect);
+		super.setAbsoluteY(super.getAbsoluteY() - BUTTON_SHADOW_OFFSET);
+		
+		pressed = false;
+		
+		GUIMaster.createGUIEvent(new GUIEvent(GUIEventType.BUTTON_RELEASE, this));
+	}
+	
+	private void pressButton() {
+		float aspect = (float) Window.getWidth() / Window.getHeight();
+		
+		super.setAbsoluteX(super.getAbsoluteX() - BUTTON_SHADOW_OFFSET / aspect);
+		super.setAbsoluteY(super.getAbsoluteY() + BUTTON_SHADOW_OFFSET);
+		
+		pressed = true;
+		GUIMaster.createGUIEvent(new GUIEvent(GUIEventType.BUTTON_PRESS, this));
+	}
+	
+	private boolean inBounds(float mouseX, float mouseY) {
+		float minX = super.getAbsoluteX();
+		float minY = super.getAbsoluteY();
+		float maxX = minX + super.getAbsoluteWidth();
+		float maxY = minY + super.getAbsoluteHeight();
+		return (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY);
+	}
+	
 	private void createMesh() {
 		float offset = MESH_PADDING + BUTTON_SHADOW_OFFSET;
 		float width = super.getAbsoluteWidth();
@@ -53,7 +111,7 @@ public class GUIButton extends GUIComponent {
 				-offset, height + offset
 		};
 		
-		MeshData meshData = Loader.load2DMesh(vertices, quadIndices);
+		MeshData meshData = Loader.load2DMesh(vertices, Loader.quadIndices);
 		super.setMesh(new Mesh(meshData, MeshType.BUTTON));
 	}
 	
@@ -97,14 +155,6 @@ public class GUIButton extends GUIComponent {
 		return this.pressed;
 	}
 	
-	private boolean inBounds(float mouseX, float mouseY) {
-		float minX = super.getAbsoluteX();
-		float minY = super.getAbsoluteY();
-		float maxX = minX + super.getAbsoluteWidth();
-		float maxY = minY + super.getAbsoluteHeight();
-		return (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY);
-	}
-	
 	public float getShadowOffset() {
 		return BUTTON_SHADOW_OFFSET;
 	}
@@ -121,31 +171,4 @@ public class GUIButton extends GUIComponent {
 		return highlighted ? highlightColor : baseColor;
 	}
 
-	@Override
-	public void handleEvent(Event e) {
-		float mouseX = (float) e.getMouseX() / Window.getWidth();
-		float mouseY = (float) e.getMouseY() / Window.getHeight();
-		float aspect =(float) Window.getWidth() / Window.getHeight();
-		
-		int eventType = e.getType();
-		if(eventType == Event.EVENT_MOUSE_BUTTON_PRESS && e.getMouseButton() == Event.MOUSE_LEFT_BUTTON) {
-			if(inBounds(mouseX, mouseY)) {
-				super.setAbsoluteX(super.getAbsoluteX() - BUTTON_SHADOW_OFFSET / aspect);
-				super.setAbsoluteY(super.getAbsoluteY() + BUTTON_SHADOW_OFFSET);
-				
-				pressed = true;
-				GUIMaster.createEvent(new GUIEvent(GUIEventType.BUTTON_PRESS, this));
-			}
-		} else if(eventType == Event.EVENT_MOUSE_BUTTON_RELEASE && pressed) {
-			super.setAbsoluteX(super.getAbsoluteX() + BUTTON_SHADOW_OFFSET / aspect);
-			super.setAbsoluteY(super.getAbsoluteY() - BUTTON_SHADOW_OFFSET);
-			
-			highlighted = inBounds(mouseX, mouseY);
-			pressed = false;
-			
-			GUIMaster.createEvent(new GUIEvent(GUIEventType.BUTTON_RELEASE, this));
-		} else if(eventType == Event.EVENT_MOUSE_MOVE) {
-			highlighted = inBounds(mouseX, mouseY);
-		}
-	}
 }

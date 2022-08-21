@@ -22,7 +22,7 @@ import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 
 public enum Axis {
-
+		
 	R("R", new Vector3f(1, 0, 0), Mathf.PI/2), 
 	U("U", new Vector3f(0, 1, 0), Mathf.PI/2), 
 	F("F", new Vector3f(0, 0, 1), Mathf.PI/2), 
@@ -38,7 +38,11 @@ public enum Axis {
 	IR("IR", new Vector3f(1, -1, 1), 2*Mathf.PI/3),
 	IL("IL", new Vector3f(-1, 1, 1), 2*Mathf.PI/3),
 	IB("IB", new Vector3f(1, 1, -1), 2*Mathf.PI/3),
-	ID("ID", new Vector3f(-1, -1, -1), 2*Mathf.PI/3);
+	ID("ID", new Vector3f(-1, -1, -1), 2*Mathf.PI/3),
+	
+	S1("S1", new Vector3f(Mathf.sin(Mathf.DEG_TO_RAD * 75), 0, Mathf.cos(Mathf.DEG_TO_RAD * 75)), Mathf.PI),
+	SU("SU", new Vector3f(0, 1, 0), Mathf.PI / 6),
+	SD("SD", new Vector3f(0, -1, 0), Mathf.PI / 6);
 	
 	private Vector3f rotationAxis;
 	private float rotationAmount;

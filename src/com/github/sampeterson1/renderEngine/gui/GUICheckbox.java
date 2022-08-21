@@ -1,3 +1,21 @@
+/*
+ *	Stickers Twisty Puzzle Simulator and Solver
+ *	Copyright (C) 2022 Sam Peterson <sam.peterson1@icloud.com>
+ *	
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *	
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *	GNU General Public License for more details.
+ *	
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.github.sampeterson1.renderEngine.gui;
 
 import com.github.sampeterson1.math.Vector3f;
@@ -9,11 +27,6 @@ import com.github.sampeterson1.renderEngine.window.Event;
 import com.github.sampeterson1.renderEngine.window.Window;
 
 public class GUICheckbox extends GUIComponent {
-
-	private static final int[] quadIndices = {
-			0, 1, 2, 
-			2, 3, 0
-	};
 	
 	private static final float MESH_PADDING = 0.005f;
 	
@@ -34,28 +47,6 @@ public class GUICheckbox extends GUIComponent {
 		createMesh();
 	}
 	
-	private void createMesh() {
-		float size = super.getAbsoluteWidth();
-		float[] vertices = new float[] {
-				-MESH_PADDING, -MESH_PADDING,
-				size + MESH_PADDING, -MESH_PADDING,
-				size + MESH_PADDING, size + MESH_PADDING,
-				-MESH_PADDING, size + MESH_PADDING
-		};
-		
-		MeshData meshData = Loader.load2DMesh(vertices, quadIndices);
-		super.setMesh(new Mesh(meshData, MeshType.CHECKBOX));
-	}
-	
-	private boolean inBounds(float mouseX, float mouseY) {
-		float minX = super.getAbsoluteX();
-		float minY = super.getAbsoluteY();
-		float maxX = minX + super.getAbsoluteWidth();
-		float maxY = minY + super.getAbsoluteWidth();
-		
-		return mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY;
-	}
-	
 	@Override
 	public void handleEvent(Event e) {
 		float mouseX = (float) e.getMouseX() / Window.getWidth();
@@ -67,9 +58,31 @@ public class GUICheckbox extends GUIComponent {
 		} else if(eventType == Event.EVENT_MOUSE_BUTTON_PRESS && e.getMouseButton() == Event.MOUSE_LEFT_BUTTON) {
 			if(inBounds(mouseX, mouseY)) {
 				checked = !checked;
-				GUIMaster.createEvent(new GUIEvent(GUIEventType.CHECKBOX_TOGGLE, this));
+				GUIMaster.createGUIEvent(new GUIEvent(GUIEventType.CHECKBOX_TOGGLE, this));
 			}
 		}
+	}
+	
+	private void createMesh() {
+		float size = super.getAbsoluteWidth();
+		float[] vertices = new float[] {
+				-MESH_PADDING, -MESH_PADDING,
+				size + MESH_PADDING, -MESH_PADDING,
+				size + MESH_PADDING, size + MESH_PADDING,
+				-MESH_PADDING, size + MESH_PADDING
+		};
+		
+		MeshData meshData = Loader.load2DMesh(vertices, Loader.quadIndices);
+		super.setMesh(new Mesh(meshData, MeshType.CHECKBOX));
+	}
+	
+	private boolean inBounds(float mouseX, float mouseY) {
+		float minX = super.getAbsoluteX();
+		float minY = super.getAbsoluteY();
+		float maxX = minX + super.getAbsoluteWidth();
+		float maxY = minY + super.getAbsoluteWidth();
+		
+		return mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY;
 	}
 	
 	public boolean hasFill() {
@@ -85,9 +98,9 @@ public class GUICheckbox extends GUIComponent {
 	}
 	
 	public Vector3f getFillColor() {
-		if(checked) {
+		if(checked)
 			return highlighted ? checkedHighlightColor : checkedColor;
-		}
+		
 		return highlightedColor;
 	}
 

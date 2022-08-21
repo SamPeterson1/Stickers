@@ -5,12 +5,14 @@ import java.util.function.Function;
 import com.github.sampeterson1.cube.pieces.Cube;
 import com.github.sampeterson1.ivyCube.IvyCube;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
+import com.github.sampeterson1.square1.Square1;
 
 public enum PuzzleType {
 
 	CUBE("Rubik's Cube", new PuzzleSizeController(3, 2, 100), (Integer size) -> new Cube(size)),
 	PYRAMINX("Pyraminx", new PuzzleSizeController(3, 2, 100), (Integer size) -> new Pyraminx(size)),
-	IVY_CUBE("Ivy Cube", new PuzzleSizeController(1), (Integer size) -> new IvyCube());
+	IVY_CUBE("Ivy Cube", new PuzzleSizeController(1), (Integer size) -> new IvyCube()),
+	SQUARE1("Square-1", new PuzzleSizeController(1), (Integer size) -> new Square1());
 	
 	private Function<Integer, Puzzle> init;
 	private PuzzleSizeController sizeController;
