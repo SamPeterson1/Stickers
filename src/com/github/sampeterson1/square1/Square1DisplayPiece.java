@@ -22,9 +22,9 @@ public class Square1DisplayPiece extends DisplayPiece {
 
 	private static void tryLoadMeshes() {
 		if(cornerPieceMesh == null || cornerPieceMesh.getData().isDeleted()) {
-			cornerPieceMesh = OBJLoader.loadColoredMesh("square1/corner.obj");
-			edgePieceMesh = OBJLoader.loadColoredMesh("square1/edge.obj");
-			centerPieceMesh = OBJLoader.loadColoredMesh("square1/center.obj");
+			cornerPieceMesh = OBJLoader.loadColoredMesh("square1/Corner.obj");
+			edgePieceMesh = OBJLoader.loadColoredMesh("square1/Edge.obj");
+			centerPieceMesh = OBJLoader.loadColoredMesh("square1/Center.obj");
 		}
 	}
 	

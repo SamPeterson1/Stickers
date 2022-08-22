@@ -23,11 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.sampeterson1.cube.display.CubeDisplayPiece;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
-import com.github.sampeterson1.puzzle.lib.Color;
+import com.github.sampeterson1.puzzle.lib.GroupedPuzzle;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
@@ -108,11 +107,7 @@ public class PuzzleDisplay {
 			batch.create();
 		}		
 	}
-	
-	public void print() {
-		puzzle.print();
-	}
-	
+
 	public float getCurrentRotation() {
 		return currentRotation;
 	}
@@ -139,8 +134,8 @@ public class PuzzleDisplay {
 
 	public void makeMove(Move move) {
 		this.animatingMove = move;
-		this.affectedPieces = getAffectedPieces();
 		this.targetRotation = move.getFace().getRotationAmount();
+		getAffectedPieces();
 		direction = animatingMove.isCW() ? 1 : -1;
 		if(!animate) {
 			finishAnimation();
@@ -148,21 +143,14 @@ public class PuzzleDisplay {
 	}
 
 	//Return a list of DisplayPieces that are affected by the current animating move
-	private List<DisplayPiece> getAffectedPieces() {
-		Map<PieceType, Map<Integer, PieceGroup>> allGroups = puzzle.getAllGroups();
-		List<DisplayPiece> allAffectedPieces = new ArrayList<DisplayPiece>();
+	private void getAffectedPieces() {
+		List<Piece> pieces = puzzle.getAffectedPieces(animatingMove);
+		this.affectedPieces = new ArrayList<DisplayPiece>();
 		
-		for(Map<Integer, PieceGroup> groups : allGroups.values()) {
-			for(PieceGroup group : groups.values()) {
-				List<Piece> groupAffectedPieces = group.getAffectedPieces(animatingMove);
-				for(Piece piece : groupAffectedPieces) {
-					DisplayPiece displayPiece = pieceMap.get(piece);
-					allAffectedPieces.add(displayPiece);
-				}
-			}
+		for(Piece piece : pieces) {
+			DisplayPiece displayPiece = pieceMap.get(piece);
+			affectedPieces.add(displayPiece);
 		}
-		
-		return allAffectedPieces;
 	}
 	
 	//Update the animation

@@ -4,6 +4,7 @@ import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
 
 public class Square1EdgeBehavior extends SimplePieceBehavior {
@@ -18,10 +19,14 @@ public class Square1EdgeBehavior extends SimplePieceBehavior {
 		{Color.BLUE, Color.YELLOW},
 		{Color.ORANGE, Color.YELLOW},
 	};
+
+	public Square1EdgeBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
 	
 	@Override
 	protected Piece createPiece(int position) {
-		Piece piece = new Piece(PieceType.EDGE, position);
+		Piece piece = new Piece(super.getPuzzle(), PieceType.EDGE, position);
 		
 		Color[] colors = edgeColors[position/3];
 		for(int i = 0; i < 2; i ++)
@@ -29,21 +34,20 @@ public class Square1EdgeBehavior extends SimplePieceBehavior {
 		
 		return piece;
 	}
-	
-	@Override
-	public void movePiece(Move move, Piece piece) {
-		// TODO Auto-generated method stub
-	}
 
 	@Override
-	public PieceType getType() {
-		return PieceType.EDGE;
+	public void movePiece(Move move, Piece piece) {
+		Square1Util.movePiece(move, piece);
 	}
 
 	@Override
 	protected boolean affectedByMove(Move move, Piece piece) {
-		return (piece.getPosition() <= 4 || (piece.getPosition() >= 12 && piece.getPosition() <= 16)); 
+		return Square1Util.affectedByMove(move, piece);
 	}
-
+	
+	@Override
+	public PieceType getType() {
+		return PieceType.EDGE;
+	}
 
 }

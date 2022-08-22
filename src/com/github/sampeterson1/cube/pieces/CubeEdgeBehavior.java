@@ -31,15 +31,20 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 
 //An implementation of PieceBehavior that defines the behavior of edge pieces on a Rubik's Cube
-public class CubeEdgeBehavior implements PieceBehavior {
+public class CubeEdgeBehavior extends PieceBehavior {
 
 	private static final PieceType type = PieceType.EDGE;
 	
+	public CubeEdgeBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
+	
 	@Override
-	public Piece createPiece(int position, int index, int puzzleSize) {
-		Piece edge = new Piece(PieceType.EDGE, position, index, puzzleSize);
+	public Piece createPiece(int position, int index) {
+		Piece edge = new Piece(super.getPuzzle(), PieceType.EDGE, position, index);
 		Color[] colors = CubeEdgeUtil.getColors(position);
 		edge.setColor(0, colors[0]);
 		edge.setColor(1, colors[1]);
@@ -73,11 +78,11 @@ public class CubeEdgeBehavior implements PieceBehavior {
 		
 		//Create an edge piece that would be affected by the move
 		if (moveFace == Axis.R) {
-			piece = new Piece(PieceType.EDGE, 0, edgeSize - move.getLayer(), puzzleSize);
+			piece = new Piece(super.getPuzzle(), PieceType.EDGE, 0, edgeSize - move.getLayer());
 		} else if (moveFace == Axis.U) {
-			piece = new Piece(PieceType.EDGE, 4, edgeSize - move.getLayer(), puzzleSize);
+			piece = new Piece(super.getPuzzle(), PieceType.EDGE, 4, edgeSize - move.getLayer());
 		} else if (moveFace == Axis.F) {
-			piece = new Piece(PieceType.EDGE, 1, move.getLayer() - 1, puzzleSize);
+			piece = new Piece(super.getPuzzle(), PieceType.EDGE, 1, move.getLayer() - 1);
 		}
 		
 		//Move it until its position matches with what we want

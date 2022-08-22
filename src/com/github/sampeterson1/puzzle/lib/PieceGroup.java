@@ -23,14 +23,14 @@ import java.util.List;
 
 public class PieceGroup {
 	
-	private Puzzle puzzle;
+	private GroupedPuzzle puzzle;
 	private PieceBehavior behavior;
 	private List<Piece> pieces;
 	private List<Piece> movedPieces;
 	private int position;
 	private int puzzleSize;
 	
-	public PieceGroup(PieceBehavior behavior, Puzzle puzzle, int position) {
+	public PieceGroup(PieceBehavior behavior, GroupedPuzzle puzzle, int position) {
 		this.position = position;
 		this.pieces = new ArrayList<Piece>();
 		this.movedPieces = new ArrayList<Piece>();
@@ -40,7 +40,8 @@ public class PieceGroup {
 		
 		int numPieces = behavior.getNumPieces(puzzleSize);
 		for(int i = 0; i < numPieces; i ++) {
-			pieces.add(behavior.createPiece(position, i, puzzleSize));
+			Piece piece = behavior.createPiece(position, i);
+			pieces.add(piece);
 		}
 	}
 	

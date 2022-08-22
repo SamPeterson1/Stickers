@@ -21,13 +21,18 @@ package com.github.sampeterson1.puzzle.lib;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SimplePieceBehavior implements PieceBehavior {
+public abstract class SimplePieceBehavior extends PieceBehavior {
 	
+	public SimplePieceBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
+
 	protected abstract Piece createPiece(int position);
+	
 	protected abstract boolean affectedByMove(Move move, Piece piece);
 	
 	@Override
-	public Piece createPiece(int position, int index, int puzzleSize) {
+	public Piece createPiece(int position, int index) {
 		return createPiece(position);
 	}
 	

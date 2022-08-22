@@ -30,15 +30,20 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 
 //An implementation of PieceBehavior that defines the behavior of center pieces on a Rubik's Cube
-public class CubeCenterBehavior implements PieceBehavior {
-	
+public class CubeCenterBehavior extends PieceBehavior {
+
 	private static final PieceType type = PieceType.CENTER;
 	
+	public CubeCenterBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
+	
 	@Override
-	public Piece createPiece(int position, int index, int puzzleSize) {
-		Piece piece = new Piece(PieceType.CENTER, position, index, puzzleSize);
+	public Piece createPiece(int position, int index) {
+		Piece piece = new Piece(super.getPuzzle(), PieceType.CENTER, position, index);
 		piece.setColor(CubeUtil.getFaceColor(CubeUtil.getFace(position)));
 		return piece;
 	}

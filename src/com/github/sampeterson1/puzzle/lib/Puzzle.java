@@ -19,17 +19,13 @@
 package com.github.sampeterson1.puzzle.lib;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 
 public abstract class Puzzle {
 	
-	private List<Piece> allPieces;
-	private Map<PieceType, Map<Integer, PieceGroup>> groupsByType;
 	private int size;
 	
 	private ArrayList<Move> rotations;
@@ -39,14 +35,15 @@ public abstract class Puzzle {
 		
 	public Puzzle(int size) {
 		this.size = size;
-		
-		this.groupsByType = new HashMap<PieceType,  Map<Integer, PieceGroup>>();
-		this.allPieces = new ArrayList<Piece>();
-		
 		this.rotations = new ArrayList<Move>();	
 		this.rotationStack = new ArrayList<Integer>();
+		this.moveLog = new Algorithm();
 	}
+	
+	public abstract List<Piece> getAffectedPieces(Move move);
 
+	public abstract List<Piece> getAllPieces();
+	
 	public abstract Axis transposeAxis(Axis face);
 	
 	public abstract Algorithm parseAlgorithm(String alg);
@@ -63,61 +60,29 @@ public abstract class Puzzle {
 	
 	public abstract PuzzleType getType();
 	
-	private void addAllPieces(PieceGroup group) {
-		for(Piece piece : group.getPieces()) {
-			allPieces.add(piece);
-		}
-	}
+	protected abstract void movePieces(Move move);
 	
-	protected void createPieceGroup(PieceBehavior behavior, int position) {
-		PieceGroup group = new PieceGroup(behavior, this, position);
-		PieceType type = behavior.getType();
-		
-		if(groupsByType.containsKey(type)) {
-			groupsByType.get(type).put(position, group);
-		} else {
-			Map<Integer, PieceGroup> groups = new HashMap<Integer, PieceGroup>();
-			groups.put(position, group);
-			groupsByType.put(type, groups);
-		}
-		
-		addAllPieces(group);
-	}
-	
-	protected void createPieces(PieceBehavior behavior, int numGroups) {
-		Map<Integer, PieceGroup> groups = new HashMap<Integer, PieceGroup>();
-		for(int i = 0; i < numGroups; i ++) {
-			groups.put(i, new PieceGroup(behavior, this, i));
-		}
-		
-		groupsByType.put(behavior.getType(), groups);
-		
-		for(PieceGroup group : groups.values()) {
-			addAllPieces(group);
-		}
-	}
-	
-	public final int getSize() {
+	public int getSize() {
 		return size;
 	}
 	
-	public final Algorithm getMoveLog() {
+	public Algorithm getMoveLog() {
 		return this.moveLog;
 	}
 	
-	public final void clearMoveLog() {
+	public void clearMoveLog() {
 		this.moveLog = new Algorithm();
 	}
 	
-	public final void setLogMoves(boolean logMoves) {
+	public void setLogMoves(boolean logMoves) {
 		this.logMoves = logMoves;
 	}
 	
-	public final void pushRotations() {
+	public void pushRotations() {
 		rotationStack.add(rotations.size());
 	}
 	
-	public final void popRotations() {
+	public void popRotations() {
 		int numRotations = rotationStack.remove(rotationStack.size() - 1);
 		while(rotations.size() != numRotations) {
 			Move move = rotations.remove(0);
@@ -126,51 +91,25 @@ public abstract class Puzzle {
 		}
 	}
 	
-	public final void makeRotation(Axis face, boolean cw) {
+	public void makeRotation(Axis face, boolean cw) {
 		Move move = new Move(face, cw, true);
 		makeMove(move, false);
 	}
 	
-	public final ArrayList<Move> getRotations() {
+	public ArrayList<Move> getRotations() {
 		return this.rotations;
 	}
-
-	public final PieceGroup getGroup(PieceType type, int position) {
-		return this.groupsByType.get(type).get(position);
-	}
 	
-	public final Map<Integer, PieceGroup> getGroups(PieceType type) {
-		return this.groupsByType.get(type);
-	}
-	
-	public final Map<PieceType, Map<Integer, PieceGroup>> getAllGroups() {
-		return this.groupsByType;
-	}
-	
-	public final List<Piece> getAllPieces() {
-		return this.allPieces;
-	}
-	
-	public final void executeAlgorithm(Algorithm alg, boolean log) {
+	public void executeAlgorithm(Algorithm alg, boolean log) {
 		List<Move> moves = alg.getMoves();
 		for(Move move : moves) {
 			makeMove(move, log);
 		}
 	}
 	
-	public final void makeMove(Move move, boolean log) {	
-		for(Map<Integer, PieceGroup> groups : groupsByType.values()) {
-			for(PieceGroup group : groups.values()) {
-				group.makeMove(move);
-			}
-		}
+	public void makeMove(Move move, boolean log) {	
+		movePieces(move);
 		
-		for(Map<Integer, PieceGroup> groups : groupsByType.values()) {
-			for(PieceGroup group : groups.values()) {
-				group.applyMoves();
-			}
-		}
-	
 		if(move.isCubeRotation()) {
 			rotations.add(0, move.getInverse());
 		}
@@ -179,26 +118,12 @@ public abstract class Puzzle {
 		if(log && !move.isCubeRotation()) moveLog.addMove(move); 
 	}
 	
-	public final void executeAlgorithm(Algorithm alg) {
+	public void executeAlgorithm(Algorithm alg) {
 		executeAlgorithm(alg, logMoves);
 	}
 	
-	public final void makeMove(Move move) {
+	public void makeMove(Move move) {
 		makeMove(move, logMoves);
 	}
 	
-	public final void print() {
-		for(PieceType type : groupsByType.keySet()) {
-			Map<Integer, PieceGroup> groups = groupsByType.get(type);
-			System.out.println(type);
-			for(PieceGroup group : groups.values()) {
-				System.out.print(group.getPosition() + ": [");
-				for(Piece piece : group.getPieces()) {
-					System.out.print(piece + ", ");
-				}
-				System.out.println("]");
-			}
-			System.out.println();
-		}
-	}
 }

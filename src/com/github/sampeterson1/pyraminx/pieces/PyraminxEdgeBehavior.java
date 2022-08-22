@@ -28,16 +28,19 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.util.PyraminxEdgeUtil;
 
-public class PyraminxEdgeBehavior implements PieceBehavior {
-	
-	private static final PieceType type = PieceType.EDGE;
+public class PyraminxEdgeBehavior extends PieceBehavior {
+
+	public PyraminxEdgeBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
 	
 	@Override
-	public Piece createPiece(int position, int index, int puzzleSize) {
+	public Piece createPiece(int position, int index) {
 		Color[] colors = PyraminxEdgeUtil.getColors(position);
-		Piece edge = new Piece(PieceType.EDGE, position, index, puzzleSize);
+		Piece edge = new Piece(super.getPuzzle(), PieceType.EDGE, position, index);
 		edge.setColor(0, colors[0]);
 		edge.setColor(1, colors[1]);
 		
@@ -64,7 +67,7 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 				return group.getPieces();
 			}
 		} else if(layer > 0 && layer < puzzleSize - 1){
-			Piece simulateFlips = new Piece(PieceType.EDGE, position, 0, puzzleSize);
+			Piece simulateFlips = new Piece(super.getPuzzle(), PieceType.EDGE, position);
 			int targetPosition = 0;
 			Move simulateMove = new Move(face, true);
 			
@@ -127,7 +130,7 @@ public class PyraminxEdgeBehavior implements PieceBehavior {
 
 	@Override
 	public PieceType getType() {
-		return type;
+		return PieceType.EDGE;
 	}
 
 }

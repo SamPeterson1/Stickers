@@ -32,12 +32,12 @@ import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.lib.GroupedPuzzle;
 import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
 import com.github.sampeterson1.puzzle.lib.PuzzleType;
 
 //An implementation of Puzzle that represents the pieces of an n by n Rubk's Cube
-public class Cube extends Puzzle {
+public class Cube extends GroupedPuzzle {
 
 	private static final int NUM_CENTERS = 6;
 	private static final int NUM_EDGES = 12;
@@ -50,9 +50,9 @@ public class Cube extends Puzzle {
 	public Cube(int size) {
 		super(size);
 
-		super.createPieces(new CubeCenterBehavior(), NUM_CENTERS);
-		super.createPieces(new CubeEdgeBehavior(), NUM_EDGES);
-		super.createPieces(new CubeCornerBehavior(), NUM_CORNERS);
+		super.createPieces(new CubeCenterBehavior(this), NUM_CENTERS);
+		super.createPieces(new CubeEdgeBehavior(this), NUM_EDGES);
+		super.createPieces(new CubeCornerBehavior(this), NUM_CORNERS);
 		
 		this.solver = new MasterCubeSolver(this);
 	}

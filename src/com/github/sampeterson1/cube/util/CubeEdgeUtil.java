@@ -102,7 +102,7 @@ public class CubeEdgeUtil {
 			position = mapVal - 1;
 		}
 
-		Piece retVal = new Piece(PieceType.EDGE, position, index, puzzleSize);
+		Piece retVal = new Piece(piece.getPuzzle(), PieceType.EDGE, position, index);
 		retVal.setColor(0, c1);
 		retVal.setColor(1, c2);
 

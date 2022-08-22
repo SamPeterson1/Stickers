@@ -27,16 +27,21 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.util.PyraminxCenterUtil;
 import com.github.sampeterson1.pyraminx.util.PyraminxMoveUtil;
 
-public class PyraminxCenterBehavior implements PieceBehavior {
+public class PyraminxCenterBehavior extends PieceBehavior {
 
 	private static PieceType type = PieceType.CENTER;
+
+	public PyraminxCenterBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
 	
 	@Override
-	public Piece createPiece(int position, int index, int puzzleSize) {
-		Piece center = new Piece(type, position, index, puzzleSize);
+	public Piece createPiece(int position, int index) {
+		Piece center = new Piece(super.getPuzzle(), type, position, index);
 		center.setColor(PyraminxCenterUtil.getColor(position));
 		
 		return center;

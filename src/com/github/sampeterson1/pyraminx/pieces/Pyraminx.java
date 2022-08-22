@@ -30,7 +30,7 @@ import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.lib.GroupedPuzzle;
 import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
 import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.pyraminx.display.PyraminxDisplayPiece;
@@ -38,7 +38,7 @@ import com.github.sampeterson1.pyraminx.solvers.PyraminxCenterSolver;
 import com.github.sampeterson1.pyraminx.util.PyraminxCenterUtil;
 import com.github.sampeterson1.pyraminx.util.PyraminxMoveUtil;
 
-public class Pyraminx extends Puzzle {
+public class Pyraminx extends GroupedPuzzle {
 	
 	public static Axis[] faces = {Axis.PF, Axis.PR, Axis.PL, Axis.PD};
 		
@@ -67,9 +67,9 @@ public class Pyraminx extends Puzzle {
 	public Pyraminx(int size) {
 		super(size);
 		
-		super.createPieces(new PyraminxCenterBehavior(), NUM_CENTERS);
-		super.createPieces(new PyraminxEdgeBehavior(), NUM_EDGES);
-		super.createPieces(new PyraminxCornerBehavior(), NUM_CORNERS);
+		super.createPieces(new PyraminxCenterBehavior(this), NUM_CENTERS);
+		super.createPieces(new PyraminxEdgeBehavior(this), NUM_EDGES);
+		super.createPieces(new PyraminxCornerBehavior(this), NUM_CORNERS);
 		
 		centerSolver = new PyraminxCenterSolver(this);
 	}

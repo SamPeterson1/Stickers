@@ -26,6 +26,7 @@ import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
 
 //Defines how the center pieces on an ivy cube move
@@ -73,9 +74,13 @@ public class IvyCubeCenterBehavior extends SimplePieceBehavior {
 		return null;
 	}
 	
+	public IvyCubeCenterBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
+	
 	@Override
 	public Piece createPiece(int position) {
-		Piece center = new Piece(PieceType.CENTER, position);
+		Piece center = new Piece(super.getPuzzle(), PieceType.CENTER, position);
 		center.setColor(colors[position]);
 		
 		return center;

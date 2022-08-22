@@ -5,13 +5,18 @@ import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
 
 public class Square1CenterBehavior extends SimplePieceBehavior {
+	
+	public Square1CenterBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
 
 	@Override
 	protected Piece createPiece(int position) {
-		Piece piece = new Piece(PieceType.SQUARE1_CENTER, position);
+		Piece piece = new Piece(super.getPuzzle(), PieceType.SQUARE1_CENTER, position);
 		
 		if(position == 0) {
 			piece.setColor(0, Color.GREEN);
@@ -43,7 +48,7 @@ public class Square1CenterBehavior extends SimplePieceBehavior {
 
 	@Override
 	protected boolean affectedByMove(Move move, Piece piece) {
-		return (move.getFace() == Axis.S1 && piece.getPosition() == 0);
+		return (!Square1Util.isLocked((Square1) super.getPuzzle()) && move.getFace() == Axis.S1 && piece.getPosition() == 0);
 	}
 
 }

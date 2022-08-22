@@ -157,7 +157,7 @@ public class PyraminxCenterSolver {
 		
 		int pairingLayer = 0;
 		if(keepDFace) {
-			Piece atIndex = new Piece(PieceType.CENTER, Pyraminx.getAxisIndex(Axis.PR), tgtIndex, puzzleSize);
+			Piece atIndex = new Piece(pyr, PieceType.CENTER, Pyraminx.getAxisIndex(Axis.PR), tgtIndex);
 			if(tilted) {
 				pairingLayer = PyraminxCenterUtil.getLayer(atIndex, Axis.PL);
 			} else {

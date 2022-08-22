@@ -30,9 +30,10 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.pyraminx.util.PyraminxCornerUtil;
 
-public class PyraminxCornerBehavior implements PieceBehavior {
+public class PyraminxCornerBehavior extends PieceBehavior {
 
 	private static final PieceType type = PieceType.CORNER;
 	private static final Map<Axis, Integer> oppositeCorners = initOppositeCorners();
@@ -47,10 +48,14 @@ public class PyraminxCornerBehavior implements PieceBehavior {
 		return oppositeCorners;
 	}
 	
+	public PyraminxCornerBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
+	
 	@Override
-	public Piece createPiece(int position, int index, int puzzleSize) {
+	public Piece createPiece(int position, int index) {
 		Color[] colors = PyraminxCornerUtil.getColors(position);
-		Piece corner = new Piece(PieceType.CORNER, position, index, puzzleSize);
+		Piece corner = new Piece(super.getPuzzle(), PieceType.CORNER, position, index);
 		for(int i = 0; i < 3; i ++)
 			corner.setColor(i, colors[i]);
 		

@@ -18,18 +18,19 @@
 
 package com.github.sampeterson1.ivyCube;
 
+import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
+import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
-import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
 import com.github.sampeterson1.puzzle.lib.PuzzleType;
+import com.github.sampeterson1.puzzle.lib.SimplePuzzle;
 
 //An implementation of Puzzle that represents an Ivy Cube
-public class IvyCube extends Puzzle {
+public class IvyCube extends SimplePuzzle {
 	
 	//indices of the corner pieces
 	public static final int L_CORNER = 0;
@@ -48,11 +49,13 @@ public class IvyCube extends Puzzle {
 	private static final int NUM_CORNERS = 4;
 	private static final int NUM_CENTERS = 6;
 	
+	private static final Axis[] moveAxes = {Axis.IR, Axis.IL, Axis.ID, Axis.IB};
+	
 	public IvyCube() {
 		super(1);
 		
-		super.createPieces(new IvyCubeCornerBehavior(), NUM_CORNERS);
-		super.createPieces(new IvyCubeCenterBehavior(), NUM_CENTERS);
+		super.createPieces(new IvyCubeCornerBehavior(this), NUM_CORNERS);
+		super.createPieces(new IvyCubeCenterBehavior(this), NUM_CENTERS);
 	}
 
 	@Override
@@ -67,7 +70,15 @@ public class IvyCube extends Puzzle {
 
 	@Override
 	public Algorithm scramble(int length) {
-		return new Algorithm();
+		Algorithm scramble = new Algorithm();
+		
+		for(int i = 0; i < length; i ++) {
+			int index = (int) Mathf.random(0, moveAxes.length);
+			boolean cw = (Mathf.random(0, 1) > 0.5f);
+			scramble.addMove(new Move(moveAxes[index], cw));
+		}
+		
+		return scramble;
 	}
 
 	@Override

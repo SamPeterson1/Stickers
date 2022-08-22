@@ -20,15 +20,25 @@ package com.github.sampeterson1.puzzle.lib;
 
 import java.util.List;
 
-public interface PieceBehavior {
+public abstract class PieceBehavior {
 
-	public Piece createPiece(int position, int index, int puzzleSize);
+	private Puzzle puzzle;
 	
-	public List<Piece> getAffectedPieces(Move move, PieceGroup group);
+	public PieceBehavior(Puzzle puzzle) {
+		this.puzzle = puzzle;
+	}
 	
-	public void movePiece(Move move, Piece piece);
+	protected Puzzle getPuzzle() {
+		return this.puzzle;
+	}
 	
-	public int getNumPieces(int puzzleSize);
+	public abstract Piece createPiece(int position, int index);
 	
-	public PieceType getType();
+	public abstract List<Piece> getAffectedPieces(Move move, PieceGroup group);
+	
+	public abstract void movePiece(Move move, Piece piece);
+	
+	public abstract int getNumPieces(int puzzleSize);
+	
+	public abstract PieceType getType();
 }

@@ -20,7 +20,7 @@ package com.github.sampeterson1.puzzle.lib;
 
 public class Piece {
 	
-	private int puzzleSize;
+	private Puzzle puzzle;
 	private int index;
 	private int position;
 	
@@ -29,22 +29,27 @@ public class Piece {
 	private Color[] colors;
 	private PieceType type;
 	
-	public Piece(PieceType type, int position) {
+	public Piece(Puzzle puzzle, PieceType type, int position) {
 		this.type = type;
+		this.puzzle = puzzle;
 		this.colors = new Color[type.getNumColors()];
 		this.position = position;
 	}
 	
-	public Piece(PieceType type, int position, int index, int puzzleSize) {
+	public Piece(Puzzle puzzle, PieceType type, int position, int index) {
 		this.type = type;
 		this.position = position;
 		this.index = index;
-		this.puzzleSize = puzzleSize;
+		this.puzzle = puzzle;
 		this.colors = new Color[type.getNumColors()];
+	}
+	
+	public Puzzle getPuzzle() {
+		return this.puzzle;
 	}
 
 	public int getPuzzleSize() {
-		return this.puzzleSize;
+		return this.puzzle.getSize();
 	}
 	
 	public boolean isSolved() {

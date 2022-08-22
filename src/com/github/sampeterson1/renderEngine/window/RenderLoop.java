@@ -26,7 +26,7 @@ import com.github.sampeterson1.puzzle.display.PuzzleMaster;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.lib.GroupedPuzzle;
 import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
 import com.github.sampeterson1.renderEngine.gui.GUICheckbox;
 import com.github.sampeterson1.renderEngine.gui.GUIDropdownBox;
@@ -65,7 +65,7 @@ public class RenderLoop implements Runnable, GUIEventListener {
 	private float maxR=1, maxG=1, maxB=1;
 
 	private Algorithm alg;
-	private Puzzle puzzle;
+	private GroupedPuzzle puzzle;
 
 	@Override
 	public void run() {
@@ -219,9 +219,6 @@ public class RenderLoop implements Runnable, GUIEventListener {
 		if (key == 'B')
 			move = new Move(Axis.IB, 1, true);
 
-		if (key == 'P')
-			puzzle.print();
-		
 		if(move != null && !display.isAnimating()) {
 			makeMove(move);
 		}

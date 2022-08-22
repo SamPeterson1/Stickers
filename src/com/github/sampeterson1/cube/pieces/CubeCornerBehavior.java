@@ -31,15 +31,20 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.lib.Puzzle;
 
 //An implementation of PieceBehavior that defines the behavior of corner pieces on a Rubik's Cube
-public class CubeCornerBehavior implements PieceBehavior {
+public class CubeCornerBehavior extends PieceBehavior {
 	
 	private static final PieceType type = PieceType.CORNER;
 	
+	public CubeCornerBehavior(Puzzle puzzle) {
+		super(puzzle);
+	}
+	
 	@Override
-	public Piece createPiece(int position, int index, int puzzleSize) {
-		Piece piece = new Piece(PieceType.CORNER, position, index, puzzleSize);
+	public Piece createPiece(int position, int index) {
+		Piece piece = new Piece(super.getPuzzle(), PieceType.CORNER, position, index);
 		Color[] colors = CubeCornerUtil.getColors(position);
 		for(int i = 0; i < 3; i ++) piece.setColor(i, colors[i]);
 		return piece;
