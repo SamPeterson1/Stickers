@@ -64,7 +64,7 @@ public class MasterCubeSolver {
 		solution = cube.simplify(solution);
 		
 		float seconds = (System.currentTimeMillis() - startTime) / 1000.0f;
-		System.out.println("Solved in " + seconds + " seconds!");
+		System.out.println("Solved in " + seconds + " seconds and " + solution.length() + " moves");
 		
 		return solution;
 	}

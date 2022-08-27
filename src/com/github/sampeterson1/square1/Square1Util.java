@@ -1,5 +1,8 @@
 package com.github.sampeterson1.square1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;
@@ -21,6 +24,8 @@ public class Square1Util {
 		Algorithm alg = new Algorithm();
 		if(algStr.equals("/")) {
 			alg.addMove(new Move(Axis.S1, true));
+			return alg;
+		} else if(algStr.equals("")) {
 			return alg;
 		}
 		if(algStr.charAt(0) == '/') {
@@ -56,6 +61,46 @@ public class Square1Util {
 		}
 		
 		return alg;
+	}
+	
+	public static Algorithm simplify(Algorithm alg) {
+		List<Move> newMoves = new ArrayList<Move>();
+		
+		int numUMoves = 0;
+		int numDMoves = 0;
+		
+		for(Move move : alg.getMoves()) {
+			Axis axis = move.getFace();
+			int increment = move.isCW() ? 1 : -1;
+			if(axis == Axis.SU) {
+				numUMoves += increment;
+			} else if(axis == Axis.SD) {
+				numDMoves += increment;
+			} else if(axis == Axis.S1) {
+				while(numUMoves > 6) numUMoves -= 12;
+				while(numDMoves > 6) numDMoves -= 12;
+				
+				while(numUMoves < -6) numUMoves += 12;
+				while(numDMoves < -6) numDMoves += 12;
+				
+				if(numUMoves < 0)
+					for(int i = 0; i < -numUMoves; i ++) newMoves.add(new Move(Axis.SU, false));
+				else
+					for(int i = 0; i < numUMoves; i ++) newMoves.add(new Move(Axis.SU, true));
+				
+				if(numDMoves < 0)
+					for(int i = 0; i < -numDMoves; i ++) newMoves.add(new Move(Axis.SD, false));
+				else
+					for(int i = 0; i < numDMoves; i ++) newMoves.add(new Move(Axis.SD, true));
+				
+				numUMoves = 0;
+				numDMoves = 0;
+				
+				newMoves.add(new Move(Axis.S1, true));
+			}
+		}
+		
+		return new Algorithm(newMoves);
 	}
 	
 	public static void movePiece(Move move, Piece piece) {
@@ -167,6 +212,26 @@ public class Square1Util {
 		}
 		
 		return mirror;
+	}
+	
+	public static boolean topSquare(Square1 sq1) {
+		for(int i = 0; i < 12; i += 3) {
+			if(sq1.getEdge(i) == null) return false;
+		}
+		for(int i = 1; i < 12; i += 3) {
+			if(sq1.getCorner(i) == null) return false;
+		}
+		return true;
+	}
+	
+	public static boolean bottomSquare(Square1 sq1) {
+		for(int i = 12; i < 24; i += 3) {
+			if(sq1.getEdge(i) == null) return false;
+		}
+		for(int i = 13; i < 24; i += 3) {
+			if(sq1.getCorner(i) == null) return false;
+		}
+		return true;
 	}
 	
 	public static Algorithm flip(Algorithm alg) {

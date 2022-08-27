@@ -6,50 +6,49 @@ import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 
-public class Square1CubeShapeCase {
+public class Square1CSCase {
 	
 	public static final boolean EDGE = false;
 	public static final boolean CORNER = true;
 	
+	private boolean mirrored;
 	private boolean[] cornersTop;
 	private boolean[] cornersBottom;
-	
-	private Algorithm solution;
-	
-	private Square1CubeShapeCase(Algorithm solution, boolean[] cornersTop, boolean[] cornersBottom) {
-		this.solution = solution;
-		this.cornersTop = cornersTop;
-		this.cornersBottom = cornersBottom;
-	}
-	
-	public Square1CubeShapeCase(String solutionStr, boolean[] cornersTop, boolean[] cornersBottom) {
-		this.solution = Square1Util.parseAlgorithm(solutionStr);
-		this.cornersTop = cornersTop;
-		this.cornersBottom = cornersBottom;
-	}
-	
-	public Square1CubeShapeCase getFlip() {
-		Algorithm flipSolution = Square1Util.flip(solution);
-		return new Square1CubeShapeCase(flipSolution, cornersBottom, cornersTop);
-	}
 
-	public void print() {
-		for(boolean b : cornersTop) System.out.println(b + " ");
-		System.out.println();
-		for(boolean b : cornersBottom) System.out.println(b + " ");
+	public Square1CSCase(boolean[] cornersTop, boolean[] cornersBottom) {
+		this.cornersTop = cornersTop;
+		this.cornersBottom = cornersBottom;
+		this.mirrored = false;
+	}
+	
+	public Square1CSCase getMirror() {
+		Square1CSCase mirror = new Square1CSCase(mirror(cornersTop), mirror(cornersBottom));
+		mirror.mirrored = true;
+		
+		return mirror;
+	}
+	
+	private boolean[] mirror(boolean[] corners) {	
+		boolean[] mirroredCorners = new boolean[corners.length];
+		int cornerIndex = 0;
+		
+		for(int i = corners.length - 1; i >= 0; i --) {
+			mirroredCorners[cornerIndex++] = corners[i]; 
+		}
+		
+		return mirroredCorners;
 	}
 	
 	private boolean topMatches(Square1 sq1) {
 		if(Square1Util.topLocked(sq1)) return false;
-				
+
 		int index = 0;
 		for(int i = 0; i < 12; i ++) {
 			Piece piece = sq1.getPiece(i);
 			if(piece != null) {
 				boolean isCorner = (piece.getType() == PieceType.CORNER);
 				if(index == cornersTop.length) return false;
-				boolean shouldBeCorner = cornersTop[index++];
-				
+				boolean shouldBeCorner = cornersTop[index++];	
 
 				if(isCorner != shouldBeCorner) return false;
 			}
@@ -62,14 +61,13 @@ public class Square1CubeShapeCase {
 		if(Square1Util.bottomLocked(sq1)) return false;
 		
 		int index = 0;
-		System.out.println();
 		for(int i = 12; i < 24; i ++) {
 			Piece piece = sq1.getPiece(i);
 			if(piece != null) {
 				boolean isCorner = (piece.getType() == PieceType.CORNER);
 				if(index == cornersBottom.length) return false;
 				boolean shouldBeCorner = cornersBottom[index++];
-				System.out.println(isCorner + " " + shouldBeCorner);
+
 				if(isCorner != shouldBeCorner) return false;
 			}
 		}
@@ -77,18 +75,11 @@ public class Square1CubeShapeCase {
 		return true;
 	}
 	
-	public Algorithm getSolution() {
-		return this.solution;
-	}
-	
 	public boolean solve(Square1 sq1) {
-		int numUMoves = 0;
 		for(int i = 0; i < 12; i ++) {
 			if(!topMatches(sq1)) {
-				numUMoves ++;
 				sq1.makeMove(new Move(Axis.SU, true));
 				if(i == 11) {
-					sq1.clearMoveLog();
 					return false;
 				}
 				
@@ -101,17 +92,19 @@ public class Square1CubeShapeCase {
 			if(!bottomMatches(sq1)) {
 				sq1.makeMove(new Move(Axis.SD, true));
 				if(i == 11) {
-					for(int j = 0; j < numUMoves; j ++) sq1.makeMove(new Move(Axis.SU, false));
-					sq1.clearMoveLog();
 					return false;
 				}
 			} else {
 				break;
 			}
 		}
+
+		if(mirrored) {
+			for(int i = 0; i < 6; i ++) sq1.makeMove(new Move(Axis.SU, true));
+			for(int i = 0; i < 6; i ++) sq1.makeMove(new Move(Axis.SD, true));
+		}
 		
-		System.out.println(solution.length());
-		sq1.executeAlgorithm(solution);
+		sq1.makeMove(new Move(Axis.S1, true));
 		return true;
 	}
 	

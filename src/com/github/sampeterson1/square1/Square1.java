@@ -2,6 +2,8 @@ package com.github.sampeterson1.square1;
 
 import java.util.List;
 
+import javax.management.remote.SubjectDelegationPermission;
+
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
@@ -20,7 +22,9 @@ public class Square1 extends SimplePuzzle {
 	private static final int[] EDGE_POSITIONS = new int[] {0, 3, 6, 9, 12, 15, 18, 21};
 	private static final int[] CORNER_POSITIONS = new int[] {1, 4, 7, 10, 13, 16, 19, 22};
 	
-	private Square1CubeShapeSolver cubeShapeSolver;
+	private Square1CSSolver cubeShapeSolver;
+	private Square1OCSolver ocSolver;
+	private Square1OESolver oeSolver;
 	
 	public Square1() {
 		super(1, true);
@@ -29,7 +33,9 @@ public class Square1 extends SimplePuzzle {
 		super.createPieces(new Square1EdgeBehavior(this), EDGE_POSITIONS);
 		super.createPieces(new Square1CornerBehavior(this), CORNER_POSITIONS);
 		
-		this.cubeShapeSolver = new Square1CubeShapeSolver(this);
+		this.cubeShapeSolver = new Square1CSSolver(this);
+		this.ocSolver = new Square1OCSolver(this);
+		this.oeSolver = new Square1OESolver(this);
 	}
 	
 	public Piece getPiece(int position) {
@@ -63,12 +69,13 @@ public class Square1 extends SimplePuzzle {
 
 	@Override
 	public Algorithm simplify(Algorithm alg) {
-		return alg;
+		return Square1Util.simplify(alg);
 	}
 
 	@Override
 	public Algorithm scramble(int length) {
-		Algorithm alg = new Algorithm();
+		super.setLogMoves(true);
+		super.clearMoveLog();
 		
 		for(int i = 0; i < length; i ++) {
 			int top = (int) Mathf.random(0, 7);
@@ -76,20 +83,43 @@ public class Square1 extends SimplePuzzle {
 			boolean topCW = (Mathf.random(0, 1) > 0.5f);
 			boolean bottomCW = (Mathf.random(0, 1) > 0.5f);
 			
-			for(int j = 0; j < top; j ++) alg.addMove(new Move(Axis.SU, topCW));
-			for(int j = 0; j < bottom; j ++) alg.addMove(new Move(Axis.SD, bottomCW));
-			alg.addMove(new Move(Axis.S1, true));
+			for(int j = 0; j < top; j ++) super.makeMove(new Move(Axis.SU, topCW));
+			for(int j = 0; j < bottom; j ++) super.makeMove(new Move(Axis.SD, bottomCW));
+			while(Square1Util.topLocked(this)) super.makeMove(new Move(Axis.SU, true));
+			while(Square1Util.bottomLocked(this)) super.makeMove(new Move(Axis.SD, true));
+			super.makeMove(new Move(Axis.S1, true));
 		}
 		
-		super.executeAlgorithm(alg);
-		return alg;
+		return super.getMoveLog();
 	}
 
 	@Override
 	public Algorithm solve() {
-		return this.cubeShapeSolver.solve();
+		
+		Algorithm solution = new Algorithm();
+		
+		for(int i = 0; i < 1000; i ++) {
+			solution.append(this.scramble(30));
+			solution.append(this.actualSolve());
+		}
+		
+		//solution.append(ocSolver.solve());
+		//solution.append(oeSolver.solve());
+		
+		return this.simplify(solution);
+		
+		
+		//return actualSolve();
 	}
 
+	private Algorithm actualSolve() {
+		Algorithm solution = cubeShapeSolver.solve();
+		solution.append(ocSolver.solve());
+		solution.append(oeSolver.solve());
+		
+		return solution;
+	}
+	
 	@Override
 	public ColorPalette createDefaultColorPalette() {
 		ColorPalette palette = new ColorPalette();
@@ -116,3 +146,68 @@ public class Square1 extends SimplePuzzle {
 	}
 
 }
+
+/*
+
+ CORNER
+CORNER
+CORNER
+EDGE
+EDGE
+EDGE
+CORNER
+EDGE
+
+CORNER
+EDGE
+EDGE
+CORNER
+CORNER
+EDGE
+EDGE
+CORNER
+
+
+
+
+
+EDGE
+CORNER
+CORNER
+EDGE
+EDGE
+EDGE
+CORNER
+CORNER
+
+EDGE
+EDGE
+EDGE
+CORNER
+EDGE
+CORNER
+CORNER
+CORNER
+ 
+ 
+ 
+ 
+ CORNER
+EDGE
+CORNER
+EDGE
+EDGE
+CORNER
+CORNER
+EDGE
+
+EDGE
+EDGE
+CORNER
+CORNER
+CORNER
+EDGE
+EDGE
+CORNER
+ 
+*/
