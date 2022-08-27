@@ -26,17 +26,15 @@ import java.util.Map;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
-import com.github.sampeterson1.puzzle.lib.GroupedPuzzle;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
-import com.github.sampeterson1.puzzle.lib.PieceGroup;
-import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.rendering.Scene;
 
+//Controls the puzzle displayed in the puzzle viewport
 public class PuzzleDisplay {
 	
 	private static final float DEFAULT_ANIMATION_SPEED = 20f;
@@ -134,7 +132,7 @@ public class PuzzleDisplay {
 
 	public void makeMove(Move move) {
 		this.animatingMove = move;
-		this.targetRotation = move.getFace().getRotationAmount();
+		this.targetRotation = move.getAxis().getRotationAmount();
 		getAffectedPieces();
 		direction = animatingMove.isCW() ? 1 : -1;
 		if(!animate) {
@@ -174,7 +172,7 @@ public class PuzzleDisplay {
 	
 	//Return a rotation matrix that rotates pieces around the current move axis by a specified amount
 	private Matrix3D getMoveRotationMatrix(Move move, float rotation) {
-		Vector3f axis = move.getFace().getRotationAxis();
+		Vector3f axis = move.getAxis().getRotationAxis();
 		Matrix3D rotationMat = new Matrix3D();
 		rotationMat.rotateAroundAxis(axis, rotation);
 		

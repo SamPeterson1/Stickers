@@ -21,6 +21,7 @@ package com.github.sampeterson1.puzzle.lib;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Vector3f;
 
+//All of the rotation axes used in every puzzle
 public enum Axis {
 		
 	R("R", new Vector3f(1, 0, 0), Mathf.PI/2), 
@@ -52,7 +53,7 @@ public enum Axis {
 		this.name = name;
 		this.rotationAxis = rotationAxis;
 		this.rotationAmount = rotationAmount;
-		Algorithm.addAxis(this);
+		UniversalAlgorithmParser.addAxis(this);
 		rotationAxis.normalize();
 	}
 

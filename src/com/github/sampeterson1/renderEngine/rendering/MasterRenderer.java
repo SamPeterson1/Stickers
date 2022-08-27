@@ -19,15 +19,6 @@
 package com.github.sampeterson1.renderEngine.rendering;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL31;
-
-import com.github.sampeterson1.math.Matrix3D;
-import com.github.sampeterson1.renderEngine.models.MeshData;
-import com.github.sampeterson1.renderEngine.models.PieceBatch;
-import com.github.sampeterson1.renderEngine.shaders.PieceShader;
-import com.github.sampeterson1.renderEngine.window.Window;
 
 public class MasterRenderer {
 	

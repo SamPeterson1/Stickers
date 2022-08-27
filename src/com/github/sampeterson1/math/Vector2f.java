@@ -1,5 +1,6 @@
 package com.github.sampeterson1.math;
 
+//A 2D float vector
 public class Vector2f {
 	
 	public float x;

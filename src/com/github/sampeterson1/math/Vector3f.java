@@ -18,7 +18,7 @@
 
 package com.github.sampeterson1.math;
 
-//A vector containing 3 floats
+//A 3D float vector
 public class Vector3f {
 	
 	public static final Vector3f ZERO = new Vector3f(0, 0, 0);

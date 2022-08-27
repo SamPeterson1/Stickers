@@ -2,23 +2,24 @@ package com.github.sampeterson1.puzzle.lib;
 
 import java.util.function.Function;
 
-import com.github.sampeterson1.cube.pieces.Cube;
-import com.github.sampeterson1.ivyCube.IvyCube;
-import com.github.sampeterson1.pyraminx.pieces.Pyraminx;
-import com.github.sampeterson1.square1.Square1;
+import com.github.sampeterson1.puzzle.puzzles.cube.pieces.Cube;
+import com.github.sampeterson1.puzzle.puzzles.ivyCube.pieces.IvyCube;
+import com.github.sampeterson1.puzzle.puzzles.pyraminx.pieces.Pyraminx;
+import com.github.sampeterson1.puzzle.puzzles.square1.pieces.Square1;
 
+//Contains all puzzle types
 public enum PuzzleType {
 
-	CUBE("Rubik's Cube", new PuzzleSizeController(3, 2, 100), (Integer size) -> new Cube(size)),
-	PYRAMINX("Pyraminx", new PuzzleSizeController(3, 2, 100), (Integer size) -> new Pyraminx(size)),
-	IVY_CUBE("Ivy Cube", new PuzzleSizeController(1), (Integer size) -> new IvyCube()),
-	SQUARE1("Square-1", new PuzzleSizeController(1), (Integer size) -> new Square1());
+	CUBE("Rubik's Cube", new PuzzleSizeBounds(3, 2, 100), (Integer size) -> new Cube(size)),
+	PYRAMINX("Pyraminx", new PuzzleSizeBounds(3, 2, 100), (Integer size) -> new Pyraminx(size)),
+	IVY_CUBE("Ivy Cube", new PuzzleSizeBounds(1), (Integer size) -> new IvyCube()),
+	SQUARE1("Square-1", new PuzzleSizeBounds(1), (Integer size) -> new Square1());
 	
 	private Function<Integer, Puzzle> init;
-	private PuzzleSizeController sizeController;
+	private PuzzleSizeBounds sizeController;
 	private String fullName;
 	
-	private PuzzleType(String fullName, PuzzleSizeController sizeController, Function<Integer, Puzzle> init) {
+	private PuzzleType(String fullName, PuzzleSizeBounds sizeController, Function<Integer, Puzzle> init) {
 		this.init = init;
 		this.fullName = fullName;
 		this.sizeController = sizeController;
@@ -28,7 +29,7 @@ public enum PuzzleType {
 		return init.apply(size);
 	}
 
-	public PuzzleSizeController getSizeController() {
+	public PuzzleSizeBounds getSizeController() {
 		return sizeController;
 	}
 

@@ -26,13 +26,14 @@ import java.util.Map;
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 
+//Provides a template and base functionality for a puzzle that can be organized into piece groups (e.g Rubik's Cube, Pyraminx, Megaminx)
 public abstract class GroupedPuzzle extends Puzzle {
 	
 	private List<Piece> allPieces;
 	private Map<PieceType, Map<Integer, PieceGroup>> groupsByType;
 		
-	public GroupedPuzzle(int size) {
-		super(size);
+	public GroupedPuzzle(PuzzleType type, int size) {
+		super(type, size);
 		
 		this.groupsByType = new HashMap<PieceType,  Map<Integer, PieceGroup>>();
 		this.allPieces = new ArrayList<Piece>();
@@ -51,9 +52,7 @@ public abstract class GroupedPuzzle extends Puzzle {
 	public abstract ColorPalette createDefaultColorPalette();
 	
 	public abstract DisplayPiece createDisplayPiece(Piece piece);
-	
-	public abstract PuzzleType getType();
-	
+
 	private void addAllPieces(PieceGroup group) {
 		for(Piece piece : group.getPieces()) {
 			allPieces.add(piece);

@@ -1,3 +1,21 @@
+/*
+ *	Stickers Twisty Puzzle Simulator and Solver
+ *	Copyright (C) 2022 Sam Peterson <sam.peterson1@icloud.com>
+ *	
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *	
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *	GNU General Public License for more details.
+ *	
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.github.sampeterson1.puzzle.lib;
 
 import java.util.ArrayList;
@@ -13,12 +31,12 @@ public abstract class SimplePuzzle extends Puzzle {
 	private Map<PieceType, List<Piece>> piecesByType;
 	private Map<PieceType, SimplePieceBehavior> pieceBehaviors;
 	
-	public SimplePuzzle(int size) {
-		this(size, false);
+	public SimplePuzzle(PuzzleType type, int size) {
+		this(type, size, false);
 	}
 	
-	public SimplePuzzle(int size, boolean sparse) {
-		super(size);
+	public SimplePuzzle(PuzzleType type, int size, boolean sparse) {
+		super(type, size);
 		
 		this.sparse = sparse;
 		this.allPieces = new ArrayList<Piece>();
@@ -26,11 +44,11 @@ public abstract class SimplePuzzle extends Puzzle {
 		this.pieceBehaviors = new EnumMap<PieceType, SimplePieceBehavior>(PieceType.class);
 	}
 	
-	protected Map<PieceType, List<Piece>> getPiecesByType() {
+	protected final Map<PieceType, List<Piece>> getPiecesByType() {
 		return this.piecesByType;
 	}
 	
-	protected Piece getPiece(PieceType type, int position) {
+	protected final Piece getPiece(PieceType type, int position) {
 		List<Piece> pieces = piecesByType.get(type);
 		
 		if(sparse) {
@@ -44,7 +62,7 @@ public abstract class SimplePuzzle extends Puzzle {
 		return pieces.get(position);
 	}
 	
-	protected void createPieces(SimplePieceBehavior behavior, int[] positions) {
+	protected final void createPieces(SimplePieceBehavior behavior, int[] positions) {
 		List<Piece> pieces = new ArrayList<Piece>();
 		PieceType type = behavior.getType();
 		pieceBehaviors.put(type, behavior);
@@ -57,7 +75,7 @@ public abstract class SimplePuzzle extends Puzzle {
 		allPieces.addAll(pieces);
 	}
 	
-	protected void createPieces(SimplePieceBehavior behavior, int numPieces) {
+	protected final void createPieces(SimplePieceBehavior behavior, int numPieces) {
 		int[] positions = new int[numPieces];
 		for(int i = 0; i < numPieces; i ++) positions[i] = i;
 		
@@ -65,7 +83,7 @@ public abstract class SimplePuzzle extends Puzzle {
 	}
 	
 	@Override
-	public List<Piece> getAffectedPieces(Move move) {
+	public final List<Piece> getAffectedPieces(Move move) {
 		List<Piece> affectedPieces = new ArrayList<Piece>();
 		
 		for(PieceType type : piecesByType.keySet()) {
@@ -83,12 +101,12 @@ public abstract class SimplePuzzle extends Puzzle {
 	}
 
 	@Override
-	public List<Piece> getAllPieces() {
+	public final List<Piece> getAllPieces() {
 		return this.allPieces;
 	}
 
 	@Override
-	protected void movePieces(Move move) {
+	protected final void movePieces(Move move) {
 		for(PieceType type : piecesByType.keySet()) {
 			List<Piece> pieces = piecesByType.get(type);
 			SimplePieceBehavior behavior = pieceBehaviors.get(type);

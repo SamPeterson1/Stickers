@@ -18,20 +18,25 @@
 
 package com.github.sampeterson1.puzzle.lib;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Move {
 	
 	private boolean isCubeRotation;
 	private boolean cw;
-	private int layer;
-	private Axis face;
 	
-	public Move(Axis face, int layer, boolean cw, boolean isCubeRotation) {
-		this.face = face;
+	private int repetitions;
+	private int layer;
+	
+	private Axis axis;
+	
+	public Move(Axis axis, int layer, boolean cw, boolean isCubeRotation) {
+		this.axis = axis;
 		this.layer = layer;
 		this.cw = cw;
 		this.isCubeRotation = isCubeRotation;
+		this.repetitions = 1;
 	}
 	
 	public Move(Axis face, boolean cw, boolean isCubeRotation) {
@@ -44,6 +49,21 @@ public class Move {
 	
 	public Move(Axis face, boolean cw) {
 		this(face, 0, cw, false);
+	}
+	
+	public List<Move> expandRepetitions() {
+		List<Move> moves = new ArrayList<Move>();
+		
+		for(int i = 0; i < repetitions; i ++) {
+			moves.add(new Move(axis, layer, cw, isCubeRotation));
+		}
+		
+		return moves;
+	}
+	
+	public Move repeated(int repetitions) {
+		this.repetitions = repetitions;
+		return this;
 	}
 	
 	public boolean isCubeRotation() {
@@ -62,24 +82,19 @@ public class Move {
 		return this.layer;
 	}
 	
-	public Axis getFace() {
-		return this.face;
+	public Axis getAxis() {
+		return this.axis;
 	}
 	
 	public Move getInverse() {
-		return new Move(face, layer, !cw, isCubeRotation);
+		return new Move(axis, layer, !cw, isCubeRotation);
 	}
 	
 	public Move transpose(Puzzle puzzle) {
-		Axis newFace = puzzle.transposeAxis(face);
+		Axis newFace = puzzle.transposeAxis(axis);
 		return new Move(newFace, layer, cw, isCubeRotation);
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(cw, face, isCubeRotation, layer);
-	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -90,7 +105,7 @@ public class Move {
 			return false;
 		
 		Move other = (Move) obj;
-		return cw == other.cw && face == other.face && isCubeRotation == other.isCubeRotation && layer == other.layer;
+		return cw == other.cw && axis == other.axis && isCubeRotation == other.isCubeRotation && layer == other.layer;
 	}
 
 	

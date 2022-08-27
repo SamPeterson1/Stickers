@@ -24,66 +24,85 @@ import java.util.List;
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 
+//provides the template and base functionality for (in theory) any type of twisty puzzle
 public abstract class Puzzle {
 	
+	private PuzzleType type;
 	private int size;
 	
 	private ArrayList<Move> rotations;
 	private ArrayList<Integer> rotationStack;
 	private Algorithm moveLog;
+	
 	private boolean logMoves;
 		
-	public Puzzle(int size) {
+	public Puzzle(PuzzleType type, int size) {
+		this.type = type;
 		this.size = size;
 		this.rotations = new ArrayList<Move>();	
 		this.rotationStack = new ArrayList<Integer>();
 		this.moveLog = new Algorithm();
 	}
 	
+	//returns a list of all of the pieces on this puzzle that are affected by a given move
 	public abstract List<Piece> getAffectedPieces(Move move);
 
+	//returns a list of all of the pieces on this puzzle
 	public abstract List<Piece> getAllPieces();
 	
+	//maps a move axis to a new axis depending on the current puzzle rotations
 	public abstract Axis transposeAxis(Axis face);
 	
+	//parses a string into an algorithm
 	public abstract Algorithm parseAlgorithm(String alg);
 	
+	//simplifies an algorithm to have a less or equal length
 	public abstract Algorithm simplify(Algorithm alg);
 	
+	//scrambles this puzzle and returns the scramble used
 	public abstract Algorithm scramble(int length);
 	
+	//solves this puzzle and returns the solution used
 	public abstract Algorithm solve();
 	
+	//creates the default sticker color values for this puzzle 
 	public abstract ColorPalette createDefaultColorPalette();
 	
+	//creates a DisplayPiece that represents the given piece
 	public abstract DisplayPiece createDisplayPiece(Piece piece);
 	
-	public abstract PuzzleType getType();
-	
+	//apply a move to this puzzle's internal piece structure
 	protected abstract void movePieces(Move move);
 	
-	public int getSize() {
+	public final PuzzleType getType() {
+		return this.type;
+	}
+	
+	public final int getSize() {
 		return size;
 	}
 	
-	public Algorithm getMoveLog() {
+	public final Algorithm getMoveLog() {
 		return this.moveLog;
 	}
 	
-	public void clearMoveLog() {
+	public final void clearMoveLog() {
 		this.moveLog = new Algorithm();
 	}
 	
-	public void setLogMoves(boolean logMoves) {
+	public final void setLogMoves(boolean logMoves) {
 		this.logMoves = logMoves;
 	}
 	
-	public void pushRotations() {
+	//save the current puzzle rotation state
+	public final void pushRotations() {
 		rotationStack.add(rotations.size());
 	}
 	
-	public void popRotations() {
+	//restore the last puzzle rotation state
+	public final void popRotations() {
 		int numRotations = rotationStack.remove(rotationStack.size() - 1);
+		
 		while(rotations.size() != numRotations) {
 			Move move = rotations.remove(0);
 			makeMove(move, false);
@@ -91,38 +110,40 @@ public abstract class Puzzle {
 		}
 	}
 	
-	public void makeRotation(Axis face, boolean cw) {
+	public final void makeRotation(Axis face, boolean cw) {
 		Move move = new Move(face, cw, true);
 		makeMove(move, false);
 	}
 	
-	public ArrayList<Move> getRotations() {
+	public final ArrayList<Move> getRotations() {
 		return this.rotations;
 	}
 	
-	public void executeAlgorithm(Algorithm alg, boolean log) {
+	public final void executeAlgorithm(Algorithm alg, boolean log) {
 		List<Move> moves = alg.getMoves();
 		for(Move move : moves) {
 			makeMove(move, log);
 		}
 	}
 	
-	public void makeMove(Move move, boolean log) {	
-		movePieces(move);
-		
-		if(move.isCubeRotation()) {
-			rotations.add(0, move.getInverse());
-		}
-		move = move.transpose(this);
-		
-		if(log && !move.isCubeRotation()) moveLog.addMove(move); 
-	}
-	
-	public void executeAlgorithm(Algorithm alg) {
+	public final void executeAlgorithm(Algorithm alg) {
 		executeAlgorithm(alg, logMoves);
 	}
 	
-	public void makeMove(Move move) {
+	public final void makeMove(Move move, boolean log) {
+		for(Move repetition : move.expandRepetitions()) {
+			movePieces(repetition);
+			
+			if(repetition.isCubeRotation()) {
+				rotations.add(0, repetition.getInverse());
+			}
+			repetition = repetition.transpose(this);
+			
+			if(log && !repetition.isCubeRotation()) moveLog.addMove(repetition); 
+		}
+	}
+	
+	public final void makeMove(Move move) {
 		makeMove(move, logMoves);
 	}
 	

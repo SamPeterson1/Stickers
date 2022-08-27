@@ -12,7 +12,6 @@ import com.github.sampeterson1.renderEngine.gui.GUIComponent;
 import com.github.sampeterson1.renderEngine.gui.GUIDropdownBox;
 import com.github.sampeterson1.renderEngine.gui.GUIMaster;
 import com.github.sampeterson1.renderEngine.gui.GUITextBox;
-import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.shaders.ButtonShader;
 import com.github.sampeterson1.renderEngine.shaders.CheckboxShader;
@@ -122,17 +121,6 @@ public class GUIRenderer {
 			}	
 		}
 		shader.stop();
-	}
-	
-	private void renderMesh(Mesh mesh) {
-		MeshData meshData = mesh.getData();
-		GL30.glBindVertexArray(meshData.getVaoID());
-		enableAttribs(1);
-
-		GL11.glDrawElements(GL11.GL_TRIANGLES, meshData.getNumIndices(), GL11.GL_UNSIGNED_INT, 0);
-		
-		disableAttribs(1);
-		GL30.glBindVertexArray(0);
 	}
 	
 	private void disableAttribs(int numAttribs) {

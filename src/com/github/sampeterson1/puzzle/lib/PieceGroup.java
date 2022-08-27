@@ -21,6 +21,7 @@ package com.github.sampeterson1.puzzle.lib;
 import java.util.ArrayList;
 import java.util.List;
 
+//Holds a list of pieces and coordinates them
 public class PieceGroup {
 	
 	private GroupedPuzzle puzzle;

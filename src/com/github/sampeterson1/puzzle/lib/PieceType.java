@@ -18,6 +18,7 @@
 
 package com.github.sampeterson1.puzzle.lib;
 
+//Piece types used in every puzzle
 public enum PieceType {
 	CORNER(3), CENTER(1), EDGE(2),
 	SQUARE1_CENTER(3);

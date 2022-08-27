@@ -23,8 +23,8 @@ import java.util.List;
 
 public abstract class SimplePieceBehavior extends PieceBehavior {
 	
-	public SimplePieceBehavior(Puzzle puzzle) {
-		super(puzzle);
+	public SimplePieceBehavior(PieceType type, Puzzle puzzle) {
+		super(type, puzzle);
 	}
 
 	protected abstract Piece createPiece(int position);

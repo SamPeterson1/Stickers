@@ -20,6 +20,7 @@ package com.github.sampeterson1.puzzle.lib;
 
 import com.github.sampeterson1.math.Vector3f;
 
+//Provides some default rgb colors
 public enum Color {
 	
 	BORDER(1f, 1f, 1f),

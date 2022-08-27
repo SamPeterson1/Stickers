@@ -1,14 +1,11 @@
 package com.github.sampeterson1.renderEngine.rendering;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
 
 import com.github.sampeterson1.math.Matrix3D;
-import com.github.sampeterson1.renderEngine.gui.GUIMaster;
-import com.github.sampeterson1.renderEngine.loaders.Loader;
 import com.github.sampeterson1.renderEngine.models.MeshData;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
 import com.github.sampeterson1.renderEngine.shaders.PieceShader;

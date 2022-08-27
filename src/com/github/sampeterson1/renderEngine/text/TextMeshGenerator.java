@@ -1,9 +1,7 @@
 package com.github.sampeterson1.renderEngine.text;
 
 import com.github.sampeterson1.renderEngine.loaders.Loader;
-import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.MeshData;
-import com.github.sampeterson1.renderEngine.rendering.MeshType;
 import com.github.sampeterson1.renderEngine.window.Window;
 
 public class TextMeshGenerator {

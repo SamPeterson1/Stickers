@@ -20,15 +20,22 @@ package com.github.sampeterson1.puzzle.lib;
 
 import java.util.List;
 
+//Provides a template for defining how a piece/piece group moves
 public abstract class PieceBehavior {
 
 	private Puzzle puzzle;
+	private PieceType type;
 	
-	public PieceBehavior(Puzzle puzzle) {
+	public PieceBehavior(PieceType type, Puzzle puzzle) {
 		this.puzzle = puzzle;
+		this.type = type;
 	}
 	
-	protected Puzzle getPuzzle() {
+	public final PieceType getType() {
+		return this.type;
+	}
+	
+	protected final Puzzle getPuzzle() {
 		return this.puzzle;
 	}
 	
@@ -40,5 +47,4 @@ public abstract class PieceBehavior {
 	
 	public abstract int getNumPieces(int puzzleSize);
 	
-	public abstract PieceType getType();
 }
