@@ -95,24 +95,6 @@ public class Square1 extends SimplePuzzle {
 
 	@Override
 	public Algorithm solve() {
-		
-		Algorithm solution = new Algorithm();
-		
-		for(int i = 0; i < 1000; i ++) {
-			solution.append(this.scramble(30));
-			solution.append(this.actualSolve());
-		}
-		
-		//solution.append(ocSolver.solve());
-		//solution.append(oeSolver.solve());
-		
-		return this.simplify(solution);
-		
-		
-		//return actualSolve();
-	}
-
-	private Algorithm actualSolve() {
 		Algorithm solution = cubeShapeSolver.solve();
 		solution.append(ocSolver.solve());
 		solution.append(oeSolver.solve());
@@ -146,68 +128,3 @@ public class Square1 extends SimplePuzzle {
 	}
 
 }
-
-/*
-
- CORNER
-CORNER
-CORNER
-EDGE
-EDGE
-EDGE
-CORNER
-EDGE
-
-CORNER
-EDGE
-EDGE
-CORNER
-CORNER
-EDGE
-EDGE
-CORNER
-
-
-
-
-
-EDGE
-CORNER
-CORNER
-EDGE
-EDGE
-EDGE
-CORNER
-CORNER
-
-EDGE
-EDGE
-EDGE
-CORNER
-EDGE
-CORNER
-CORNER
-CORNER
- 
- 
- 
- 
- CORNER
-EDGE
-CORNER
-EDGE
-EDGE
-CORNER
-CORNER
-EDGE
-
-EDGE
-EDGE
-CORNER
-CORNER
-CORNER
-EDGE
-EDGE
-CORNER
- 
-*/

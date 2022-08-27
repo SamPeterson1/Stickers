@@ -53,7 +53,6 @@ public class Square1OCSolver {
 		
 		for(Square1OCCase ocCase : cases) {
 			if(ocCase.solve(sq1)) {
-				System.out.println("Orient corners solved");
 				break;
 			}
 		}

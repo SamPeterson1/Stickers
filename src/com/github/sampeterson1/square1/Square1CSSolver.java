@@ -93,17 +93,15 @@ public class Square1CSSolver {
 			for(int i = 0; i < 7; i ++) {
 				for(Square1CSCase cubeShapeCase : cases) {
 					if(cubeShapeCase.solve(sq1)) {
+						recognizedCase = true;
 						break;
 					}
 				}
 			}
 		}
 
-		if(!recognizedCase) {
-			int i = 0;
-			while(!Square1Util.topSquare(sq1)) sq1.makeMove(new Move(Axis.SU, true));
-			while(!Square1Util.bottomSquare(sq1)) sq1.makeMove(new Move(Axis.SD, true));
-		}
+		while(!Square1Util.topSquare(sq1)) sq1.makeMove(new Move(Axis.SU, true));
+		while(!Square1Util.bottomSquare(sq1)) sq1.makeMove(new Move(Axis.SD, true));
 		
 		return sq1.simplify(sq1.getMoveLog());
 	}

@@ -52,7 +52,6 @@ public class Square1OESolver {
 		
 		for(Square1OECase oeCase : cases) {
 			if(oeCase.solve(sq1)) {
-				System.out.println("Orient edges solve");
 				break;
 			}
 		}
