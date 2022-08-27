@@ -2,10 +2,10 @@ package com.github.sampeterson1.puzzle.lib;
 
 import java.util.function.Function;
 
-import com.github.sampeterson1.puzzle.puzzles.cube.pieces.Cube;
-import com.github.sampeterson1.puzzle.puzzles.ivyCube.pieces.IvyCube;
-import com.github.sampeterson1.puzzle.puzzles.pyraminx.pieces.Pyraminx;
-import com.github.sampeterson1.puzzle.puzzles.square1.pieces.Square1;
+import com.github.sampeterson1.puzzles.cube.pieces.Cube;
+import com.github.sampeterson1.puzzles.ivyCube.pieces.IvyCube;
+import com.github.sampeterson1.puzzles.pyraminx.pieces.Pyraminx;
+import com.github.sampeterson1.puzzles.square1.pieces.Square1;
 
 //Contains all puzzle types
 public enum PuzzleType {
