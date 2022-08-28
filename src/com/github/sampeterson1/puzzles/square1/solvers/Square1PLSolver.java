@@ -36,15 +36,12 @@ public class Square1PLSolver {
 	
 	private Square1 sq1;
 	private List<Square1PLCase> cases;
-	
-	/*
-	 * Case 5 and 1 induces a problem in Case 8
-	 */
+	private Algorithm flipEquator;
 	
 	public Square1PLSolver(Square1 sq1) {
 		this.sq1 = sq1;
 		this.cases = new ArrayList<Square1PLCase>();
-		
+		this.flipEquator = Square1Util.parseAlgorithm("/(6,0)/(6,0)/(6,0)");
 		loadCases("square1/PL_Algs.txt");
 	}
 
@@ -99,9 +96,7 @@ public class Square1PLSolver {
 	public Algorithm solve() {
 		sq1.clearMoveLog();
 		sq1.setLogMoves(true);		
-		//testCases();
-		
-		int casesSolved = 0;
+
 		boolean swapLayers = false;
 		for(int i = 0; i < 3; i ++) {
 			int caseIndex = 0;
@@ -109,12 +104,10 @@ public class Square1PLSolver {
 				caseIndex ++;
 				if(plCase.solve(sq1, swapLayers)) {
 					System.out.println("Case: " + caseIndex);
-					casesSolved ++;
 					break;
 				}
 			}
-			if(i == 1 && casesSolved == 1) {
-				System.out.println("swap");
+			if(i == 1) {
 				swapLayers = true;
 			}
 		}
@@ -126,7 +119,10 @@ public class Square1PLSolver {
 		while(sq1.getPiece(13).getColor(2) != Color.GREEN) {
 			sq1.makeMove(new Move(Axis.SD, true).repeated(3));
 		}
-		
+
+		if(sq1.getCenter(0).getColor(0) == Color.BLUE) {
+			sq1.executeAlgorithm(flipEquator);
+		}
 		
 		return sq1.simplify(sq1.getMoveLog());
 	}

@@ -56,7 +56,7 @@ public class Square1CenterBehavior extends SimplePieceBehavior {
 			Color front = piece.getColor(0);
 			Color back = piece.getColor(2);
 			piece.setColor(0, back);
-			piece.setColor(1, front);
+			piece.setColor(2, front);
 		}
 	}
 

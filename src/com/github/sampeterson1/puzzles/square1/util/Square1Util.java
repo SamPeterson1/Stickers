@@ -290,15 +290,19 @@ public class Square1Util {
 	}
 	
 	public static Algorithm flip(Algorithm alg) {
+		return flip(alg, true);
+	}
+	
+	public static Algorithm flip(Algorithm alg, boolean invertDirection) {
 		Algorithm mirror = new Algorithm();
 		for(Move move : alg.getMoves()) {
 			Axis axis = move.getAxis();
 			if(axis == Axis.S1) {
 				mirror.addMove(move);
 			} else if(axis == Axis.SD){
-				mirror.addMove(new Move(Axis.SU, move.isCCW()));
+				mirror.addMove(new Move(Axis.SU, invertDirection ? move.isCCW() : move.isCW()));
 			} else if(axis == Axis.SU) {
-				mirror.addMove(new Move(Axis.SD, move.isCCW()));
+				mirror.addMove(new Move(Axis.SD, invertDirection ? move.isCCW() : move.isCW()));
 			}
 		}
 		
