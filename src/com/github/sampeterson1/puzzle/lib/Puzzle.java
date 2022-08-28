@@ -32,15 +32,19 @@ public abstract class Puzzle {
 	
 	private ArrayList<Move> rotations;
 	private ArrayList<Integer> rotationStack;
+	
 	private Algorithm moveLog;
+	private ArrayList<Integer> moveLogStack;
 	
 	private boolean logMoves;
 		
 	public Puzzle(PuzzleType type, int size) {
+		this.logMoves = true;
 		this.type = type;
 		this.size = size;
 		this.rotations = new ArrayList<Move>();	
 		this.rotationStack = new ArrayList<Integer>();
+		this.moveLogStack = new ArrayList<Integer>();
 		this.moveLog = new Algorithm();
 	}
 	
@@ -99,6 +103,10 @@ public abstract class Puzzle {
 		rotationStack.add(rotations.size());
 	}
 	
+	public final void pushState() {
+		moveLogStack.add(moveLog.length());
+	}
+	
 	//restore the last puzzle rotation state
 	public final void popRotations() {
 		int numRotations = rotationStack.remove(rotationStack.size() - 1);
@@ -107,6 +115,15 @@ public abstract class Puzzle {
 			Move move = rotations.remove(0);
 			makeMove(move, false);
 			rotations.remove(0);
+		}
+	}
+	
+	public final void popState() {
+		int targetSize = moveLogStack.remove(moveLogStack.size() - 1);
+		
+		while(moveLog.length() != targetSize) {
+			Move move = moveLog.pop();
+			makeMove(move.getInverse(), false);
 		}
 	}
 	

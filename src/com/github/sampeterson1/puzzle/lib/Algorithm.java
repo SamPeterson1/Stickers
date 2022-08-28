@@ -88,6 +88,10 @@ public class Algorithm {
 		for(Move move : moves) addMove(move);
 	}
 	
+	public Move pop() {
+		return moves.remove(moves.size() - 1);
+	}
+	
 	public void addMove(Move move) {
 		moves.add(move);
 	}

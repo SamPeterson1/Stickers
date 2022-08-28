@@ -31,8 +31,8 @@ import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzle.lib.SimplePuzzle;
 import com.github.sampeterson1.puzzles.square1.display.Square1DisplayPiece;
 import com.github.sampeterson1.puzzles.square1.solvers.Square1CSSolver;
-import com.github.sampeterson1.puzzles.square1.solvers.Square1OCSolver;
-import com.github.sampeterson1.puzzles.square1.solvers.Square1OESolver;
+import com.github.sampeterson1.puzzles.square1.solvers.Square1OLSolver;
+import com.github.sampeterson1.puzzles.square1.solvers.Square1PLSolver;
 import com.github.sampeterson1.puzzles.square1.util.Square1Util;
 
 public class Square1 extends SimplePuzzle {
@@ -41,9 +41,9 @@ public class Square1 extends SimplePuzzle {
 	private static final int[] EDGE_POSITIONS = new int[] {0, 3, 6, 9, 12, 15, 18, 21};
 	private static final int[] CORNER_POSITIONS = new int[] {1, 4, 7, 10, 13, 16, 19, 22};
 	
-	private Square1CSSolver cubeShapeSolver;
-	private Square1OCSolver ocSolver;
-	private Square1OESolver oeSolver;
+	private Square1CSSolver csSolver;
+	private Square1OLSolver olSolver;
+	private Square1PLSolver plSolver;
 	
 	public Square1() {
 		super(PuzzleType.SQUARE1, 1, true);
@@ -52,9 +52,9 @@ public class Square1 extends SimplePuzzle {
 		super.createPieces(new Square1EdgeBehavior(this), EDGE_POSITIONS);
 		super.createPieces(new Square1CornerBehavior(this), CORNER_POSITIONS);
 		
-		this.cubeShapeSolver = new Square1CSSolver(this);
-		this.ocSolver = new Square1OCSolver(this);
-		this.oeSolver = new Square1OESolver(this);
+		this.csSolver = new Square1CSSolver(this);
+		this.olSolver = new Square1OLSolver(this);
+		this.plSolver = new Square1PLSolver(this);
 	}
 	
 	public Piece getPiece(int position) {
@@ -114,9 +114,9 @@ public class Square1 extends SimplePuzzle {
 
 	@Override
 	public Algorithm solve() {
-		Algorithm solution = cubeShapeSolver.solve();
-		solution.append(ocSolver.solve());
-		solution.append(oeSolver.solve());
+		Algorithm solution = csSolver.solve();
+		solution.append(olSolver.solve());
+		solution.append(plSolver.solve());
 		
 		return solution;
 	}

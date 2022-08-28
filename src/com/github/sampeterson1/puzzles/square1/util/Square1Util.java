@@ -83,6 +83,38 @@ public class Square1Util {
 	}
 	
 	public static Algorithm simplify(Algorithm alg) {
+		int lastLen = alg.length();
+		
+		do {
+			lastLen = alg.length();
+			while((alg = mergeLayerMoves(alg)).length() < lastLen) {
+				lastLen = alg.length();
+			}
+		} while((alg = mergeSliceMoves(alg)).length() < lastLen);
+		
+		
+		return alg;
+	}
+	
+	private static Algorithm mergeSliceMoves(Algorithm alg) {
+		List<Move> newMoves = new ArrayList<Move>();
+		Axis lastAxis = null;
+		
+		for(Move move : alg.getMoves()) {
+			Axis axis = move.getAxis();
+			
+			if(axis == lastAxis && axis == Axis.S1) {
+				newMoves.remove(newMoves.size() - 1);
+			} else {
+				newMoves.add(move);
+			}
+			lastAxis = axis;
+		}
+		
+		return new Algorithm(newMoves);
+	}
+	
+	private static Algorithm mergeLayerMoves(Algorithm alg) {
 		List<Move> newMoves = new ArrayList<Move>();
 		
 		int numUMoves = 0;

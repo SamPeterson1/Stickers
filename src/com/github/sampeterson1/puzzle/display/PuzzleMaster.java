@@ -98,7 +98,7 @@ public class PuzzleMaster {
 		}
 
 		display = new PuzzleDisplay(selectedPuzzleType.createPuzzle(puzzleSize));
-		display.setAnimationSpeed(20f);
+		display.setAnimationSpeed(200000f);
 		display.setAnimate(true);
 		puzzleCopy = selectedPuzzleType.createPuzzle(puzzleSize);
 	}

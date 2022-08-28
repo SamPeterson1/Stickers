@@ -23,6 +23,7 @@ import com.github.sampeterson1.math.Vector3f;
 //Provides some default rgb colors
 public enum Color {
 	
+	NONE(0f, 0f, 0f),
 	BORDER(1f, 1f, 1f),
 	
 	RED(1f, 0f, 0f), GREEN(0f, 1f, 0f), BLUE(0f, 0f, 1f),
