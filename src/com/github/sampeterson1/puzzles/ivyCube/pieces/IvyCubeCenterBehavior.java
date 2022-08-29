@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
+import com.github.sampeterson1.puzzles.ivyCube.IvyCubeUtil;
 
 //Defines how the center pieces on an ivy cube move
 public class IvyCubeCenterBehavior extends SimplePieceBehavior {
@@ -43,11 +43,6 @@ public class IvyCubeCenterBehavior extends SimplePieceBehavior {
 	private static final Map<Integer, Integer> lPositionMap = initPositionMap(lPositionArr);
 	private static final Map<Integer, Integer> dPositionMap = initPositionMap(dPositionArr);
 	private static final Map<Integer, Integer> bPositionMap = initPositionMap(bPositionArr);
-	
-	private static Color[] colors = {
-			Color.RED, Color.WHITE, Color.GREEN,
-			Color.ORANGE, Color.YELLOW, Color.BLUE
-	};
 	
 	private static Map<Integer, Integer> initPositionMap(int[][] positionArr) {
 		Map<Integer, Integer> positionMap = new HashMap<Integer, Integer>();
@@ -79,7 +74,7 @@ public class IvyCubeCenterBehavior extends SimplePieceBehavior {
 	@Override
 	public Piece createPiece(int position) {
 		Piece center = new Piece(super.getPuzzle(), PieceType.CENTER, position);
-		center.setColor(colors[position]);
+		center.setColor(IvyCubeUtil.centerColors[position]);
 		
 		return center;
 	}

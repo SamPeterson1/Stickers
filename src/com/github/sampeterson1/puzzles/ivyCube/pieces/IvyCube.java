@@ -26,8 +26,12 @@ import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
+import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzle.lib.SimplePuzzle;
+import com.github.sampeterson1.puzzle.lib.UniversalAlgorithmParser;
+import com.github.sampeterson1.puzzles.ivyCube.IvyCubeSolver;
+import com.github.sampeterson1.puzzles.ivyCube.IvyCubeUtil;
 import com.github.sampeterson1.puzzles.ivyCube.display.IvyCubeDisplayPiece;
 
 //An implementation of Puzzle that represents an Ivy Cube
@@ -50,15 +54,25 @@ public class IvyCube extends SimplePuzzle {
 	private static final int NUM_CORNERS = 4;
 	private static final int NUM_CENTERS = 6;
 	
-	private static final Axis[] moveAxes = {Axis.IR, Axis.IL, Axis.ID, Axis.IB};
+	private IvyCubeSolver solver;
 	
 	public IvyCube() {
-		super(PuzzleType.IVY_CUBE, 1);
+		super(PuzzleType.IVY_CUBE, 1, true);
 		
 		super.createPieces(new IvyCubeCornerBehavior(this), NUM_CORNERS);
 		super.createPieces(new IvyCubeCenterBehavior(this), NUM_CENTERS);
+		
+		this.solver = new IvyCubeSolver(this);
 	}
 
+	public Piece getCenter(int position) {
+		return super.getPiece(PieceType.CENTER, position);
+	}
+	
+	public Piece getCorner(int position) {
+		return super.getPiece(PieceType.CORNER, position);
+	}
+	
 	@Override
 	public Axis transposeAxis(Axis face) {
 		return face;
@@ -74,17 +88,19 @@ public class IvyCube extends SimplePuzzle {
 		Algorithm scramble = new Algorithm();
 		
 		for(int i = 0; i < length; i ++) {
-			int index = (int) Mathf.random(0, moveAxes.length);
+			int index = (int) Mathf.random(0, IvyCubeUtil.moveAxes.length);
 			boolean cw = (Mathf.random(0, 1) > 0.5f);
-			scramble.addMove(new Move(moveAxes[index], cw));
+			scramble.addMove(new Move(IvyCubeUtil.moveAxes[index], cw));
 		}
+		
+		super.executeAlgorithm(scramble);
 		
 		return scramble;
 	}
 
 	@Override
 	public Algorithm solve() {
-		return new Algorithm();
+		return solver.solve();
 	}
 
 	@Override
@@ -109,7 +125,7 @@ public class IvyCube extends SimplePuzzle {
 
 	@Override
 	public Algorithm parseAlgorithm(String alg) {
-		return new Algorithm();
+		return UniversalAlgorithmParser.parseAlgorithm(alg);
 	}
 
 }

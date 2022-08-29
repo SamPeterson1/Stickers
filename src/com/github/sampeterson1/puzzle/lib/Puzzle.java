@@ -107,6 +107,10 @@ public abstract class Puzzle {
 		moveLogStack.add(moveLog.length());
 	}
 	
+	public final void clearStates() {
+		moveLogStack.clear();
+	}
+	
 	//restore the last puzzle rotation state
 	public final void popRotations() {
 		int numRotations = rotationStack.remove(rotationStack.size() - 1);

@@ -25,16 +25,10 @@ import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
+import com.github.sampeterson1.puzzles.ivyCube.IvyCubeUtil;
 
 //Defines how a corner piece moves on an Ivy Cube
 public class IvyCubeCornerBehavior extends SimplePieceBehavior {
-
-	private static final Color[][] colors = {
-			{Color.WHITE, Color.GREEN, Color.ORANGE},
-			{Color.WHITE, Color.BLUE, Color.RED},
-			{Color.YELLOW, Color.GREEN, Color.RED},
-			{Color.YELLOW, Color.BLUE, Color.ORANGE}
-	};
 	
 	public IvyCubeCornerBehavior(Puzzle puzzle) {
 		super(PieceType.CORNER, puzzle);
@@ -43,7 +37,7 @@ public class IvyCubeCornerBehavior extends SimplePieceBehavior {
 	@Override
 	public Piece createPiece(int position) {
 		Piece corner = new Piece(super.getPuzzle(), PieceType.CORNER, position);
-		for(int i = 0; i < 3; i ++) corner.setColor(i, colors[position][i]);
+		for(int i = 0; i < 3; i ++) corner.setColor(i, IvyCubeUtil.cornerColors[position][i]);
 		
 		return corner;
 	}
