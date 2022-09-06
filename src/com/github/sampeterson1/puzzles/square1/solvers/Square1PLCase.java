@@ -31,12 +31,11 @@ public class Square1PLCase {
 	private static Algorithm layerSwapAlg = Square1Util.parseAlgorithm("/(6,6)/(-1,1)");
 	private static Square1 solvedReference = new Square1();
 	private Algorithm solution;
-	private Algorithm flipSolution;
+
 	private int[] positions;
 	
 	public Square1PLCase(String solution, int[] positions) {
 		this.solution = Square1Util.parseAlgorithm(solution);
-		this.flipSolution = Square1Util.flip(this.solution);
 		this.positions = positions;
 	}
 	

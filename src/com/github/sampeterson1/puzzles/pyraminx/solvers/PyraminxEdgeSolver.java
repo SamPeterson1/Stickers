@@ -19,9 +19,6 @@
 
 package com.github.sampeterson1.puzzles.pyraminx.solvers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Move;

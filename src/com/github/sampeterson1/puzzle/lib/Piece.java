@@ -133,16 +133,30 @@ public class Piece {
 	}
 	
 	public boolean hasEquivalentColors(Piece other) {
+		return hasColors(other.colors);
+	}
+	
+	public boolean hasColor(Color color) {
+		for(Color c : this.colors) {
+			if(color == c) 
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean hasColors(Color ...colors) {
 		for(Color c1 : colors) {
-			boolean hasColor = false;
-			for(Color c2 : other.colors) {
-				if(c1 == c2) {
-					hasColor = true;
-					break;
-				}
-			}
-			
-			if(!hasColor) return false;
+			if(!hasColor(c1))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean matchesColors(Color ...colors) {
+		for(int i = 0; i < colors.length; i ++) {
+			if(colors[i] != this.colors[i]) return false;
 		}
 		
 		return true;

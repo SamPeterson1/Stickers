@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
@@ -82,15 +81,6 @@ public class Square1PLSolver {
 		String solution = tokens[1];
 		
 		return new Square1PLCase(solution, positions);
-	}
-	
-	private void testCases() {
-		for(Square1PLCase plCase : cases) {
-			sq1.executeAlgorithm(plCase.getSolution().getInverse());
-			sq1.makeMove(new Move(Axis.SU, true).repeated(((int) Mathf.random(0, 4)) * 3));
-			sq1.makeMove(new Move(Axis.SD, true).repeated(((int) Mathf.random(0, 4)) * 3));
-			if(!plCase.solve(sq1, false)) System.out.println("NOOOO");
-		}
 	}
 	
 	public Algorithm solve() {

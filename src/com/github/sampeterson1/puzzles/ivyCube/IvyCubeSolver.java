@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.UniversalAlgorithmParser;
-import com.github.sampeterson1.puzzles.IvyCubeSolutionGenerator;
 import com.github.sampeterson1.puzzles.ivyCube.pieces.IvyCube;
 import com.github.sampeterson1.renderEngine.loaders.ResourceLoader;
 
