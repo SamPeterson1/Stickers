@@ -54,6 +54,14 @@ public class PieceGroup {
 		return true;
 	}
 	
+	public boolean hasSolvedPiece() {
+		for(Piece piece : pieces) {
+			if(piece.isSolved()) return true;
+		}
+		
+		return false;
+	}
+	
 	public int getNumPieces() {
 		return this.pieces.size();
 	}

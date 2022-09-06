@@ -34,6 +34,8 @@ import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzles.pyraminx.display.PyraminxDisplayPiece;
 import com.github.sampeterson1.puzzles.pyraminx.solvers.PyraminxCenterSolver;
+import com.github.sampeterson1.puzzles.pyraminx.solvers.PyraminxEdgeSolver;
+import com.github.sampeterson1.puzzles.pyraminx.solvers.PyraminxRingSolver;
 import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxCenterUtil;
 import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxMoveUtil;
 
@@ -61,7 +63,9 @@ public class Pyraminx extends GroupedPuzzle {
 		return faces[piece.getPosition()];
 	}
 	
-	PyraminxCenterSolver centerSolver;
+	private PyraminxCenterSolver centerSolver;
+	private PyraminxEdgeSolver edgeSolver;
+	private PyraminxRingSolver ringSolver;
 	
 	public Pyraminx(int size) {
 		super(PuzzleType.PYRAMINX, size);
@@ -70,12 +74,18 @@ public class Pyraminx extends GroupedPuzzle {
 		super.createPieces(new PyraminxEdgeBehavior(this), NUM_EDGES);
 		super.createPieces(new PyraminxCornerBehavior(this), NUM_CORNERS);
 		
+		edgeSolver = new PyraminxEdgeSolver(this);
 		centerSolver = new PyraminxCenterSolver(this);
+		ringSolver = new PyraminxRingSolver(this);
 	}
 	
 	@Override
 	public Algorithm solve() {
-		return centerSolver.solve();
+		Algorithm alg = centerSolver.solve();
+		alg.append(edgeSolver.solve());
+		alg.append(ringSolver.solve());
+		
+		return alg;
 	}
 	
 	private Move getRandomMove(int puzzleSize) {

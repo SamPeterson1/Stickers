@@ -20,6 +20,12 @@ package com.github.sampeterson1.puzzles.pyraminx.util;
 
 import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
+import com.github.sampeterson1.puzzle.lib.Move;
+import com.github.sampeterson1.puzzle.lib.Piece;
+import com.github.sampeterson1.puzzle.lib.PieceGroup;
+import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzles.pyraminx.pieces.Pyraminx;
+import com.github.sampeterson1.puzzles.pyraminx.pieces.PyraminxEdgeBehavior;
 
 public class PyraminxEdgeUtil {
 	
@@ -56,24 +62,38 @@ public class PyraminxEdgeUtil {
 		return map[position];
 	}
 
+	public static int getLayer(Axis axis, Piece piece) {
+		PyraminxEdgeBehavior edgeBehavior = new PyraminxEdgeBehavior(piece.getPuzzle());
+		PieceGroup edge = ((Pyraminx) piece.getPuzzle()).getGroup(PieceType.EDGE, piece.getPosition());
+		
+		for(int layer = 0; layer < piece.getPuzzleSize(); layer++) {
+			Move move = new Move(axis, layer, true);
+			if(edgeBehavior.getAffectedPieces(move, edge).contains(piece)) {
+				return layer;
+			}
+		}
+		
+		return -1;
+	}
+	
 	public static Axis getFace(int position, int side) {
 		if(side == 0) {
-			if(position >= 3 && position <= 5) {
-				return Axis.PD;
-			} else if(position == 0) {
+			if(position == 0 || position == 3) {
 				return Axis.PF;
-			} else if(position == 1) {
+			} else if(position == 1 || position == 4) {
 				return Axis.PR;
-			} else if(position == 2) {
+			} else if(position == 2 || position == 5) {
 				return Axis.PL;
 			}
 		} else if(side == 1) {
-			if(position == 0 || position == 4) {
+			if(position == 0) {
 				return Axis.PR;
-			} else if(position == 1 || position == 5) {
+			} else if(position == 1) {
 				return Axis.PL;
-			} else if(position == 2 || position == 3) {
+			} else if(position == 2) {
 				return Axis.PF;
+			} else if(position >= 3 && position <= 5) {
+				return Axis.PD;
 			}
 		}
 		

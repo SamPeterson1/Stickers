@@ -113,6 +113,44 @@ public class Piece {
 		
 		return sb.toString();
 	}
+	
+	@Override
+	public Piece clone() {
+		Piece piece = new Piece(puzzle, type, position, index);
+		for(int i = 0; i < colors.length; i ++) {
+			piece.setColor(i, colors[i]);
+		}
+		
+		return piece;
+	}
+	
+	public boolean hasExactColors(Piece other) {
+		for(int i = 0; i < colors.length; i ++) {
+			if(colors[i] != other.colors[i]) return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean hasEquivalentColors(Piece other) {
+		for(Color c1 : colors) {
+			boolean hasColor = false;
+			for(Color c2 : other.colors) {
+				if(c1 == c2) {
+					hasColor = true;
+					break;
+				}
+			}
+			
+			if(!hasColor) return false;
+		}
+		
+		return true;
+	}
+	
+	public Color[] getColors() {
+		return this.colors;
+	}
 
 	public boolean equalsPosition(Piece other) {
 		return index == other.index && position == other.position && type == other.type;

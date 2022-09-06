@@ -431,11 +431,6 @@ public class PyraminxCenterSolver {
 	}
 	
 	public void lastTwoCenters() {
-		
-		//boolean swap = !(isSolved(Axis.PR) && isSolved(Axis.PL));
-		//Axis colorAxis = swap ? Axis.PD : Axis.PF;
-		
-		//Color color = pyr.getGroup(PieceType.CENTER, colorFace).getPiece(centerIndex).getColor();
 		Color color = Color.RED;
 		for(int layer = 0; layer < centerSize; layer ++) {
 			System.out.println("Layer " + layer + "/" + centerSize);
