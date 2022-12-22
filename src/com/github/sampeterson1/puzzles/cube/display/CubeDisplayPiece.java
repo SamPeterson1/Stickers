@@ -20,10 +20,10 @@ package com.github.sampeterson1.puzzles.cube.display;
 
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
 import com.github.sampeterson1.puzzles.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;

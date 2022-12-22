@@ -18,6 +18,9 @@
 
 package com.github.sampeterson1.puzzle.lib;
 
+import com.github.sampeterson1.puzzle.templates.GroupedPuzzle;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
+
 public class Piece {
 	
 	private Puzzle puzzle;
@@ -44,12 +47,15 @@ public class Piece {
 		this.colors = new Color[type.getNumColors()];
 	}
 	
+	public int getPuzzleSize() {
+		if(this.puzzle instanceof GroupedPuzzle)
+			return ((GroupedPuzzle) puzzle).getSize();
+		
+		return 0;
+	}
+	
 	public Puzzle getPuzzle() {
 		return this.puzzle;
-	}
-
-	public int getPuzzleSize() {
-		return this.puzzle.getSize();
 	}
 	
 	public boolean isSolved() {

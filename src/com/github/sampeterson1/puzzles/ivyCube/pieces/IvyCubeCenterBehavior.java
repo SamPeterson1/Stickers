@@ -21,22 +21,22 @@ package com.github.sampeterson1.puzzles.ivyCube.pieces;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
-import com.github.sampeterson1.puzzles.ivyCube.IvyCubeUtil;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
+import com.github.sampeterson1.puzzles.ivyCube.util.IvyCubeUtil;
 
 //Defines how the center pieces on an ivy cube move
 public class IvyCubeCenterBehavior extends SimplePieceBehavior {
 	
 	//key-value pairs to be put into the position maps below
-	private static final int[][] rPositionArr = { {IvyCube.GREEN_CENTER, IvyCube.RED_CENTER}, {IvyCube.RED_CENTER, IvyCube.YELLOW_CENTER}, {IvyCube.YELLOW_CENTER, IvyCube.GREEN_CENTER} };
-	private static final int[][] lPositionArr = { {IvyCube.WHITE_CENTER, IvyCube.GREEN_CENTER}, {IvyCube.GREEN_CENTER, IvyCube.ORANGE_CENTER}, {IvyCube.ORANGE_CENTER, IvyCube.WHITE_CENTER} };
-	private static final int[][] dPositionArr = { {IvyCube.BLUE_CENTER, IvyCube.ORANGE_CENTER}, {IvyCube.ORANGE_CENTER, IvyCube.YELLOW_CENTER}, {IvyCube.YELLOW_CENTER, IvyCube.BLUE_CENTER} };
-	private static final int[][] bPositionArr = { {IvyCube.WHITE_CENTER, IvyCube.BLUE_CENTER}, {IvyCube.BLUE_CENTER, IvyCube.RED_CENTER}, {IvyCube.RED_CENTER, IvyCube.WHITE_CENTER} };
+	private static final int[][] rPositionArr = { {IvyCubeUtil.GREEN_CENTER, IvyCubeUtil.RED_CENTER}, {IvyCubeUtil.RED_CENTER, IvyCubeUtil.YELLOW_CENTER}, {IvyCubeUtil.YELLOW_CENTER, IvyCubeUtil.GREEN_CENTER} };
+	private static final int[][] lPositionArr = { {IvyCubeUtil.WHITE_CENTER, IvyCubeUtil.GREEN_CENTER}, {IvyCubeUtil.GREEN_CENTER, IvyCubeUtil.ORANGE_CENTER}, {IvyCubeUtil.ORANGE_CENTER, IvyCubeUtil.WHITE_CENTER} };
+	private static final int[][] dPositionArr = { {IvyCubeUtil.BLUE_CENTER, IvyCubeUtil.ORANGE_CENTER}, {IvyCubeUtil.ORANGE_CENTER, IvyCubeUtil.YELLOW_CENTER}, {IvyCubeUtil.YELLOW_CENTER, IvyCubeUtil.BLUE_CENTER} };
+	private static final int[][] bPositionArr = { {IvyCubeUtil.WHITE_CENTER, IvyCubeUtil.BLUE_CENTER}, {IvyCubeUtil.BLUE_CENTER, IvyCubeUtil.RED_CENTER}, {IvyCubeUtil.RED_CENTER, IvyCubeUtil.WHITE_CENTER} };
 	
 	//Takes a face position and maps it to a new face given a move
 	private static final Map<Integer, Integer> rPositionMap = initPositionMap(rPositionArr);
@@ -80,7 +80,7 @@ public class IvyCubeCenterBehavior extends SimplePieceBehavior {
 	}
 	
 	@Override
-	protected boolean affectedByMove(Move move, Piece piece) {
+	public boolean affectedByMove(Move move, Piece piece) {
 		Axis axis = move.getAxis();
 		int position = piece.getPosition();
 		Map<Integer, Integer> positionMap = getPositionMap(axis);
@@ -101,5 +101,4 @@ public class IvyCubeCenterBehavior extends SimplePieceBehavior {
 		
 		piece.setPosition(newPosition);
 	}
-
 }

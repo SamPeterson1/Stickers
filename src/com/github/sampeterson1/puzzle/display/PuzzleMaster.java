@@ -19,18 +19,21 @@
 package com.github.sampeterson1.puzzle.display;
 
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
-import com.github.sampeterson1.puzzle.lib.PuzzleSizeBounds;
+import com.github.sampeterson1.puzzle.lib.PuzzleFactory;
+import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
 import com.github.sampeterson1.puzzle.lib.PuzzleType;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
 
 //Controls the selected puzzle and provides functionality to switch between puzzles
 public class PuzzleMaster {
 	
 	private static final Map<String, PuzzleType> puzzlesByName = getPuzzlesByName();
+	private static final Map<PuzzleType, PuzzleSizeController> sizeControllers = createSizeControllers();
 	
 	private static Puzzle puzzleCopy;
 	private static PuzzleDisplay display;
@@ -40,6 +43,19 @@ public class PuzzleMaster {
 	private static int scrambleLength = 0;
 	private static int movePointer = 0;
 	private static Algorithm animatingAlg;
+	
+	private static Map<PuzzleType, PuzzleSizeController> createSizeControllers() {
+		Map<PuzzleType, PuzzleSizeController> sizeControllers = new EnumMap<PuzzleType, PuzzleSizeController>(PuzzleType.class);
+		
+		PuzzleType[] types = PuzzleType.class.getEnumConstants();
+		for(PuzzleType type : types) 
+			sizeControllers.put(type, new PuzzleSizeController());
+		
+		sizeControllers.put(PuzzleType.CUBE, new PuzzleSizeController().withDefault(3).withMin(2).withMax(100));
+		sizeControllers.put(PuzzleType.PYRAMINX, new PuzzleSizeController().withDefault(3).withMin(2).withMax(100));
+		
+		return sizeControllers;
+	}
 	
 	private static Map<String, PuzzleType> getPuzzlesByName() {
 		Map<String, PuzzleType> retVal = new HashMap<String, PuzzleType>();
@@ -76,16 +92,16 @@ public class PuzzleMaster {
 	}
 	
 	public static void executeAlgorithm(String alg) {
-		animatingAlg = puzzleCopy.parseAlgorithm(alg);
+		animatingAlg = puzzleCopy.getMetaFunctions().parseAlgorithm(alg);
 		puzzleCopy.executeAlgorithm(animatingAlg);
 	}
 	
 	public static void scramble() {
-		animatingAlg = puzzleCopy.scramble(scrambleLength);
+		animatingAlg = puzzleCopy.getMetaFunctions().scramble(scrambleLength);
 	}
 	
 	public static void solve() {
-		animatingAlg = puzzleCopy.solve();
+		animatingAlg = puzzleCopy.getMetaFunctions().solve();
 	}
 	
 	public static Collection<String> getPuzzleNames() {
@@ -97,23 +113,21 @@ public class PuzzleMaster {
 			display.delete();
 		}
 
-		display = new PuzzleDisplay(selectedPuzzleType.createPuzzle(puzzleSize));
+		display = new PuzzleDisplay(PuzzleFactory.createPuzzle(selectedPuzzleType, puzzleSize, true));
 		display.setAnimationSpeed(200000f);
 		display.setAnimate(true);
-		puzzleCopy = selectedPuzzleType.createPuzzle(puzzleSize);
+		puzzleCopy = PuzzleFactory.createPuzzle(selectedPuzzleType, puzzleSize, true);
 	}
 	
 	public static void selectPuzzle(String name) {	
 		selectedPuzzleType = puzzlesByName.get(name);
-		puzzleSize = selectedPuzzleType.getSizeController().getDefaultSize();
+		puzzleSize = sizeControllers.get(selectedPuzzleType).getDefaultSize();
+
 		refresh();
 	}
 	
 	public static void setPuzzleSize(int size) {
-		PuzzleSizeBounds sizeController = puzzleCopy.getType().getSizeController();
-		if(size >= sizeController.getMinSize() && size <= sizeController.getMaxSize()) {
-			puzzleSize = size;
-		}
+		puzzleSize = sizeControllers.get(selectedPuzzleType).restrictSize(size);
 		refresh();
 	}
 	

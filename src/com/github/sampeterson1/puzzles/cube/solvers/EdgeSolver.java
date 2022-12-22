@@ -20,12 +20,12 @@ package com.github.sampeterson1.puzzles.cube.solvers;
 
 import java.util.ArrayList;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
-import com.github.sampeterson1.puzzles.cube.pieces.Cube;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzles.cube.meta.Cube;
 import com.github.sampeterson1.puzzles.cube.util.CubeEdgeUtil;
 
 /*

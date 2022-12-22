@@ -21,8 +21,8 @@ package com.github.sampeterson1.puzzles.cube.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Move;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
 
 //Utilities relating to moves on a Rubik's Cube
 public class CubeMoveUtil {

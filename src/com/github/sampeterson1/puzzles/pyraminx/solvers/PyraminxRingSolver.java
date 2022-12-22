@@ -3,13 +3,13 @@ package com.github.sampeterson1.puzzles.pyraminx.solvers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzles.pyraminx.pieces.Pyraminx;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzles.pyraminx.meta.Pyraminx;
 
 public class PyraminxRingSolver {
 

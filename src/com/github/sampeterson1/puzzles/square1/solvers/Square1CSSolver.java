@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Move;
-import com.github.sampeterson1.puzzles.square1.pieces.Square1;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzles.square1.meta.Square1;
 import com.github.sampeterson1.puzzles.square1.util.Square1Util;
 import com.github.sampeterson1.renderEngine.loaders.ResourceLoader;
 
@@ -86,7 +86,7 @@ public class Square1CSSolver {
 	
 		//if the puzzle is already in cube shape, return
 		if(tryAllignSquareLayers()) 
-			return sq1.simplify(sq1.getMoveLog());
+			return Square1Util.simplify(sq1.getMoveLog());
 		
 		//if we can't solve it the first time, swap the layers and try again
 		if(!trySolveCS()) {
@@ -94,7 +94,7 @@ public class Square1CSSolver {
 			trySolveCS();
 		}
 		
-		return sq1.simplify(sq1.getMoveLog());
+		return Square1Util.simplify(sq1.getMoveLog());
 	}
 	
 	//returns true if solving cubeshape was successful

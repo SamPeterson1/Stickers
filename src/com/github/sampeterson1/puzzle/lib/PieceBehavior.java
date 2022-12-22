@@ -20,6 +20,9 @@ package com.github.sampeterson1.puzzle.lib;
 
 import java.util.List;
 
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
+
 //Provides a template for defining how a piece/piece group moves
 public abstract class PieceBehavior {
 

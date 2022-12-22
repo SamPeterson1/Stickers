@@ -18,14 +18,14 @@
 
 package com.github.sampeterson1.puzzles.ivyCube.pieces;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
-import com.github.sampeterson1.puzzles.ivyCube.IvyCubeUtil;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
+import com.github.sampeterson1.puzzles.ivyCube.util.IvyCubeUtil;
 
 //Defines how a corner piece moves on an Ivy Cube
 public class IvyCubeCornerBehavior extends SimplePieceBehavior {
@@ -43,18 +43,18 @@ public class IvyCubeCornerBehavior extends SimplePieceBehavior {
 	}
 
 	@Override
-	protected boolean affectedByMove(Move move, Piece piece) {
+	public boolean affectedByMove(Move move, Piece piece) {
 		Axis axis = move.getAxis();
 		int affectedPosition = 0;
 		
 		if(axis == Axis.IR) {
-			affectedPosition = IvyCube.R_CORNER;
+			affectedPosition = IvyCubeUtil.R_CORNER;
 		} else if(axis == Axis.IL) {
-			affectedPosition = IvyCube.L_CORNER;
+			affectedPosition = IvyCubeUtil.L_CORNER;
 		} else if(axis == Axis.ID) {
-			affectedPosition = IvyCube.D_CORNER;
+			affectedPosition = IvyCubeUtil.D_CORNER;
 		} else if(axis == Axis.IB) {
-			affectedPosition = IvyCube.B_CORNER;
+			affectedPosition = IvyCubeUtil.B_CORNER;
 		}
 		
 		return (piece.getPosition() == affectedPosition);

@@ -18,11 +18,11 @@
 
 package com.github.sampeterson1.puzzles.cube.util;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
 
 //Utilities relating to edges on a Rubik's Cube
 public class CubeEdgeUtil {

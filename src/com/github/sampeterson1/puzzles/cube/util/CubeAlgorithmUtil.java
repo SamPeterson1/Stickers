@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.sampeterson1.math.Mathf;
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Move;
-import com.github.sampeterson1.puzzle.lib.UniversalAlgorithmParser;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.moves.UniversalAlgorithmParser;
 
 //Utilities relating to a Rubik's Cube algorithm
 public class CubeAlgorithmUtil {

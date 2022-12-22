@@ -24,7 +24,7 @@ import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzles.ivyCube.pieces.IvyCube;
+import com.github.sampeterson1.puzzles.ivyCube.util.IvyCubeUtil;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 
@@ -35,8 +35,8 @@ public class IvyCubeDisplayPiece extends DisplayPiece {
 	private static ColoredMesh cornerPieceMesh;
 	
 	private static void loadMeshes() {
-		petalPieceMesh = OBJLoader.loadColoredMesh("IvyPetal.obj");
-		cornerPieceMesh = OBJLoader.loadColoredMesh("IvyCorner.obj");
+		petalPieceMesh = OBJLoader.loadColoredMesh("ivyCube/IvyPetal.obj");
+		cornerPieceMesh = OBJLoader.loadColoredMesh("ivyCube/IvyCorner.obj");
 	}
 	
 	public IvyCubeDisplayPiece(Piece position) {
@@ -48,11 +48,11 @@ public class IvyCubeDisplayPiece extends DisplayPiece {
 	private Matrix3D getCornerWorldPosition(int position) {
 		Matrix3D transform = new Matrix3D();
 		
-		if(position == IvyCube.R_CORNER) {
+		if(position == IvyCubeUtil.R_CORNER) {
 			transform.rotateZ(Mathf.PI);
-		} else if(position == IvyCube.B_CORNER) {
+		} else if(position == IvyCubeUtil.B_CORNER) {
 			transform.rotateY(Mathf.PI);
-		} else if(position == IvyCube.D_CORNER) {
+		} else if(position == IvyCubeUtil.D_CORNER) {
 			transform.rotateY(Mathf.PI);
 			transform.rotateZ(Mathf.PI);
 		}
@@ -63,20 +63,20 @@ public class IvyCubeDisplayPiece extends DisplayPiece {
 	private Matrix3D getCenterWorldPosition(int position) {
 		Matrix3D transform = new Matrix3D();
 		
-		if(position == IvyCube.RED_CENTER) {
+		if(position == IvyCubeUtil.RED_CENTER) {
 			transform.rotateY(Mathf.PI);
-		} else if(position == IvyCube.WHITE_CENTER) {
+		} else if(position == IvyCubeUtil.WHITE_CENTER) {
 			transform.rotateX(Mathf.PI/2);
 			transform.rotateZ(Mathf.PI/2);
-		} else if(position == IvyCube.GREEN_CENTER) {
+		} else if(position == IvyCubeUtil.GREEN_CENTER) {
 			transform.rotateX(Mathf.PI/2);
 			transform.rotateY(-Mathf.PI/2);
-		} else if(position == IvyCube.ORANGE_CENTER) {
+		} else if(position == IvyCubeUtil.ORANGE_CENTER) {
 			//this center is positioned correctly by default
-		} else if(position == IvyCube.YELLOW_CENTER) {
+		} else if(position == IvyCubeUtil.YELLOW_CENTER) {
 			transform.rotateX(Mathf.PI/2);
 			transform.rotateZ(-Mathf.PI/2);
-		} else if(position == IvyCube.BLUE_CENTER) {
+		} else if(position == IvyCubeUtil.BLUE_CENTER) {
 			transform.rotateX(Mathf.PI/2);
 			transform.rotateY(Mathf.PI/2);
 		}

@@ -26,9 +26,9 @@ import java.util.Map;
 import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.math.Matrix3D;
 import com.github.sampeterson1.math.Vector3f;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
 import com.github.sampeterson1.renderEngine.models.Mesh;
 import com.github.sampeterson1.renderEngine.models.PieceBatch;
@@ -62,7 +62,7 @@ public class PuzzleDisplay {
 	
 	public PuzzleDisplay(Puzzle puzzle) {
 		this.puzzle = puzzle;
-		this.palette = puzzle.createDefaultColorPalette();
+		this.palette = puzzle.getMetaFunctions().createDefaultColorPalette();
 		
 		createPieces();
 		this.lastTime = System.currentTimeMillis();
@@ -83,7 +83,7 @@ public class PuzzleDisplay {
 		this.allDisplayPieces = new ArrayList<DisplayPiece>();
 		
 		for(Piece piece : puzzle.getAllPieces()) {
-			DisplayPiece displayPiece = puzzle.createDisplayPiece(piece);
+			DisplayPiece displayPiece = puzzle.getMetaFunctions().createDisplayPiece(piece);
 			ColoredMesh mesh = displayPiece.getMesh();
 			
 			if(pieceBatches.containsKey(mesh)) {

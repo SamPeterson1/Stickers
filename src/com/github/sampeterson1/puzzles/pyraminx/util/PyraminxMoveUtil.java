@@ -21,8 +21,10 @@ package com.github.sampeterson1.puzzles.pyraminx.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Move;
+import com.github.sampeterson1.math.Mathf;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzles.pyraminx.meta.Pyraminx;
 
 public class PyraminxMoveUtil {
 
@@ -58,6 +60,16 @@ public class PyraminxMoveUtil {
 		faceMaps.put(Axis.PL, lMap);
 		faceMaps.put(Axis.PF, fMap);
 		faceMaps.put(Axis.PR, rMap);
+	}
+	
+	public static Move getRandomMove(int puzzleSize) {
+		int i = (int) Mathf.random(0, Pyraminx.faces.length);
+		Axis f = Pyraminx.faces[i];
+
+		int layer = (int) Mathf.random(0, puzzleSize);
+		boolean cw = (Mathf.random(0, 1) < 0.5);
+
+		return new Move(f, layer, cw);
 	}
 	
 	public static Axis mapFace(Axis face, Move move) {

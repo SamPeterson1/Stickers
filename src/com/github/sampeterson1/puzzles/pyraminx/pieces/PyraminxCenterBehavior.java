@@ -21,13 +21,14 @@ package com.github.sampeterson1.puzzles.pyraminx.pieces;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceBehavior;
 import com.github.sampeterson1.puzzle.lib.PieceGroup;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
+import com.github.sampeterson1.puzzles.pyraminx.meta.Pyraminx;
 import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxCenterUtil;
 import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxMoveUtil;
 

@@ -18,10 +18,10 @@
 
 package com.github.sampeterson1.puzzles.cube.solvers;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzles.cube.pieces.Cube;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzles.cube.meta.Cube;
 import com.github.sampeterson1.puzzles.cube.util.CubeAlgorithmUtil;
 
 //A representation of a full PLL case in the CFOP method

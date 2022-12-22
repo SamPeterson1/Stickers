@@ -21,8 +21,8 @@ package com.github.sampeterson1.puzzles.pyraminx.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.UniversalAlgorithmParser;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.UniversalAlgorithmParser;
 
 public class PyraminxAlgorithmUtil {
 

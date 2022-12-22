@@ -23,11 +23,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
-import com.github.sampeterson1.puzzles.square1.pieces.Square1;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzles.square1.meta.Square1;
 import com.github.sampeterson1.puzzles.square1.util.Square1Util;
 import com.github.sampeterson1.renderEngine.loaders.ResourceLoader;
 
@@ -114,7 +114,7 @@ public class Square1PLSolver {
 			sq1.executeAlgorithm(flipEquator);
 		}
 		
-		return sq1.simplify(sq1.getMoveLog());
+		return Square1Util.simplify(sq1.getMoveLog());
 	}
 	
 }

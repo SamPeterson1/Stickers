@@ -21,15 +21,18 @@ package com.github.sampeterson1.puzzle.lib;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
+
 public abstract class SimplePieceBehavior extends PieceBehavior {
 	
 	public SimplePieceBehavior(PieceType type, Puzzle puzzle) {
 		super(type, puzzle);
 	}
 
-	protected abstract Piece createPiece(int position);
+	public abstract Piece createPiece(int position);
 	
-	protected abstract boolean affectedByMove(Move move, Piece piece);
+	public abstract boolean affectedByMove(Move move, Piece piece);
 	
 	@Override
 	public Piece createPiece(int position, int index) {

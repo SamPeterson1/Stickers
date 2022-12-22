@@ -18,12 +18,12 @@
 
 package com.github.sampeterson1.puzzles.square1.solvers;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
-import com.github.sampeterson1.puzzles.square1.pieces.Square1;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzles.square1.meta.Square1;
 import com.github.sampeterson1.puzzles.square1.util.Square1Util;
 
 public class Square1OLCase {

@@ -21,8 +21,8 @@ package com.github.sampeterson1.puzzles.cube.util;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
+import com.github.sampeterson1.puzzle.moves.Axis;
 
 //Utilities relating to the Rubik's Cube in general
 public class CubeUtil {

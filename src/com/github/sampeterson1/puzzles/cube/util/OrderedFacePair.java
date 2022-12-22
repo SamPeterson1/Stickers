@@ -20,7 +20,7 @@ package com.github.sampeterson1.puzzles.cube.util;
 
 import java.util.Objects;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
+import com.github.sampeterson1.puzzle.moves.Axis;
 
 //An ordered pair of faces
 public class OrderedFacePair {

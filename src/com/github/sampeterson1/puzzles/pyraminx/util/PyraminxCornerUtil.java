@@ -19,8 +19,8 @@
 package com.github.sampeterson1.puzzles.pyraminx.util;
 
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
+import com.github.sampeterson1.puzzle.moves.Move;
 
 public class PyraminxCornerUtil {
 

@@ -18,13 +18,14 @@
 
 package com.github.sampeterson1.puzzles.square1.pieces;
 
-import com.github.sampeterson1.puzzle.lib.Axis;
 import com.github.sampeterson1.puzzle.lib.Color;
-import com.github.sampeterson1.puzzle.lib.Move;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
-import com.github.sampeterson1.puzzle.lib.Puzzle;
 import com.github.sampeterson1.puzzle.lib.SimplePieceBehavior;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
+import com.github.sampeterson1.puzzles.square1.meta.Square1;
 import com.github.sampeterson1.puzzles.square1.util.Square1Util;
 
 public class Square1CenterBehavior extends SimplePieceBehavior {
@@ -34,7 +35,7 @@ public class Square1CenterBehavior extends SimplePieceBehavior {
 	}
 
 	@Override
-	protected Piece createPiece(int position) {
+	public Piece createPiece(int position) {
 		Piece piece = new Piece(super.getPuzzle(), PieceType.SQUARE1_CENTER, position);
 		
 		if(position == 0) {
@@ -61,7 +62,7 @@ public class Square1CenterBehavior extends SimplePieceBehavior {
 	}
 
 	@Override
-	protected boolean affectedByMove(Move move, Piece piece) {
+	public boolean affectedByMove(Move move, Piece piece) {
 		return (!Square1Util.isLocked((Square1) super.getPuzzle()) && move.getAxis() == Axis.S1 && piece.getPosition() == 0);
 	}
 

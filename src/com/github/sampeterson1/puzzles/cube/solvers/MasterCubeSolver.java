@@ -18,8 +18,8 @@
 
 package com.github.sampeterson1.puzzles.cube.solvers;
 
-import com.github.sampeterson1.puzzle.lib.Algorithm;
-import com.github.sampeterson1.puzzles.cube.pieces.Cube;
+import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzles.cube.meta.Cube;
 
 //Encapsulates all of the solvers needed to produce a full solution of a Rubik's Cube
 public class MasterCubeSolver {
@@ -62,7 +62,7 @@ public class MasterCubeSolver {
 		
 		System.out.println("Simplifying solution...");
 		Algorithm solution = cube.getMoveLog();
-		solution = cube.simplify(solution);
+		solution = cube.getMetaFunctions().simplify(solution);
 		
 		float seconds = (System.currentTimeMillis() - startTime) / 1000.0f;
 		System.out.println("Solved in " + seconds + " seconds and " + solution.length() + " moves");
