@@ -52,7 +52,7 @@ public class PuzzleMaster {
 			sizeControllers.put(type, new PuzzleSizeController());
 		
 		sizeControllers.put(PuzzleType.CUBE, new PuzzleSizeController().withDefault(3).withMin(2).withMax(100));
-		sizeControllers.put(PuzzleType.PYRAMINX, new PuzzleSizeController().withDefault(3).withMin(2).withMax(100));
+		sizeControllers.put(PuzzleType.PYRAMINX, new PuzzleSizeController().withDefault(3).withMin(3).withMax(100));
 		
 		return sizeControllers;
 	}

@@ -431,11 +431,13 @@ public class PyraminxEdgeSolver {
 		pyr.clearMoveLog();
 		pyr.pushRotations();
 
-		firstThreeEdges();
-		lastThreeEdges();
-		
-		pyr.setLogMoves(false);
-		pyr.popRotations();
+		if(pyr.getSize() > 3) {
+			firstThreeEdges();
+			lastThreeEdges();
+			
+			pyr.setLogMoves(false);
+			pyr.popRotations();
+		}
 		
 		Algorithm alg = pyr.getMoveLog();
 		

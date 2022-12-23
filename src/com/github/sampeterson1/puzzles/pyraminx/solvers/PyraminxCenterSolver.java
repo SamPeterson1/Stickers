@@ -466,14 +466,16 @@ public class PyraminxCenterSolver {
 		pyr.clearMoveLog();
 		pyr.pushRotations();
 		
-		firstTwoCenters();
-		lastTwoCenters();
-		
-		if(puzzleSize % 3 != 0)
-			solveMiddleCenterPieces();
-
-		pyr.setLogMoves(false);
-		pyr.popRotations();
+		if(pyr.getSize() > 3) {
+			firstTwoCenters();
+			lastTwoCenters();
+			
+			if(puzzleSize % 3 != 0)
+				solveMiddleCenterPieces();
+	
+			pyr.setLogMoves(false);
+			pyr.popRotations();
+		}
 		
 		Algorithm alg = pyr.getMoveLog();
 		

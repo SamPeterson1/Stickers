@@ -44,6 +44,7 @@ public class PyraminxMetaFunctions extends PuzzleMetaFunctions<Pyraminx> {
 	
 	@Override
 	public Algorithm solve() {
+		
 		Algorithm alg = centerSolver.solve();
 		alg.append(edgeSolver.solve());
 		alg.append(ringSolver.solve());

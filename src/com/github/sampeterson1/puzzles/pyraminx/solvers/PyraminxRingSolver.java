@@ -166,7 +166,11 @@ public class PyraminxRingSolver {
 	}
 	
 	private Color getCenterColor(Axis face) {
-		return pyr.getGroup(PieceType.CENTER, face).getPiece().getColor();
+		if(pyr.getSize() > 3) {
+			return pyr.getGroup(PieceType.CENTER, face).getPiece().getColor();
+		} else {
+			return getEdgeColor(face);
+		}
 	}
 	
 	private Color getEdgeColor(Axis face) {
@@ -292,7 +296,7 @@ public class PyraminxRingSolver {
 		
 		solveTopEdges();
 		System.out.println("solving centers");
-		solveCenters();
+		if(pyr.getSize() > 3) solveCenters();
 		
 		orientCorner();
 		pyr.makeRotation(Axis.PF, true);
