@@ -1,13 +1,17 @@
 package com.github.sampeterson1.puzzles.skewb.meta;
 
+import com.github.sampeterson1.math.Mathf;
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PuzzleMetaFunctions;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.Move;
 import com.github.sampeterson1.puzzle.moves.UniversalAlgorithmParser;
 import com.github.sampeterson1.puzzles.skewb.display.SkewbDisplayPiece;
+import com.github.sampeterson1.puzzles.skewb.util.SkewbUtil;
 
 public class SkewbMetaFunctions extends PuzzleMetaFunctions<Skewb> {
 
@@ -22,7 +26,20 @@ public class SkewbMetaFunctions extends PuzzleMetaFunctions<Skewb> {
 
 	@Override
 	public Algorithm scramble(int length) {
-		return new Algorithm();
+		Algorithm scramble = new Algorithm();
+		scramble.addMove(new Move(Axis.SKB, true));
+		
+		for(int i = 0; i < length; i ++) {
+			Axis axis = SkewbUtil.AXES[(int) Mathf.random(0, SkewbUtil.AXES.length)];
+			boolean cw = (Math.random() > 0.5);
+			
+			scramble.addMove(new Move(axis, cw));
+		}
+		
+		super.getPuzzle().executeAlgorithm(scramble);
+		super.getPuzzle().print();
+		
+		return scramble;
 	}
 
 	@Override

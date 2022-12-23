@@ -11,8 +11,8 @@ import com.github.sampeterson1.puzzles.skewb.pieces.SkewbCornerBehavior;
 
 public class Skewb extends SimplePuzzle {
 
-	private static final int NUM_CORNERS = 8;
-	private static final int NUM_CENTERS = 6;
+	public static final int NUM_CORNERS = 8;
+	public static final int NUM_CENTERS = 6;
 
 	public Skewb() {
 		super(PuzzleType.SKEWB, true);
@@ -21,6 +21,16 @@ public class Skewb extends SimplePuzzle {
 		super.createPieces(new SkewbCenterBehavior(this), NUM_CENTERS);	
 	}
 
+	public void print() {
+		for(int i = 0; i < NUM_CORNERS; i ++) {
+			System.out.println(getCorner(i));
+		}
+		
+		for(int i = 0; i < NUM_CENTERS; i ++) {
+			System.out.println(getCenter(i));
+		}
+	}
+	
 	public Piece getCenter(int position) {
 		return super.getPiece(PieceType.CENTER, position);
 	}
