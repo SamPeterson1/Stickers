@@ -4,10 +4,29 @@
  * This generated file contains a sample Java application project to get you started.
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.8/userguide/building_java_projects.html in the Gradle documentation.
  */
-
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    `java-library`
+    id("com.github.johnrengelman.shadow") version "8.0.0"
+    kotlin("jvm") version "1.8.0" // or any Kotlin version you're using
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 repositories {
@@ -16,10 +35,6 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation(libs.junit.jupiter)
-
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.lwjgl:lwjgl-opengl:3.2.3")
     implementation("org.lwjgl:lwjgl-glfw:3.2.3")
     implementation(files("libs/pngdecoder-1.0.jar"))
@@ -31,6 +46,37 @@ dependencies {
     implementation(libs.guava)
 }
 
+tasks.register<Copy>("copyResources") {
+    from("res")
+    into("build/classes/java/main/res")
+}
+
+tasks.named("build").configure {
+    dependsOn("copyResources")
+}
+
+tasks.named("run").configure {
+    dependsOn("copyResources")
+}
+
+tasks.named("shadowJar").configure {
+    dependsOn("copyResources")
+}
+
+tasks.named("jar").configure {
+    dependsOn("copyResources")
+}
+
+tasks.named("inspectClassesForKotlinIC") {
+    dependsOn("copyResources")
+}
+
+tasks.shadowJar {
+    manifest {
+        attributes("Main-Class" to "com.github.sampeterson1.main.Main")
+    }
+}
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -40,5 +86,5 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "com.github.sampeterson1.main.App"
+    mainClass = "com.github.sampeterson1.main.Main"
 }

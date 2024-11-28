@@ -23,7 +23,7 @@ import org.lwjgl.glfw.GLFW;
 import com.github.sampeterson1.renderEngine.window.RenderLoop;
 import com.github.sampeterson1.renderEngine.window.Window;
 
-public class App {
+public class Main {
 	
 	public static void main(String[] args) {
 		Window.init("Stickers", 1f);
