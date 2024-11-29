@@ -39,7 +39,6 @@ public class CornerSolver {
 	}
 
 	public void solve() {
-		System.out.println("Solving Corners...");
 		cube.pushRotations();
 		
 		Color c = cube.getSolveColor(Axis.D);

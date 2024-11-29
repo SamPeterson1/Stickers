@@ -61,10 +61,7 @@ public class Square1OLSolver {
 			if(c == 'w') colors[i] = Color.WHITE;
 			else if(c == 'y') colors[i] = Color.YELLOW;
 			else if(c == '-') colors[i] = Color.NONE;
-			
-			System.out.print(colors[i] + " ");
 		}
-		System.out.println();
 		
 		return colors;
 	}
@@ -86,12 +83,10 @@ public class Square1OLSolver {
 			for(Square1OLCase olCase : cases) {
 				j ++;
 				if(olCase.solve(sq1)) {
-					System.out.println("ol solve line " + j);
 					break;
 				}
 			}
 		}
-		System.out.println("solved");
 		sq1.setLogMoves(false);
 		
 		return Square1Util.simplify(sq1.getMoveLog());

@@ -45,7 +45,6 @@ public class SkewbMetaFunctions extends PuzzleMetaFunctions<Skewb> {
 		super.getPuzzle().executeAlgorithm(scramble);
 		
 		super.getPuzzle().print();
-		System.out.println("Hash: " + SkewbSolverUtil.hash(getPuzzle()));
 		
 		return scramble;
 	}

@@ -116,8 +116,6 @@ public class UniversalAlgorithmParser {
 	}
 	
 	private static List<Move> parseRawMove(String move, int puzzleSize, PuzzleType puzzleType) throws InvalidAlgorithmException {		
-		System.out.println(move);
-		
 		if (move.length() == 0) {
 			throw new InvalidAlgorithmException("Empty move");
 		}
@@ -147,10 +145,8 @@ public class UniversalAlgorithmParser {
 
 		if(i < move.length() && move.charAt(i) == '[') {
 			layerRangeStartIndex = i + 1;
-			System.out.println("foo");
 			for(i = layerRangeStartIndex; i < move.length(); i ++) {
 				char c = move.charAt(i);
-				System.out.println(c);
 				if(c == ']') {
 					layerRangeEndIndex = i;
 					break;
@@ -166,14 +162,11 @@ public class UniversalAlgorithmParser {
 			axisNameEndIndex = Math.min(axisNameEndIndex, i);
 		}
 
-		System.out.println("layerRangeStartIndex: " + layerRangeStartIndex + ", layerRangeEndIndex: " + layerRangeEndIndex);
-
 		if (layerRangeStartIndex == -1 || layerRangeEndIndex == -1) {
 			startLayer = 0;
 			endLayer = 0;
 		} else {
 			String layerRange = move.substring(layerRangeStartIndex, layerRangeEndIndex);
-			System.out.println(layerRange);
 			String[] layerRangeSplit = layerRange.split(",");
 
 			if (layerRangeSplit.length == 1) {

@@ -58,7 +58,6 @@ public class PyraminxRingSolver {
 	
 	private void solveBottomCorners() {
 		Color color = getBottomCornerColor();
-		System.out.println("Common bottom color: " + color);
 		
 		for(int i = 0; i < 3; i ++) {
 			Piece corner = getInnerCorner(1);
@@ -93,7 +92,6 @@ public class PyraminxRingSolver {
 		Color bottomColor = referenceCorner.getColor(1);
 		
 		Piece edge = findEdgePiece(frontColor, bottomColor);
-		System.out.println(edge);
 		int position = edge.getPosition();
 		
 		if(position == 3 && edge.matchesColors(frontColor, bottomColor)) return;
@@ -110,8 +108,6 @@ public class PyraminxRingSolver {
 			
 			pyr.popRotations();
 		}
-
-		System.out.println(edge.getPosition());
 		
 		if(edge.getColor(0) == bottomColor) {
 			while(edge.getPosition() != 0)
@@ -143,9 +139,7 @@ public class PyraminxRingSolver {
 		Piece referenceCorner = getInnerCorner(1);
 		Color leftColor = referenceCorner.getColor(0);
 		Color rightColor = referenceCorner.getColor(2);
-		
-		System.out.println(leftColor + " " + rightColor + " " + edge);
-		
+				
 		pyr.popRotations();
 		
 		return edge.matchesColors(leftColor, rightColor);
@@ -213,7 +207,6 @@ public class PyraminxRingSolver {
 		int numSolved = getNumSolvedCenters();
 		
 		if(numSolved == 1) {
-			System.out.println("((:");
 			if(hasSolvedCenter(Axis.PF)) {
 				pyr.makeRotation(Axis.PL, true);
 			} else if(hasSolvedCenter(Axis.PR)) {
@@ -295,7 +288,6 @@ public class PyraminxRingSolver {
 		}
 		
 		solveTopEdges();
-		System.out.println("solving centers");
 		if(pyr.getSize() > 3) solveCenters();
 		
 		orientCorner();

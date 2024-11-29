@@ -37,15 +37,12 @@ public class SkewbSolver {
 			}
 		}
 
-		System.out.println("Foobar");
 		int[] scramble = newAlgorithm();
 		logSolution(scramble);
 		
 		for(int firstMove = 0; firstMove < possibleMoves.length; firstMove ++) {
-			System.out.println("foo");
 			scramble(scramble, firstMove);
 		}
-		System.out.println("bar");
 		
 		SkewbSolutionIO.writeSolutions(solutions);
 	}
@@ -105,7 +102,6 @@ public class SkewbSolver {
 	
 	private void scramble(int[] scramble, int move) {	
 		int len = length(scramble);
-		if(len < 3) System.out.println(len);
 		
 		if(len == MAX_SOLUTION_LENGTH) {
 			logSolution(scramble);

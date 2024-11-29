@@ -23,11 +23,11 @@ public class Skewb extends SimplePuzzle {
 
 	public void print() {
 		for(int i = 0; i < NUM_CORNERS; i ++) {
-			System.out.println(getCorner(i));
+			//System.out.println(getCorner(i));
 		}
 		
 		for(int i = 0; i < NUM_CENTERS; i ++) {
-			System.out.println(getCenter(i));
+			//System.out.println(getCenter(i));
 		}
 	}
 	

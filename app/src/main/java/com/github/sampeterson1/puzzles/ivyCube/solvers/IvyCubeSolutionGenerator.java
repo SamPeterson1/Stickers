@@ -52,13 +52,11 @@ public class IvyCubeSolutionGenerator {
 			for(Algorithm alg : solutions.values()) {
 				IvyCubeSolution solution = new IvyCubeSolution(alg, false);
 				String str = solution.toString();
-				//System.out.println("Reading, Num solutions: " + solutions.size() + " " + str);
 				if((i++) % 100 == 0) {
 					System.out.println(i + "/"  + solutions.size());
 				}
 				writer.write(str + "\n");
 			}
-			System.out.println("done reading");
 			
 			while(solutions.size() < 29160) {
 				IvyCube solutionFinder = new IvyCube();

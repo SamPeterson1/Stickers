@@ -44,7 +44,6 @@ public class SkewbSolutionIO {
 	private static int writeAlgorithm(byte[] bytes, int cursor, int[] alg) {
 
 		for(int i = 0; i < alg.length; i += 2) {
-			System.out.println(alg[i]);
 			int codeA = (alg[i] != -1) ? (alg[i] + 2) : 0;
 			int codeB = ((i + 1) < alg.length && alg[i + 1] != -1) ? (alg[i + 1] + 2) : 0;
 			

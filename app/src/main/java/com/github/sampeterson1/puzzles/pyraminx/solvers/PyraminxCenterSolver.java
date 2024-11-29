@@ -113,10 +113,6 @@ public class PyraminxCenterSolver {
 		if(restoreNeeded) {
 			pyr.makeMove(new Move(Axis.PD, pairingLayer + 1, true));
 		}
-		
-		if(Pyraminx.getFace(piece) != Axis.PL) {
-			System.out.println("Badd");
-		}
 	}
 	
 	public void movePiece_RL(Piece piece, boolean keepDFace) {

@@ -60,7 +60,6 @@ public class Square1PLSolver {
 	private int[] parsePositions(String positionStr) {
 		int[] positions = new int[16];
 		String[] tokens = positionStr.split(",");
-		System.out.println(positionStr);
 		for(int i = 0; i < 16; i ++) {
 			if(tokens[i].equals("-")) {
 				positions[i] = -1;
@@ -74,9 +73,6 @@ public class Square1PLSolver {
 	
 	private Square1PLCase parseCase(String line) {
 		String[] tokens = line.split(" ");
-		System.out.println("parse");
-		System.out.println(line);
-		System.out.println(tokens[0]);
 		int[] positions = parsePositions(tokens[0]);
 		String solution = tokens[1];
 		
