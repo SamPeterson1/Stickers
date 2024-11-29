@@ -6,8 +6,10 @@ import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PuzzleMetaFunctions;
+import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
 import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzle.moves.Move;
 import com.github.sampeterson1.puzzle.moves.UniversalAlgorithmParser;
 import com.github.sampeterson1.puzzles.skewb.display.SkewbDisplayPiece;
@@ -77,8 +79,8 @@ public class SkewbMetaFunctions extends PuzzleMetaFunctions<Skewb> {
 	}
 
 	@Override
-	public Algorithm parseAlgorithm(String alg) {
-		return UniversalAlgorithmParser.parseAlgorithm(alg);
+	public Algorithm parseAlgorithm(String alg) throws InvalidAlgorithmException {
+		return UniversalAlgorithmParser.parseAlgorithm(alg, PuzzleType.SKEWB);
 	}
 
 }

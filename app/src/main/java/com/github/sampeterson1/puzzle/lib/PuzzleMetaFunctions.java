@@ -3,6 +3,7 @@ package com.github.sampeterson1.puzzle.lib;
 import com.github.sampeterson1.puzzle.display.ColorPalette;
 import com.github.sampeterson1.puzzle.display.DisplayPiece;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzle.templates.Puzzle;
 
 public abstract class PuzzleMetaFunctions<T extends Puzzle> {
@@ -18,7 +19,7 @@ public abstract class PuzzleMetaFunctions<T extends Puzzle> {
 	}
 	
 	//parses a string into an algorithm
-	public abstract Algorithm parseAlgorithm(String alg);
+	public abstract Algorithm parseAlgorithm(String alg) throws InvalidAlgorithmException;
 	
 	//simplifies an algorithm to have a less or equal length
 	public abstract Algorithm simplify(Algorithm alg);

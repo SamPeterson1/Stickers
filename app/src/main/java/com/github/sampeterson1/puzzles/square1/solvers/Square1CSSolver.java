@@ -94,6 +94,8 @@ public class Square1CSSolver {
 			trySolveCS();
 		}
 		
+		sq1.setLogMoves(false);
+
 		return Square1Util.simplify(sq1.getMoveLog());
 	}
 	

@@ -21,8 +21,10 @@ package com.github.sampeterson1.puzzles.pyraminx.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
 import com.github.sampeterson1.puzzle.moves.UniversalAlgorithmParser;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 
 public class PyraminxAlgorithmUtil {
 
@@ -30,21 +32,20 @@ public class PyraminxAlgorithmUtil {
 	
 	private static Map<String, String> initMoveReplacements() {
 		Map<String, String> moveReplacements = new HashMap<String, String>();
-		moveReplacements.put("b", "F ~F'");	
-		moveReplacements.put("r", "L ~L'");
-		moveReplacements.put("l", "R ~R'");	
-		moveReplacements.put("u", "D ~D'");	
-		
-		moveReplacements.put("F", "PF");	
-		moveReplacements.put("L", "PL");
-		moveReplacements.put("R", "PR");	
-		moveReplacements.put("D", "PD");	
+		moveReplacements.put("b", "~F'");	
+		moveReplacements.put("r", "~L'");
+		moveReplacements.put("l", "~R'");	
+		moveReplacements.put("u", "~D'");	
 
 		return moveReplacements;
 	}
 	
-	public static Algorithm parseAlgorithm(String str) {
-		return UniversalAlgorithmParser.parseAlgorithm(str, moveReplacements);
+	public static Algorithm parseAlgorithm(String str, int puzzleSize) throws InvalidAlgorithmException {
+		return UniversalAlgorithmParser.parseAlgorithm(str, moveReplacements, puzzleSize, PuzzleType.PYRAMINX);
+	}
+
+	public static Algorithm parseAlgorithm(String str) throws InvalidAlgorithmException {
+		return UniversalAlgorithmParser.parseAlgorithm(str, moveReplacements, PuzzleType.PYRAMINX);
 	}
 	
 }

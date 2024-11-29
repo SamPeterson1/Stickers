@@ -27,6 +27,7 @@ import com.github.sampeterson1.puzzle.lib.PuzzleFactory;
 import com.github.sampeterson1.puzzle.lib.PuzzleSizeController;
 import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzle.templates.Puzzle;
 
 //Controls the selected puzzle and provides functionality to switch between puzzles
@@ -55,6 +56,12 @@ public class PuzzleMaster {
 		sizeControllers.put(PuzzleType.PYRAMINX, new PuzzleSizeController().withDefault(3).withMin(3).withMax(100));
 		
 		return sizeControllers;
+	}
+
+	private static void setAnimation(Algorithm alg) {
+		if (animatingAlg != null) {
+			animatingAlg = alg;
+		}
 	}
 	
 	private static Map<String, PuzzleType> getPuzzlesByName() {
@@ -92,15 +99,39 @@ public class PuzzleMaster {
 	}
 	
 	public static void executeAlgorithm(String alg) {
-		animatingAlg = puzzleCopy.getMetaFunctions().parseAlgorithm(alg);
-		puzzleCopy.executeAlgorithm(animatingAlg);
+		if (animatingAlg != null) {
+			return;
+		}
+
+		try {
+			Algorithm parsedAlg = puzzleCopy.getMetaFunctions().parseAlgorithm(alg);
+
+			puzzleCopy.clearMoveLog();
+			
+			puzzleCopy.pushRotations();
+			puzzleCopy.executeAlgorithm(parsedAlg, true);
+			puzzleCopy.popRotations();
+
+			animatingAlg = puzzleCopy.getMoveLog();
+			puzzleCopy.clearMoveLog();
+		} catch(InvalidAlgorithmException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void scramble() {
+		if (animatingAlg != null) {
+			return;
+		}
+
 		animatingAlg = puzzleCopy.getMetaFunctions().scramble(scrambleLength);
 	}
 	
 	public static void solve() {
+		if (animatingAlg != null) {
+			return;
+		}
+
 		animatingAlg = puzzleCopy.getMetaFunctions().solve();
 	}
 	

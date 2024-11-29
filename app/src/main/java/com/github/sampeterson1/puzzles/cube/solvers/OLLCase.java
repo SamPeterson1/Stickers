@@ -36,7 +36,11 @@ public class OLLCase {
 
 	//The locations array must be interleaved in the same way as in PLLCase
 	public OLLCase(String solution, int[] locations) {
-		this.solution = CubeAlgorithmUtil.parseAlgorithm(solution);
+		try {
+			this.solution = CubeAlgorithmUtil.parseAlgorithm(solution);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		cornerLocations = new int[4];
 		for (int i = 0; i < 8; i += 2)
 			cornerLocations[i / 2] = locations[i];

@@ -6,10 +6,12 @@ import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PuzzleMetaFunctions;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzles.pyraminx.display.PyraminxDisplayPiece;
 import com.github.sampeterson1.puzzles.pyraminx.solvers.PyraminxCenterSolver;
 import com.github.sampeterson1.puzzles.pyraminx.solvers.PyraminxEdgeSolver;
 import com.github.sampeterson1.puzzles.pyraminx.solvers.PyraminxRingSolver;
+import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxAlgorithmUtil;
 import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxMoveUtil;
 
 public class PyraminxMetaFunctions extends PuzzleMetaFunctions<Pyraminx> {
@@ -71,8 +73,8 @@ public class PyraminxMetaFunctions extends PuzzleMetaFunctions<Pyraminx> {
 	}
 
 	@Override
-	public Algorithm parseAlgorithm(String alg) {
-		return new Algorithm();
+	public Algorithm parseAlgorithm(String alg) throws InvalidAlgorithmException {
+		return PyraminxAlgorithmUtil.parseAlgorithm(alg, super.getPuzzle().getSize());
 	}
 
 	

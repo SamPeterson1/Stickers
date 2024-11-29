@@ -114,6 +114,8 @@ public class Square1PLSolver {
 			sq1.executeAlgorithm(flipEquator);
 		}
 		
+		sq1.setLogMoves(false);		
+
 		return Square1Util.simplify(sq1.getMoveLog());
 	}
 	

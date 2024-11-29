@@ -25,6 +25,7 @@ import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxAlgorithmUtil;
 import com.github.sampeterson1.puzzles.pyraminx.util.PyraminxCenterUtil;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
@@ -53,10 +54,14 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	private static Algorithm[] initCornerRotationAlgs() {
 		Algorithm[] algs = new Algorithm[4];
 		
-		algs[0] = PyraminxAlgorithmUtil.parseAlgorithm("F'");
-		algs[1] = PyraminxAlgorithmUtil.parseAlgorithm("");
-		algs[2] = PyraminxAlgorithmUtil.parseAlgorithm("D");
-		algs[3] = PyraminxAlgorithmUtil.parseAlgorithm("D'");
+		try {
+			algs[0] = PyraminxAlgorithmUtil.parseAlgorithm("F'");
+			algs[1] = PyraminxAlgorithmUtil.parseAlgorithm("");
+			algs[2] = PyraminxAlgorithmUtil.parseAlgorithm("D");
+			algs[3] = PyraminxAlgorithmUtil.parseAlgorithm("D'");
+		} catch(InvalidAlgorithmException e) {
+			e.printStackTrace();
+		}
 		
 		return algs;
 	}
@@ -64,12 +69,16 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	private static Algorithm[] initEdgeRotationAlgs() {
 		Algorithm[] algs = new Algorithm[6];
 		
-		algs[0] = PyraminxAlgorithmUtil.parseAlgorithm("F'");
-		algs[1] = PyraminxAlgorithmUtil.parseAlgorithm("F' D");
-		algs[2] = PyraminxAlgorithmUtil.parseAlgorithm("F' D'");
-		algs[3] = PyraminxAlgorithmUtil.parseAlgorithm("");
-		algs[4] = PyraminxAlgorithmUtil.parseAlgorithm("D");
-		algs[5] = PyraminxAlgorithmUtil.parseAlgorithm("D'");
+		try {
+			algs[0] = PyraminxAlgorithmUtil.parseAlgorithm("F'");
+			algs[1] = PyraminxAlgorithmUtil.parseAlgorithm("F' D");
+			algs[2] = PyraminxAlgorithmUtil.parseAlgorithm("F' D'");
+			algs[3] = PyraminxAlgorithmUtil.parseAlgorithm("");
+			algs[4] = PyraminxAlgorithmUtil.parseAlgorithm("D");
+			algs[5] = PyraminxAlgorithmUtil.parseAlgorithm("D'");
+		} catch(InvalidAlgorithmException e) {
+			e.printStackTrace();
+		}
 
 		return algs;
 	}
@@ -78,10 +87,14 @@ public class PyraminxDisplayPiece extends DisplayPiece {
 	private static Algorithm[] initCenterRotationAlgs() {
 		Algorithm[] algs = new Algorithm[4];
 		
-		algs[0] = PyraminxAlgorithmUtil.parseAlgorithm("");
-		algs[1] = PyraminxAlgorithmUtil.parseAlgorithm("D");
-		algs[2] = PyraminxAlgorithmUtil.parseAlgorithm("D'");
-		algs[3] = PyraminxAlgorithmUtil.parseAlgorithm("L D'");
+		try {
+			algs[0] = PyraminxAlgorithmUtil.parseAlgorithm("");
+			algs[1] = PyraminxAlgorithmUtil.parseAlgorithm("D");
+			algs[2] = PyraminxAlgorithmUtil.parseAlgorithm("D'");
+			algs[3] = PyraminxAlgorithmUtil.parseAlgorithm("L D'");
+		} catch(InvalidAlgorithmException e) {
+			e.printStackTrace();
+		}
 		
 		return algs;
 	}

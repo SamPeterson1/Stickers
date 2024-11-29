@@ -59,6 +59,7 @@ public class Square1MetaFunctions extends PuzzleMetaFunctions<Square1> {
 			sq1.makeMove(new Move(Axis.S1, true));
 		}
 		
+		sq1.setLogMoves(false);
 		return sq1.getMoveLog();
 	}
 

@@ -24,6 +24,7 @@ import com.github.sampeterson1.puzzle.lib.Color;
 import com.github.sampeterson1.puzzle.lib.Piece;
 import com.github.sampeterson1.puzzle.lib.PieceType;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzles.cube.util.CubeAlgorithmUtil;
 import com.github.sampeterson1.renderEngine.loaders.OBJLoader;
 import com.github.sampeterson1.renderEngine.models.ColoredMesh;
@@ -50,14 +51,18 @@ public class CubeDisplayPiece extends DisplayPiece {
 	private static final Algorithm[] initCornerRotations() {
 		Algorithm[] cornerRotations = new Algorithm[8];
 		
-		cornerRotations[0] = CubeAlgorithmUtil.parseAlgorithm("R F'");
-		cornerRotations[1] = CubeAlgorithmUtil.parseAlgorithm("F'");
-		cornerRotations[2] = CubeAlgorithmUtil.parseAlgorithm("F' U'");
-		cornerRotations[3] = CubeAlgorithmUtil.parseAlgorithm("F' U2");
-		cornerRotations[4] = CubeAlgorithmUtil.parseAlgorithm("D'");
-		cornerRotations[5] = CubeAlgorithmUtil.parseAlgorithm("");
-		cornerRotations[6] = CubeAlgorithmUtil.parseAlgorithm("D");
-		cornerRotations[7] = CubeAlgorithmUtil.parseAlgorithm("D2");
+		try {
+			cornerRotations[0] = CubeAlgorithmUtil.parseAlgorithm("R F'");
+			cornerRotations[1] = CubeAlgorithmUtil.parseAlgorithm("F'");
+			cornerRotations[2] = CubeAlgorithmUtil.parseAlgorithm("F' U'");
+			cornerRotations[3] = CubeAlgorithmUtil.parseAlgorithm("F' U2");
+			cornerRotations[4] = CubeAlgorithmUtil.parseAlgorithm("D'");
+			cornerRotations[5] = CubeAlgorithmUtil.parseAlgorithm("");
+			cornerRotations[6] = CubeAlgorithmUtil.parseAlgorithm("D");
+			cornerRotations[7] = CubeAlgorithmUtil.parseAlgorithm("D2");
+		} catch (InvalidAlgorithmException e) {
+			e.printStackTrace();
+		}
 
 		return cornerRotations;
 	}
@@ -65,18 +70,22 @@ public class CubeDisplayPiece extends DisplayPiece {
 	private static final Algorithm[] initEdgeRotations() {
 		Algorithm[] edgeRotations = new Algorithm[12];
 		
-		edgeRotations[0] = CubeAlgorithmUtil.parseAlgorithm("F2");
-		edgeRotations[1] = CubeAlgorithmUtil.parseAlgorithm("F2 U'");
-		edgeRotations[2] = CubeAlgorithmUtil.parseAlgorithm("F2 U2");
-		edgeRotations[3] = CubeAlgorithmUtil.parseAlgorithm("F2 U");
-		edgeRotations[4] = CubeAlgorithmUtil.parseAlgorithm("F");
-		edgeRotations[5] = CubeAlgorithmUtil.parseAlgorithm("F U'");
-		edgeRotations[6] = CubeAlgorithmUtil.parseAlgorithm("F U2");
-		edgeRotations[7] = CubeAlgorithmUtil.parseAlgorithm("F U");
-		edgeRotations[8] = CubeAlgorithmUtil.parseAlgorithm("");
-		edgeRotations[9] = CubeAlgorithmUtil.parseAlgorithm("D");
-		edgeRotations[10] = CubeAlgorithmUtil.parseAlgorithm("D2");
-		edgeRotations[11] = CubeAlgorithmUtil.parseAlgorithm("D'");
+		try {
+			edgeRotations[0] = CubeAlgorithmUtil.parseAlgorithm("F2");
+			edgeRotations[1] = CubeAlgorithmUtil.parseAlgorithm("F2 U'");
+			edgeRotations[2] = CubeAlgorithmUtil.parseAlgorithm("F2 U2");
+			edgeRotations[3] = CubeAlgorithmUtil.parseAlgorithm("F2 U");
+			edgeRotations[4] = CubeAlgorithmUtil.parseAlgorithm("F");
+			edgeRotations[5] = CubeAlgorithmUtil.parseAlgorithm("F U'");
+			edgeRotations[6] = CubeAlgorithmUtil.parseAlgorithm("F U2");
+			edgeRotations[7] = CubeAlgorithmUtil.parseAlgorithm("F U");
+			edgeRotations[8] = CubeAlgorithmUtil.parseAlgorithm("");
+			edgeRotations[9] = CubeAlgorithmUtil.parseAlgorithm("D");
+			edgeRotations[10] = CubeAlgorithmUtil.parseAlgorithm("D2");
+			edgeRotations[11] = CubeAlgorithmUtil.parseAlgorithm("D'");
+		} catch (InvalidAlgorithmException e) {
+			e.printStackTrace();
+		}
 		
 		return edgeRotations;
 	}
@@ -84,18 +93,23 @@ public class CubeDisplayPiece extends DisplayPiece {
 	private static final Algorithm[] initCenterRotations() {
 		Algorithm[] centerRotations = new Algorithm[6];
 		
-		centerRotations[0] = CubeAlgorithmUtil.parseAlgorithm("U'");
-		centerRotations[1] = CubeAlgorithmUtil.parseAlgorithm("R");
-		centerRotations[2] = CubeAlgorithmUtil.parseAlgorithm("");
-		centerRotations[3] = CubeAlgorithmUtil.parseAlgorithm("U");
-		centerRotations[4] = CubeAlgorithmUtil.parseAlgorithm("R'");
-		centerRotations[5] = CubeAlgorithmUtil.parseAlgorithm("U2");
+		try {
+			centerRotations[0] = CubeAlgorithmUtil.parseAlgorithm("U'");
+			centerRotations[1] = CubeAlgorithmUtil.parseAlgorithm("R");
+			centerRotations[2] = CubeAlgorithmUtil.parseAlgorithm("");
+			centerRotations[3] = CubeAlgorithmUtil.parseAlgorithm("U");
+			centerRotations[4] = CubeAlgorithmUtil.parseAlgorithm("R'");
+			centerRotations[5] = CubeAlgorithmUtil.parseAlgorithm("U2");
+		} catch (InvalidAlgorithmException e) {
+			e.printStackTrace();
+		}
 		
 		return centerRotations;
 	}
 	
 	public CubeDisplayPiece(Piece position) {
 		super(position);
+		
 		if(cornerPieceMesh == null || cornerPieceMesh.getData().isDeleted())
 			loadMeshes();
 	}

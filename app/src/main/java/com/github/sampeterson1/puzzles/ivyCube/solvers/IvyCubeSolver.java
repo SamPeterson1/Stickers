@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzle.moves.UniversalAlgorithmParser;
+import com.github.sampeterson1.puzzle.templates.Puzzle;
 import com.github.sampeterson1.puzzles.ivyCube.meta.IvyCube;
 import com.github.sampeterson1.puzzles.ivyCube.util.IvyCubeUtil;
 import com.github.sampeterson1.renderEngine.loaders.ResourceLoader;
@@ -32,15 +35,15 @@ public class IvyCubeSolver {
 				parseSolution(line);
 			}
 			reader.close();
-		} catch (IOException e) {
+		} catch (IOException | InvalidAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void parseSolution(String line) {
+	private void parseSolution(String line) throws InvalidAlgorithmException{
 		String[] tokens = line.split(";");
 		
-		Algorithm solution = UniversalAlgorithmParser.parseAlgorithm(tokens[1]);
+		Algorithm solution = UniversalAlgorithmParser.parseAlgorithm(tokens[1], PuzzleType.IVY_CUBE);
 		int stateHash = Integer.parseInt(tokens[0]);
 		
 		solutions.put(stateHash, solution);

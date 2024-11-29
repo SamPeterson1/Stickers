@@ -100,16 +100,25 @@ public class PuzzleControlGUI implements GUIEventListener {
 			} else if(name.equals("Execute Button")) {
 				GUITextBox algorithmBox = (GUITextBox) GUIMaster.getComponent("Algorithm Text Box");
 				String algorithm = algorithmBox.getString();
+				System.out.println("Executing alg: " +algorithm);
 				PuzzleMaster.executeAlgorithm(algorithm);
 			}
 		} else if(type == GUIEventType.TEXT_BOX_UPDATE) {
 			GUITextBox textBox = (GUITextBox) component;
 			if(name.equals("Size Text Box")) {
-				int size = Integer.parseInt(textBox.getString());
-				PuzzleMaster.setPuzzleSize(size);
+				try {
+					int size = Integer.parseInt(textBox.getString());
+					PuzzleMaster.setPuzzleSize(size);
+				} catch(NumberFormatException ex) {
+					System.err.println("Invalid size");
+				}
 			} else if(name.equals("Scramble Length Text Box")) {
-				int length = Integer.parseInt(textBox.getString());
-				PuzzleMaster.setScrambleLength(length);
+				try {
+					int length = Integer.parseInt(textBox.getString());
+					PuzzleMaster.setScrambleLength(length);
+				} catch(NumberFormatException ex) {
+					System.err.println("Invalid scramble length");
+				}
 			}
 		} else if(type == GUIEventType.SLIDER_MOVED) {
 			GUISlider slider = (GUISlider) component;

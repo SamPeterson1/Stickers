@@ -103,6 +103,10 @@ public abstract class GroupedPuzzle extends Puzzle {
 	@Override
 	public List<Piece> getAffectedPieces(Move move) {
 		List<Piece> affectedPieces = new ArrayList<Piece>();
+
+		if (move.isCubeRotation()) {
+			return affectedPieces;
+		}
 		
 		for(Map<Integer, PieceGroup> groups : groupsByType.values()) {
 			for(PieceGroup group : groups.values()) {

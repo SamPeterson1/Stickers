@@ -122,6 +122,10 @@ public abstract class Puzzle {
 			makeMove(move.getInverse(), false);
 		}
 	}
+
+	public final void clearRotations() {
+		rotations.clear();
+	}
 	
 	public final void makeRotation(Axis face, boolean cw) {
 		Move move = new Move(face, cw, true);
@@ -146,7 +150,7 @@ public abstract class Puzzle {
 	public final void makeMove(Move move, boolean log) {
 		for(Move repetition : move.expandRepetitions()) {
 			movePieces(repetition);
-			
+
 			if(repetition.isCubeRotation()) {
 				rotations.add(0, repetition.getInverse());
 			}

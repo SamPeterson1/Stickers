@@ -92,6 +92,7 @@ public class Square1OLSolver {
 			}
 		}
 		System.out.println("solved");
+		sq1.setLogMoves(false);
 		
 		return Square1Util.simplify(sq1.getMoveLog());
 	}

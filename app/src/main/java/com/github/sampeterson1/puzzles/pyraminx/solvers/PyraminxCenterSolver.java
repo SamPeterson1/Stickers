@@ -477,6 +477,7 @@ public class PyraminxCenterSolver {
 			pyr.popRotations();
 		}
 		
+		pyr.setLogMoves(false);
 		Algorithm alg = pyr.getMoveLog();
 		
 		return alg;

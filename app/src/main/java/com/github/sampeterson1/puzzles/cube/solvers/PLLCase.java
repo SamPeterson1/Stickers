@@ -47,7 +47,11 @@ public class PLLCase {
 	 * corner position 0, edge position 0, corner position 1, edge position 1, corner position 2, edge position 2... etc.
 	 */
 	public PLLCase(String solution, Axis[] locations) {
-		this.solution = CubeAlgorithmUtil.parseAlgorithm(solution);
+		try {
+			this.solution = CubeAlgorithmUtil.parseAlgorithm(solution);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		cornerLocations = new Axis[4];
 		for (int i = 0; i < 8; i += 2) {

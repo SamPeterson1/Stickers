@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.sampeterson1.math.Mathf;
+import com.github.sampeterson1.puzzle.lib.PuzzleType;
 import com.github.sampeterson1.puzzle.moves.Algorithm;
 import com.github.sampeterson1.puzzle.moves.Axis;
+import com.github.sampeterson1.puzzle.moves.InvalidAlgorithmException;
 import com.github.sampeterson1.puzzle.moves.Move;
 import com.github.sampeterson1.puzzle.moves.UniversalAlgorithmParser;
 
@@ -52,12 +54,20 @@ public class CubeAlgorithmUtil {
 		
 		return moveReplacements;
 	}
+
+	public static Algorithm parseAlgorithm(String str) throws InvalidAlgorithmException {
+		return UniversalAlgorithmParser.parseAlgorithm(str, moveReplacements, 0, PuzzleType.CUBE);
+	}
 	
-	public static Algorithm parseAlgorithm(String str) {
-		return UniversalAlgorithmParser.parseAlgorithm (str.toString(), moveReplacements);
+	public static Algorithm parseAlgorithm(String str, int puzzleSize) throws InvalidAlgorithmException {
+		return UniversalAlgorithmParser.parseAlgorithm(str.toString(), moveReplacements, puzzleSize, PuzzleType.CUBE);
 	}
 	
 	private static List<Move> mergeInversePairs(List<Move> moves) {
+		if (moves.size() == 0) {
+			return moves;
+		}
+
 		List<Move> newMoves = new ArrayList<Move>();
 		
 		newMoves.add(moves.get(0));
@@ -80,6 +90,10 @@ public class CubeAlgorithmUtil {
 	}
 	
 	private static List<Move> mergeRepeatedMoves(List<Move> moves) {
+		if (moves.size() == 0 || moves.size() == 1) {
+			return moves;
+		}
+
 		List<Move> newMoves = new ArrayList<Move>();
 		
 		newMoves.add(moves.get(0));

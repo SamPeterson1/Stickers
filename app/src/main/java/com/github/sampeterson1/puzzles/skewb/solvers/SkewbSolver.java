@@ -21,26 +21,10 @@ public class SkewbSolver {
 	private int[][] solutions;
 	
 	public SkewbSolver(Skewb skewb) {
-		
 		this.skewb = skewb;
-		//test();
 		//generateSolutions();
 	}
 	
-	private void test() {
-		int[] numPositions = new int[MAX_SOLUTION_LENGTH + 1];
-		for(int hash = 0; hash < NUM_HASHES; hash ++) {
-			if(hash % 10000 == 0) System.out.println((float) 100 * hash / NUM_HASHES);
-			Algorithm alg = SkewbSolutionIO.getSolution(hash);
-			numPositions[alg.length()] ++;
-		}
-		
-		for(int i = 0; i < numPositions.length; i ++) {
-			System.out.println("Solution length: " + i + ", Positions: " + numPositions[i]);
-		}
-	}
-	
-	@SuppressWarnings("unused")
 	private void generateSolutions() {
 		this.solutions = new int[NUM_HASHES][MAX_SOLUTION_LENGTH];
 		this.possibleMoves = new Move[2 * SkewbUtil.AXES.length];
@@ -67,9 +51,7 @@ public class SkewbSolver {
 	}
 
 	public Algorithm solve() {
-		int hash = SkewbSolverUtil.hash(skewb);
-		System.out.println(hash + " " + SkewbSolverUtil.isSolved(skewb));
-		return SkewbSolutionIO.getSolution(hash);
+		return new Algorithm();
 	}
 	
 	private int[] newAlgorithm() {
